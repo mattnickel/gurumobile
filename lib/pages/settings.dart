@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../bloc/navagation_bloc/navagation_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class SettingsPage extends StatelessWidget with NavigationStates{
   @override
   Widget build(BuildContext context) {
   	return Center(

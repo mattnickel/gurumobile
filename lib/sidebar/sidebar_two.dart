@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
+import '../bloc/navagation_bloc/navagation_bloc.dart';
 
 import 'menu_item.dart';
 
@@ -112,27 +114,50 @@ class _SideBarSimpleState extends State<SideBarSimple> with SingleTickerProvider
                           ),
                           MenuItem(
                             icon: Icons.notifications,
-                            title: "Notifications"
+                            title: "Notifications",
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.NotificationsClickedEvent);
+                            }
                           ),
                           MenuItem(
                               icon: Icons.perm_identity,
-                              title: "Profile"
+                              title: "Profile",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.ProfileClickedEvent);
+                              }
                           ),
                           MenuItem(
                               icon: Icons.settings,
-                              title: "Settings"
+                              title: "Settings",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.SettingsClickedEvent);
+                              }
                           ),
                           MenuItem(
                               icon: Icons.account_circle,
-                              title: "Account"
+                              title: "Account",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.AccountClickedEvent);
+                              }
                           ),
                           MenuItem(
                               icon: Icons.live_help,
-                              title: "Support"
+                              title: "Support",
+                              onTap: () {
+                                onIconPressed();BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.SupportClickedEvent);
+                              }
                           ),
                           MenuItem(
                               icon: Icons.filter_none,
-                              title: "Terms"
+                              title: "Terms",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.TermsClickedEvent);
+                              }
                           ),
                       ]
                     )
