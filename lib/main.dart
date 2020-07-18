@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
-import 'sidebar/sidebar_layout.dart';
 
 void main() => runApp(MyApp());
 

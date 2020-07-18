@@ -7,7 +7,6 @@ class MenuItem extends StatelessWidget {
   final Function onTap;
 
   const MenuItem({Key key, this.icon, this.title, this.onTap}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {

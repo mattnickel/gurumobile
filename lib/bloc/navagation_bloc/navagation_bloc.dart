@@ -8,7 +8,6 @@ import 'package:sidebar_animation/pages/support.dart';
 import 'package:sidebar_animation/pages/terms.dart';
 
 enum NavigationEvents {
-  HomePageClickedEvent,
   NotificationsClickedEvent,
   ProfileClickedEvent,
   SettingsClickedEvent,
@@ -23,14 +22,12 @@ abstract class NavigationStates{}
 class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   @override
   // TODO: implement initialState
-  NavigationStates get initialState => HomePage();
+  NavigationStates get initialState => Notifications();
 
   @override
   Stream<NavigationStates> mapEventToState(NavigationEvents event) async* {
     switch(event){
-      case NavigationEvents.HomePageClickedEvent:
-        yield HomePage();
-        break;
+
       case NavigationEvents.NotificationsClickedEvent:
         yield Notifications();
         break;
