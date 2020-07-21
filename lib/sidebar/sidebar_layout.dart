@@ -7,8 +7,13 @@ class SideBarMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer( child:
       Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/menu_background.png"),
+              fit: BoxFit.cover,
+            )
+          ),
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        color: Colors.grey[800],
         child:
           Column(
             children:<Widget>[
