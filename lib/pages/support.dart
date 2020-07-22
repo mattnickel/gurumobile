@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sidebar_animation/bloc/navagation_bloc/navagation_bloc.dart';
 
-class SupportPage extends StatelessWidget with NavigationStates{
+class SupportPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Center(
