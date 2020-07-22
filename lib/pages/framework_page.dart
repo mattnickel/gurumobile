@@ -20,15 +20,15 @@ class FrameworkPage extends StatelessWidget{
 								),
 							drawer: SideBarMenu(),
 							bottomNavigationBar: FloatingNavbar(
-								onTap: (int index){
-									model.currentTab = index;
+								onTap: (int _index){
+									model.currentTab = _index;
 								},
 								backgroundColor: Colors.white,
 								borderRadius: 30,
 								selectedItemColor: Colors.redAccent,
 								selectedBackgroundColor: null,
 								unselectedItemColor: Colors.black54,
-								currentIndex: 0,
+								currentIndex: (model.currentTab),
 								items: [
 									FloatingNavbarItem(icon: Icons.home, title: 'Home'),
 									FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),

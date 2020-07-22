@@ -53,6 +53,12 @@ flutter:
     - assets/images/guru2.png
     - assets/images/guru3.png
     - assets/images/menu_background.png
+    - assets/images/course1.png
+    - assets/images/course2.png
+    - assets/images/course3.png
+    - assets/images/post1.png
+    - assets/images/post2.png
+    - assets/images/post3.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
