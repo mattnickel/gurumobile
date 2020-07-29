@@ -12,7 +12,7 @@ class Social extends StatelessWidget{
 			margin: EdgeInsets.only(left: 10.0, bottom:30.0),
 			child: ListView.builder(
 				scrollDirection: Axis.vertical,
-				itemCount: posts.length,
+				itemCount: posts == null ? 0 : posts.length,
 				itemBuilder: (context, index) {
 					return PostTiles(
 							posts: posts,

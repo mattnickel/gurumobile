@@ -7,6 +7,7 @@ class NextSteps extends StatelessWidget{
   String category;
   List<String> videos = <String>['video1.png', 'video2.png', 'video3.png'];
   List<String> gurus = <String>['guru1.png', 'guru2.png', 'guru3.png'];
+
   @override
   Widget build(BuildContext context){
     return ListView(

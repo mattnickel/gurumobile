@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class VideoTiles extends StatelessWidget {
 
-  List<String> videos;
+  List<dynamic> videos;
   int index;
 
   VideoTiles({ this.videos, this.index});
@@ -21,12 +22,20 @@ class VideoTiles extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(18.0),
                     child:
-                      Image.asset("assets/images/" + videos[index],
-                      width: 300,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      color: Colors.black38,
-                      colorBlendMode: BlendMode.darken,)
+                    CachedNetworkImage(
+                      imageUrl: '${videos[index].videoUrl}',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                              colorFilter:
+                              ColorFilter.mode(Colors.black38, BlendMode.darken)),
+                        ),
+                      ),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
                   ),
                   Center(
                     child: Icon(
@@ -40,7 +49,7 @@ class VideoTiles extends StatelessWidget {
                     bottom: 50,
                     left:10,
                     child: Text(
-                        "Video Name",
+                        videos[index].title,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -51,7 +60,7 @@ class VideoTiles extends StatelessWidget {
                     bottom: 30,
                     left:10,
                     child: Text(
-                      "Author Name",
+                        videos[index].author,
                       style: TextStyle(
                         color: Colors.white,
                       )

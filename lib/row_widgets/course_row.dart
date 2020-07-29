@@ -39,7 +39,7 @@ class CourseRow extends StatelessWidget {
               height: 370,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: courses.length,
+                itemCount: courses == null ? 0 : courses.length,
                 itemBuilder: (context, index) {
                   return CourseTiles(
                     courses: courses,

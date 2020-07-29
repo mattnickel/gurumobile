@@ -38,7 +38,7 @@ class GuruRow extends StatelessWidget {
               height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: gurus.length,
+                itemCount: gurus == null ? 0 : gurus.length,
                 itemBuilder: (context, index) {
                   return GuruTiles(
                     gurus: gurus,
