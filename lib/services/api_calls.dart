@@ -7,14 +7,14 @@ import 'dart:convert';
 import '../models/video_model.dart';
 import 'dart:io';
 
-String url = 'https://run.mocky.io/v3/4933d4c8-bda9-4bf6-9364-4a05aaa95df5';
+String url = 'https://aqueous-sierra-56433.herokuapp.com/api/v1/videos';
 
 List<Video> parseVideos(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   final parsedList = parsed.map<Video>((json)=> Video.fromJson(json)).toList();
   return parsedList;
 }
-Future<List<Video>> fetchVideos(http.Client client) async {
+Future<List<Video>> fetchVideos(http.Client client, category) async {
 
   final response =  await client.get(url);
 

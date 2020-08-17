@@ -20,7 +20,7 @@ class VideoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return
       FutureBuilder<List<Video>>(
-          future: fetchVideos(http.Client()),
+          future: fetchVideos(http.Client(), category),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
@@ -73,44 +73,5 @@ class VideoRow extends StatelessWidget {
               return CircularProgressIndicator();
           }
       );
-    Wrap(
-        children: <Widget>[
-          Row(children: [
-            Container(
-              margin: EdgeInsets.only(left: 20.0, bottom:10.0),
-              child: Text(
-                  category,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  )
-              ),
-            ),
-            Spacer(),
-            Container(
-              margin: EdgeInsets.only(right: 10.0),
-              child: Icon(
-                Icons.chevron_right,
-                color: Colors.redAccent,
-              ),
-            ),
-          ],
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 10.0, bottom:30.0),
-              height: 220,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: videos == null ? 0 : videos.length,
-                itemBuilder: (context, index) {
-                  return VideoTiles(
-                    videos: videos,
-                    index: index,
-                  );
-                },
-              )
-          ),
-        ]
-    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+
 class VideoTiles extends StatelessWidget {
 
   List<dynamic> videos;
@@ -23,7 +24,7 @@ class VideoTiles extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                     child:
                     CachedNetworkImage(
-                      imageUrl: '${videos[index].videoUrl}',
+                      imageUrl: '${videos[index].url}',
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
