@@ -17,6 +17,24 @@ class _LoginPageState extends State<LoginPage> {
   SharedPreferences sharedPreferences;
   Image backgroundImage;
   bool _isLoading = false;
+  bool _isEnabled = false;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes.
+    emailController.addListener( _enableSignin);
+    passwordController.addListener(  _enableSignin);
+  }
+
+  _enableSignin() {
+      setState(() {
+        _isEnabled = true;
+      });
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
       'email': email,
       'password': pass
     };
-    var jsonResponse = null;
+    var jsonResponse;
     var response = await http.post("YOUR_BASE_URL", body: data);
     if(response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
@@ -98,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 5.0),
       child: RaisedButton(
-        onPressed: emailController.text == "" || passwordController.text == "" ? null : () {
+        onPressed:  emailController.text == "" || passwordController.text == "" ? null : () {
           setState(() {
             _isLoading = true;
           });
@@ -114,8 +132,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
 
   Container textSection() {
     return Container(
@@ -124,8 +150,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
-                child: TextFormField(
-
+                child: TextField(
                   controller: emailController,
                   cursorColor: Colors.black54,
                   keyboardType: TextInputType.emailAddress,
@@ -151,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 20.0),
-              TextFormField(
+              TextField(
                 controller: passwordController,
                 cursorColor: Colors.black54,
                 obscureText: true,

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sidebar_animation/media_widgets/flick_manager.dart';
+
 
 
 class VideoTiles extends StatelessWidget {
@@ -24,7 +26,7 @@ class VideoTiles extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                     child:
                     CachedNetworkImage(
-                      imageUrl: '${videos[index].url}',
+                      imageUrl: '${videos[index].image}',
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -39,11 +41,21 @@ class VideoTiles extends StatelessWidget {
                     ),
                   ),
                   Center(
-                    child: Icon(
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return FlickVideoScreen(videos[index].file);
+                        }));
+                      },
+                      elevation: 2.0,
+                      child: Icon(
                         Icons.play_circle_filled,
-                        size: 54,
+                        size: 55.0,
                         color: Colors.white,
-                    ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    )
 
                   ),
                   Positioned(

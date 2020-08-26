@@ -3,12 +3,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './screens/splash_page.dart';
 
 
-import 'framework_page.dart';
+
 
 
 void main() {
   SharedPreferences.setMockInitialValues({});
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {

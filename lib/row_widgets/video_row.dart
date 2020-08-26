@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 
 import 'package:sidebar_animation/models/video_model.dart';
-import 'package:sidebar_animation/services/api_calls.dart';
+import 'package:sidebar_animation/services/api_calls2.dart';
 
 import 'video_tiles.dart';
 
@@ -55,7 +55,7 @@ class VideoRow extends StatelessWidget {
                           height: 220,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: videos == null ? 0 : videos.length,
+                            itemCount: snapshot.data == null ? 0 : snapshot.data.length,
                             itemBuilder: (context, index) {
                               return VideoTiles(
                                 videos: snapshot.data,

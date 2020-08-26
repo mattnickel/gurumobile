@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sidebar_animation/media_widgets/video_player_screen.dart';
-import 'models/navbar_tab_selected_model.dart';
+import './media_widgets/video_player_screen.dart';
 
-import 'sidebar/sidebar_layout.dart';
 
 class TodayFeature extends StatelessWidget{
   @override

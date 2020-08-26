@@ -13,10 +13,9 @@ class NextSteps extends StatelessWidget{
   Widget build(BuildContext context){
     return ListView(
       children:<Widget>[
-//        StreamVideo(),
         VideoRow(category:"For Today", videos:videos),
         GuruRow(category: "Recommended Gurus", gurus:gurus),
-        VimeoRow(category:"Continue Watching", videos:videos),
+        VideoRow(category:"Continue Watching", videos:videos),
       ],
       );
   }

@@ -5,9 +5,9 @@ import 'dart:async' show Future;
 import 'dart:convert';
 
 import '../models/video_model.dart';
-import 'dart:io';
 
-String url = 'https://aqueous-sierra-56433.herokuapp.com/api/v1/videos';
+
+String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
 
 List<Video> parseVideos(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();

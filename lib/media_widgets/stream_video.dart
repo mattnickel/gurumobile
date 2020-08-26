@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../media_widgets/player_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class StreamVideo extends StatefulWidget {

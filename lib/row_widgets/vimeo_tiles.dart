@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vimeoplayer/vimeoplayer.dart';
+//import 'package:vimeoplayer/vimeoplayer.dart';
 
 
 class VimeoTiles extends StatelessWidget {
@@ -21,7 +21,6 @@ class VimeoTiles extends StatelessWidget {
               width: 300,
               child: Stack(
                 children: <Widget>[
-                  VimeoPlayer(id:'${videos[index].vimeoId}'),
                   Center(
                     child: Icon(
                         Icons.play_circle_filled,

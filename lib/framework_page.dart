@@ -18,22 +18,43 @@ class FrameworkPage extends StatelessWidget{
 								title: Image.asset("assets/images/logo.png", fit: BoxFit.cover),
 								),
 							drawer: SideBarMenu(),
-							bottomNavigationBar: FloatingNavbar(
-								onTap: (int _index){
-									model.currentTab = _index;
-								},
-								backgroundColor: Colors.white,
-								borderRadius: 30,
-								selectedItemColor: Colors.redAccent,
-								selectedBackgroundColor: null,
-								unselectedItemColor: Colors.black54,
-								currentIndex: (model.currentTab),
-								items: [
-									FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-									FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
-									FloatingNavbarItem(icon: Icons.person, title: 'MyGuru'),
-									FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
-								],
+							bottomNavigationBar:
+							Container(
+								decoration: BoxDecoration(
+									color: Colors.white,
+									borderRadius: BorderRadius.only(
+											topLeft: Radius.circular(35),
+											topRight: Radius.circular(35),
+											bottomLeft: Radius.circular(35),
+											bottomRight: Radius.circular(35)
+									),
+									boxShadow: [
+										BoxShadow(
+											color: Colors.grey.withOpacity(0.5),
+											spreadRadius: 5,
+											blurRadius: 7,
+											offset: Offset(0, 3), // changes position of shadow
+										),
+									],
+								),
+							  child: FloatingNavbar(
+							  	onTap: (int _index){
+							  		model.currentTab = _index;
+							  	},
+							  	backgroundColor: Colors.white,
+							  	borderRadius: 30,
+							  	selectedItemColor: Colors.redAccent,
+							  	selectedBackgroundColor: null,
+							  	unselectedItemColor: Colors.black54,
+							  	currentIndex: (model.currentTab),
+
+							  	items: [
+							  		FloatingNavbarItem(icon: Icons.home, title: 'Home'),
+							  		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
+							  		FloatingNavbarItem(icon: Icons.person, title: 'MyGuru'),
+							  		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
+							  	],
+							  ),
 							),
 						body: model.currentScreen,
 							extendBody: true,

@@ -25,6 +25,8 @@ class Video {
   int vimeoId;
   int seconds;
   String url;
+  String image;
+  String file;
 
   Video(
       {this.id,
@@ -33,7 +35,9 @@ class Video {
         this.description,
         this.vimeoId,
         this.seconds,
-        this.url});
+        this.url,
+        this.image,
+        this.file});
 
   Video.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,6 +47,8 @@ class Video {
     vimeoId = json['vimeo_id'];
     seconds = json['seconds'];
     url = json['url'];
+    image = json['image'];
+    file = json['file'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +60,8 @@ class Video {
     data['vimeo_id'] = this.vimeoId;
     data['seconds'] = this.seconds;
     data['url'] = this.url;
+    data['image'] = this.image;
+    data['file'] = this.file;
     return data;
   }
 }

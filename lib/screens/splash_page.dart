@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sidebar_animation/framework_page.dart';
+
+import '../services/api_calls2.dart';
 import '../featured.dart';
 import 'login_screen.dart';
 
@@ -35,8 +36,9 @@ class SplashPageState extends State<SplashPage> {
 
   }
   Future<Timer> loadData() async {
+    updateVideos(http.Client(),"For Today");
     return Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 3),
         onDoneLoading);
   }
   checkLoginStatus() async {
