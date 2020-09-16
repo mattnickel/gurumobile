@@ -3,8 +3,6 @@ import '../row_widgets/course_row.dart';
 import '../row_widgets/video_row.dart';
 
 
-
-
 class Library extends StatelessWidget{
 	String category;
 	List<String> videos = <String>[];
@@ -20,6 +18,7 @@ class Library extends StatelessWidget{
 				  	VideoRow(category:"Trending Videos", videos:videos),
 				  	CourseRow(category: "Recommended Courses", courses:courses),
 				  	VideoRow(category:"Recommended Videos", videos:videos),
+
 				  ],
 				);
 	}

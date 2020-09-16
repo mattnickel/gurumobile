@@ -20,7 +20,7 @@ class VideoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return
       FutureBuilder<List<Video>>(
-          future: fetchVideos(http.Client(), category),
+          future: checkThenUpdateVideos(http.Client(), category),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
@@ -46,7 +46,7 @@ class VideoRow extends StatelessWidget {
                           margin: EdgeInsets.only(right: 10.0),
                           child: Icon(
                             Icons.chevron_right,
-                            color: Colors.redAccent,
+                            color: Color(0xFF00ebcc),
                           ),
                         ),
                       ],),

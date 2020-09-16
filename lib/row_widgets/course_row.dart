@@ -29,7 +29,7 @@ class CourseRow extends StatelessWidget {
             Container(
               child: Icon(
                 Icons.chevron_right,
-                color: Colors.redAccent,
+                color: Color(0xFF00ebcc),
               ),
             ),
           ],

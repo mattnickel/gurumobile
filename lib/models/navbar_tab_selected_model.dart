@@ -11,7 +11,7 @@ class NavbarTabSelectedModel extends ChangeNotifier {
   List <Widget> _pages = [
     HomePage(),
     Library(),
-    Gurus(),
+    // Gurus(),
     Social(),
   ];
 

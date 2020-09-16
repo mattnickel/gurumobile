@@ -14,12 +14,17 @@ class FrameworkPage extends StatelessWidget{
 		  child: Consumer<NavbarTabSelectedModel>(
 				builder: (context, model, child) =>
 					Scaffold(
+							resizeToAvoidBottomInset: false,
+						resizeToAvoidBottomPadding:false,
 							appBar: AppBar(
-								title: Image.asset("assets/images/logo.png", fit: BoxFit.cover),
+								title: Image.asset("assets/images/lmlogo.png", fit: BoxFit.cover),
 								),
 							drawer: SideBarMenu(),
 							bottomNavigationBar:
+							
 							Container(
+								height: 70,
+								margin: EdgeInsets.only(bottom: 20, left: 20, right:20),
 								decoration: BoxDecoration(
 									color: Colors.white,
 									borderRadius: BorderRadius.only(
@@ -30,33 +35,35 @@ class FrameworkPage extends StatelessWidget{
 									),
 									boxShadow: [
 										BoxShadow(
-											color: Colors.grey.withOpacity(0.5),
+											color: Colors.black.withOpacity(0.15),
 											spreadRadius: 5,
 											blurRadius: 7,
 											offset: Offset(0, 3), // changes position of shadow
 										),
 									],
 								),
-							  child: FloatingNavbar(
-							  	onTap: (int _index){
-							  		model.currentTab = _index;
-							  	},
-							  	backgroundColor: Colors.white,
-							  	borderRadius: 30,
-							  	selectedItemColor: Colors.redAccent,
-							  	selectedBackgroundColor: null,
-							  	unselectedItemColor: Colors.black54,
-							  	currentIndex: (model.currentTab),
-
-							  	items: [
-							  		FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-							  		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
-							  		FloatingNavbarItem(icon: Icons.person, title: 'MyGuru'),
-							  		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
-							  	],
+							  child: SingleChildScrollView(
+										physics: NeverScrollableScrollPhysics(),
+							    child: FloatingNavbar(
+							      	onTap: (int _index){
+							      		model.currentTab = _index;
+							      	},
+							      	backgroundColor: Colors.white,
+							      	borderRadius: 100,
+							      	selectedItemColor: Color(0xFF00ebcc),
+							      	selectedBackgroundColor: null,
+							      	unselectedItemColor: Colors.black54,
+							      	currentIndex: (model.currentTab),
+							      	items: [
+							      		FloatingNavbarItem(icon: Icons.home, title: 'Home'),
+							      		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
+							      		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
+							      	],
+							      ),
 							  ),
 							),
-						body: model.currentScreen,
+
+							body: model.currentScreen,
 							extendBody: true,
 					)
 				),

@@ -6,18 +6,26 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/framework_page.dart';
+import 'package:sidebar_animation/screens/signup_screen.dart';
+import 'package:sidebar_animation/services/api_login.dart';
+
 
 
 class LoginPage extends StatefulWidget {
+final String error_message;
+const LoginPage(this.error_message);
   @override
+
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  SharedPreferences sharedPreferences;
+  SharedPreferences prefs;
   Image backgroundImage;
   bool _isLoading = false;
   bool _isEnabled = false;
+
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -38,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -46,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/images/adventure.png'),
+                  image: AssetImage('assets/images/adventure3.png'),
                   fit:BoxFit.cover
               )
           ),
@@ -55,13 +64,13 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text("Logging In...",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black54,
                         fontWeight: FontWeight.w500,
                       )),
                 )
@@ -70,62 +79,71 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             headerSection(),
             textSection(),
+            errorSection(),
             buttonSection(),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:<Widget>[
+                  Text('New user?', style: TextStyle(
+                      color: Colors.black54
+                  ),
+                  ),
+                  FlatButton(child:
+                  Text(
+                    'Sign up',
+                    style: TextStyle(
+                        color: Colors.black54,
+                        decoration: TextDecoration.underline,
+                    ),
+                  ),
+                    onPressed: (){
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage()), (Route<dynamic> route) => false);
+                    },)
+                ]
+            )
           ],
         ),
       ),
     );
   }
 
-  _moveForward() {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (
-        Route<dynamic> route) => false);
+  Container errorSection(){
+    return Container(
+        child:
+          widget.error_message.length > 1
+         ? Center(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Icon(Icons.error_outline), SizedBox(width: 5.0),
+                  Text(
+                  widget.error_message
+                  ),
+                ],
+              ),
+          ))
+          : null,
+    );
   }
-
-  signIn(String email, pass) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data = {
-      'email': email,
-      'password': pass
-    };
-    var jsonResponse;
-    var response = await http.post("YOUR_BASE_URL", body: data);
-    if(response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-      if(jsonResponse != null) {
-        setState(() {
-          _isLoading = false;
-        });
-        sharedPreferences.setString("token", jsonResponse['token']);
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
-      }
-    }
-    else {
-      setState(() {
-        _isLoading = false;
-      });
-      print(response.body);
-    }
-  }
-
   Container buttonSection() {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 50.0,
       padding: EdgeInsets.symmetric(horizontal: 15.0),
-      margin: EdgeInsets.only(top: 5.0),
+      margin: EdgeInsets.only(top: 0),
       child: RaisedButton(
         onPressed:  emailController.text == "" || passwordController.text == "" ? null : () {
           setState(() {
             _isLoading = true;
           });
-          _moveForward();
-          signIn(emailController.text, passwordController.text);
+          signIn(emailController.text, passwordController.text, context, prefs);
         },
         elevation: 0.2,
-        color: Color(0xffFF6051),
-        disabledColor: Color.fromRGBO(255,96,81, 0.5),
+        color: Color(0xff00eebc),
+        disabledColor: Color.fromRGBO(0,238,188, 0.25),
         child: Text("Sign In", style: TextStyle(color: Colors.white)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
@@ -150,8 +168,14 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
-                child: TextField(
+                child: TextFormField(
                   controller: emailController,
+                  validator: (value){
+                    if(value.isEmpty){
+                    return 'Email cannot be empty';
+                    }
+                    return null;
+                  },
                   cursorColor: Colors.black54,
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(color: Colors.black54),
@@ -169,15 +193,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(0xffFF6051)),
+                      borderSide: BorderSide(color: Color(0xff00eebc)),
                     ),
                     hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
               ),
               SizedBox(height: 20.0),
-              TextField(
+              TextFormField(
                 controller: passwordController,
+                validator: (value){
+                  if(value.isEmpty){
+                    return 'Password cannot be empty';
+                  }
+                  return null;
+                },
                 cursorColor: Colors.black54,
                 obscureText: true,
                 style: TextStyle(color: Colors.black54),
@@ -195,11 +225,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Color(0xffFF6051)),
+                    borderSide: BorderSide(color: Color(0xff00eebc)),
                   ),
                   hintStyle: TextStyle(color: Colors.black54),
                 ),
               ),
+
             ],
           ),
     );

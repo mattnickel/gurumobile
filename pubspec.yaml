@@ -22,6 +22,7 @@ dependencies:
   video_player:
   flick_video_player: ^0.1.1
   flutter_widgets: ^0.1.12
+  flutter_secure_storage: ^3.3.1+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -36,6 +37,7 @@ dependencies:
   shimmer: ^1.1.1
   splashscreen:
   shared_preferences: ^0.5.8
+  flutter_session: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +60,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
+    - assets/images/lmlogo.png
     - assets/images/guru1.png
     - assets/images/guru2.png
     - assets/images/guru3.png
@@ -68,11 +71,9 @@ flutter:
     - assets/images/post1.png
     - assets/images/post2.png
     - assets/images/post3.png
-    - assets/images/splash.png
-    - assets/images/splash2.jpg
     - assets/videos/background.mp4
     - assets/fonts/druk_medium.otf
-    - assets/images/adventure.png
+    - assets/images/adventure3.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

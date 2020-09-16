@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:async' show Future;
@@ -14,70 +15,100 @@ List<Video> parseVideos(String responseBody) {
   final parsedList = parsed.map<Video>((json)=> Video.fromJson(json)).toList();
   return parsedList;
 }
-Future<List<Video>> fetchVideos(http.Client client, category) async {
-  var dir = await getTemporaryDirectory();
-  File file= File(dir.path+"/"+category+".json");
 
-  if(file.existsSync()) {
-    print("Loading from cache");
+Future<List<Video>> fetchVideos(http.Client client, category) async {
+
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  String params = "access_token=$token";
+  String build_url = url+"?"+params;
+  print(build_url);
+  var dir = await getTemporaryDirectory();
+  File file = File(dir.path + "/" + category + ".json");
+
+  if (file.existsSync()) {
+    print("Fetching from cache: $category");
     var cachedVideos = file.readAsStringSync();
     return parseVideos(cachedVideos);
+  } else {
+    print("Fetching from api: $category");
+    final response = await client.get(
+        build_url,
+        );
 
-  }else{
-    print("Loading from api");
-    final response =  await client.get(url);
     if (response.statusCode == 200) {
-      //If the call to the server was successful, parse the JSON.
       file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
       return compute(parseVideos, response.body);
-
     } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
+      print("errors fetching: $category");
+      if (response.statusCode != null) {
+        print(response.statusCode);
+      } else {
+        print("no response");
+        return null;
+      }
+    }
+  }
+}
+
+Future<List<Video>> updateVideos(http.Client client, category) async {
+  var dir = await getTemporaryDirectory();
+  File file = File(dir.path + "/" + category + ".json");
+  print("updateVideos: $category");
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  String params = "access_token=$token";
+  String build_url = url+"?"+params;
+  print(build_url);
+
+  final response = await client.get(build_url);
+  if (response.statusCode == 200) {
+    print("update from api");
+    file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
+  } else {
+    if (response.statusCode != null) {
+      print("not updated from api");
+      print(response.statusCode);
+    } else {
+      print("no api response");
+      return null;
+    }
+  }
+}
+  Future<List<Video>> checkThenUpdateVideos(http.Client client,
+      category) async {
+    var dir = await getTemporaryDirectory();
+    File file = File(dir.path + "/" + category + ".json");
+    var _cachedVideos = file.readAsStringSync();
+    final storage = FlutterSecureStorage();
+    String token = await storage.read(key: "token");
+    String params = "access_token=$token";
+    String build_url = url+"?"+params;
+    print(build_url);
+
+    if (file.existsSync()) {
+      final response = await client.get(build_url);
+      if (response.statusCode == 200) {
+        var _apiVideos = response.body;
+
+        if (_cachedVideos.length == _apiVideos.length) {
+          print("no change in $category, no update");
+          return parseVideos(_cachedVideos);
+        } else {
+          print("updating $category... there is a change");
+          file.writeAsStringSync(
+              _apiVideos, flush: true, mode: FileMode.write);
+          return parseVideos(_apiVideos);
+        }
+      } else {
+        if (response.statusCode != null) {
+          print("$category not updated from api");
+          print(response.statusCode);
+        } else {
+          print("no api response");
+          return null;
+        }
+      }
     }
   }
 
-}
-Future<List<Video>> updateVideos(http.Client client, category) async {
-  var dir = await getTemporaryDirectory();
-  File file= File(dir.path+"/"+category+".json");
-
-    final response =  await client.get(url);
-    if (response.statusCode == 200) {
-     print("update from api");
-      //If the call to the server was successful, parse the JSON.
-      file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
-    } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
-    }
-}
-
-
-
-//Future<Video> getVideo() async{
-//  final response = await http.get('$url/1');
-//  return postFromJson(response.body);
-//}
-//
-//Future<http.Response> createPost(Post post) async{
-//  final response = await http.post('$url',
-//      headers: {
-//        HttpHeaders.contentTypeHeader: 'application/json',
-//        HttpHeaders.authorizationHeader : ''
-//      },
-//      body: postToJson(post)
-//  );
-//  return response;
-//}
-
-//Future<String> _callApi() async {
-//  return await url;
-//}
-//
-//Future getVideos() async {
-//  String jsonPhotos = await _callApi();
-//  final jsonResponse = json.decode(jsonPhotos);
-//  videosList VideosList = videosList.fromJson(jsonResponse);
-//  print("videos " + videosList.photos[0].title);
-//}

@@ -1,11 +1,51 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sidebar_animation/services/api_login.dart';
+import '../main.dart';
 import 'menu_item.dart';
 
-class SideBarMenu extends StatelessWidget {
+
+class SideBarMenu extends StatefulWidget {
+  @override
+  _SideBarMenuState createState() => _SideBarMenuState();
+}
+class _SideBarMenuState extends State<SideBarMenu>{
+  String firstName;
+  String tagLine;
+  String avatarUrl;
+
+  Future <List> readName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String firstName = prefs.getString("first_name");
+    String tagLine= prefs.getString("tag_line")??
+        "Add a tagline to people get to know you better";
+    String avatarUrl= prefs.getString("avatar_url")?? "no";
+    List userInfo = [tagLine, firstName, avatarUrl];
+    print(userInfo);
+    return userInfo;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    readName().then((value) {
+      setState(() {
+        tagLine = value[0];
+        firstName = value[1];
+        avatarUrl = value[2];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Drawer( child:
+
+    return firstName == null
+    ? Text('Loading')
+    : Drawer( child:
       Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -27,7 +67,7 @@ class SideBarMenu extends StatelessWidget {
               ),
               ListTile(
                 title: Text(
-                  "Harry Wilson",
+                  firstName,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30, fontWeight:
@@ -35,18 +75,21 @@ class SideBarMenu extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  "President of Limitless Minds",
+                  tagLine,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w200
                   ),
                 ),
                 leading: CircleAvatar(
-                  child: Icon(
-                    Icons.perm_identity,
-                    color: Colors.white,
-                  ),
+                  child:
+                    avatarUrl.length > 3
+                        ? NetworkImage("$avatarUrl")
+                        : Icon(
+                          Icons.perm_identity,
+                          color: Colors.white,
+                        ),
                   radius: 40,
                 ),
               ),
@@ -94,10 +137,19 @@ class SideBarMenu extends StatelessWidget {
               onTap: () {
               }
           ),
+              MenuItem(
+                  icon: Icons.logout,
+                  title: "Logout",
+                  onTap: () {
+                    signOut(context);
+                  }
+              ),
           ]
          )
         ),
 
     );
   }
+
+
 }

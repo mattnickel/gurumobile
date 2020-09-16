@@ -21,7 +21,7 @@ class Gurus extends StatelessWidget {
 								margin: const EdgeInsets.only(top: 10.0, bottom: 30.0),
 								child:
 								TabBar(
-									indicatorColor: Colors.redAccent,
+									indicatorColor: Color(0xFF00ebcc),
 									indicatorSize: TabBarIndicatorSize.label,
 									unselectedLabelColor: Colors.black26,
 									isScrollable: true,
