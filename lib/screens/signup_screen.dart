@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/services/api_login.dart';
-
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'login_screen.dart';
 
 
@@ -17,11 +17,11 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final GlobalKey<FormBuilderState> _formBKey = GlobalKey<FormBuilderState>();
   SharedPreferences prefs;
   Image backgroundImage;
   bool _isLoading = false;
-  bool _isEnabled = false;
-
+  bool _isEnabled;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -30,23 +30,24 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void initState() {
     super.initState();
-
+    _isEnabled = false;
     // Start listening to changes.
-    emailController.addListener( _enableSignin);
+    emailController.addListener(_enableSignin);
     passwordController.addListener( _enableSignin);
     firstNameController.addListener( _enableSignin);
   }
-
   _enableSignin() {
-      setState(() {
-        _isEnabled = true;
-      });
-   }
+    setState(() {
+      _isEnabled = true;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
     return Scaffold(
+
       resizeToAvoidBottomInset: false,
       body: Container(
           width: MediaQuery.of(context).size.width,
@@ -76,7 +77,7 @@ class _SignupPageState extends State<SignupPage> {
             )) : ListView(
           children: <Widget>[
             headerSection(),
-            textSection(),
+            formSection(),
             buttonSection(),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -112,11 +113,10 @@ class _SignupPageState extends State<SignupPage> {
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 5.0),
       child: RaisedButton(
-        onPressed:  emailController.text == "" || passwordController.text == "" || firstNameController.text == ""? null : () {
-          setState(() {
-            _isLoading = true;
-          });
-          signUp(emailController.text, passwordController.text, firstNameController.text, context);
+        onPressed: emailController.text == "" || passwordController.text == "" || firstNameController.text == "" ? null : () {
+          if (_formBKey.currentState.validate()) {
+            signUp(emailController.text, passwordController.text, firstNameController.text, context);
+          };
         },
         elevation: 0.2,
         color: Color(0xff00eebc),
@@ -139,114 +139,106 @@ class _SignupPageState extends State<SignupPage> {
   }
 
 
-  Container textSection() {
+  Container formSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
-      child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                child: TextFormField(
-                  controller: firstNameController,
-                  validator: (value){
-                    if(value.isEmpty){
-                    return 'First Name cannot be empty';
-                    }
-                    return null;
-                  },
-                  cursorColor: Colors.black54,
-                  style: TextStyle(color: Colors.black54),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-                    prefixIcon: Icon(Icons.person_rounded, color: Colors.black54),
-                    filled:true,
-                    fillColor: Colors.white,
-                    focusColor: Colors.white,
-                    hintText: "First Name",
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(00000000)),
+      child: FormBuilder(
+        key: _formBKey,
+        child: Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  child: FormBuilderTextField(
+                    keyboardType: TextInputType.text,
+                    maxLines:1,
+                    attribute:"firstName",
+                    controller: firstNameController,
+                    validators: [FormBuilderValidators.required(),FormBuilderValidators.maxLength(25) ],
+                    cursorColor: Colors.black54,
+                    style: TextStyle(color: Colors.black54),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+                      prefixIcon: Icon(Icons.person_rounded, color: Colors.black54),
+                      filled:true,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hintText: "First Name",
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(00000000)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(0xff00eebc)),
+                      ),
+                      hintStyle: TextStyle(color: Colors.black54),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(0xff00eebc)),
-                    ),
-                    hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 20.0),
-              Container(
-                alignment: Alignment.center,
-                child: TextFormField(
-                  controller: emailController,
-                  validator: (value){
-                    if(value.isEmpty){
-                      return 'Email cannot be empty';
-                    }
-                    return null;
-                  },
-                  cursorColor: Colors.black54,
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.black54),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-                    prefixIcon: Icon(Icons.email, color: Colors.black54),
-                    filled:true,
-                    fillColor: Colors.white,
-                    focusColor: Colors.white,
-                    hintText: "Email",
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(00000000)),
+                SizedBox(height: 20.0),
+                Container(
+                  alignment: Alignment.center,
+                  child: FormBuilderTextField(
+                    attribute:"email",
+                    controller: emailController,
+                    validators: [FormBuilderValidators.email(),FormBuilderValidators.required()],
+                    cursorColor: Colors.black54,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color: Colors.black54),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+                      prefixIcon: Icon(Icons.email, color: Colors.black54),
+                      filled:true,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hintText: "Email",
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(00000000)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(0xff00eebc)),
+                      ),
+                      hintStyle: TextStyle(color: Colors.black54),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(0xff00eebc)),
-                    ),
-                    hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-              ),
-              SizedBox(height: 20.0),
-              Container(
-                child: TextFormField(
-                  controller: passwordController,
-                  validator: (value){
-                    if(value.isEmpty){
-                      return 'Password cannot be empty';
-                    }
-                    return null;
-                  },
-                  cursorColor: Colors.black54,
-                  obscureText: true,
-                  style: TextStyle(color: Colors.black54),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-                    prefixIcon: Icon(Icons.lock, color: Colors.black54),
-                    filled:true,
-                    fillColor: Colors.white,
-                    focusColor: Colors.white,
-                    hintText: "Password",
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(00000000)),
+                SizedBox(height: 20.0),
+                Container(
+                  child: FormBuilderTextField(
+                    attribute:"password",
+                    controller: passwordController,
+                    validators:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
+                    cursorColor: Colors.black54,
+                    obscureText: true,
+                    style: TextStyle(color: Colors.black54),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+                      prefixIcon: Icon(Icons.lock, color: Colors.black54),
+                      filled:true,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hintText: "Password",
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(00000000)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        borderSide: BorderSide(color: Color(0xff00eebc)),
+                      ),
+                      hintStyle: TextStyle(color: Colors.black54),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(0xff00eebc)),
-                    ),
-                    hintStyle: TextStyle(color: Colors.black54),
                   ),
                 ),
-              ),
-
-            ],
-          ),
+              ],
+            ),
+      ),
     );
   }
 

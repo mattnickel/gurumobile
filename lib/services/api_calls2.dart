@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +7,7 @@ import 'dart:async';
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
+import 'package:sidebar_animation/screens/login_screen.dart';
 import '../models/video_model.dart';
 import 'dart:io';
 
@@ -16,7 +19,7 @@ List<Video> parseVideos(String responseBody) {
   return parsedList;
 }
 
-Future<List<Video>> fetchVideos(http.Client client, category) async {
+Future<List<Video>> fetchVideos(http.Client client, category, context) async {
 
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
@@ -43,7 +46,9 @@ Future<List<Video>> fetchVideos(http.Client client, category) async {
       print("errors fetching: $category");
       if (response.statusCode != null) {
         print(response.statusCode);
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginPage("")));
       } else {
+
         print("no response");
         return null;
       }

@@ -34,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
 
     // Start listening to changes.
-    emailController.addListener( _enableSignin);
-    passwordController.addListener(  _enableSignin);
+    emailController.addListener(_enableSignin);
+    passwordController.addListener(_enableSignin);
   }
 
   _enableSignin() {

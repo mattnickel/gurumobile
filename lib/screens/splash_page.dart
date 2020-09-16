@@ -39,14 +39,14 @@ class SplashPageState extends State<SplashPage> {
         onDoneLoading);
   }
   checkLoginStatus() async {
-    print("here");
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     print(token);
     if(token != null) {
-      print("logged in");
-      await updateVideos(http.Client(), "For Today");
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
+        await updateVideos(http.Client(), "For Today");
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (BuildContext context) => FrameworkPage()), (
+            Route<dynamic> route) => false);
     }else {
       print("logged out");
       Navigator.of(context).pushAndRemoveUntil(

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +38,7 @@ Future signIn(String email, String pass, context, prefs) async {
       String tag_line = jsonResponse["data"]["description"] as String;
       String avatar_url = jsonResponse["data"]["avatar"] as String;
 
+      await storage.deleteAll();
       await storage.write(key:"token", value: auth_token);
       await storage.write(key:"email", value: user_email);
       prefs.setString("first_name", first_name);

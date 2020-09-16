@@ -7,7 +7,6 @@ import 'package:sidebar_animation/models/video_model.dart';
 import 'package:sidebar_animation/services/api_calls2.dart';
 
 import 'big_tiles.dart';
-import 'video_tiles.dart';
 
 class BigRow extends StatelessWidget {
 
@@ -21,7 +20,7 @@ class BigRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return
       FutureBuilder<List<Video>>(
-          future: fetchVideos(http.Client(), category),
+          future: fetchVideos(http.Client(), category, context),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
