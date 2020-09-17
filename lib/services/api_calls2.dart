@@ -12,6 +12,7 @@ import '../models/video_model.dart';
 import 'dart:io';
 
 String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
+String local_url = 'https:localhost:3000/api/v1/videos';
 
 List<Video> parseVideos(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -23,9 +24,7 @@ Future<List<Video>> fetchVideos(http.Client client, category, context) async {
 
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-  String params = "access_token=$token";
-  String build_url = url+"?"+params;
-  print(build_url);
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
 
@@ -36,7 +35,7 @@ Future<List<Video>> fetchVideos(http.Client client, category, context) async {
   } else {
     print("Fetching from api: $category");
     final response = await client.get(
-        build_url,
+        local_url, headers: tokenHeaders,
         );
 
     if (response.statusCode == 200) {
