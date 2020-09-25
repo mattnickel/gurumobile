@@ -11,6 +11,7 @@ class BigTiles extends StatelessWidget {
   int index;
 
   BigTiles({ this.videos, this.index});
+  bool hasViewed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class BigTiles extends StatelessWidget {
           Container(
               margin: const EdgeInsets.all(10.0),
               height: 550,
-              width: 375,
+              width: MediaQuery.of(context).size.width - 40,
               child: Stack(
                 children: <Widget>[
                   ClipRRect(
@@ -40,11 +41,22 @@ class BigTiles extends StatelessWidget {
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
+                  Positioned(
+                      top: 20,
+                      right:20,
+                      child:
+                      hasViewed
+                          ? Icon(
+                        Icons.check_box,
+                        size: 35.0,
+                        color: Colors.white38,
+                      ) : SizedBox()
+                  ),
                   Center(
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FlickVideoScreen(videos[index].file);
+                          return FlickVideoScreen(videos[index].file, videos[index].id);
                         }));
                       },
                       elevation: 2.0,
@@ -65,7 +77,7 @@ class BigTiles extends StatelessWidget {
                         videos[index].title,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 22,
                             color: Colors.white)
                         ),
                   ),

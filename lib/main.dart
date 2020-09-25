@@ -14,7 +14,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final storage = FlutterSecureStorage();
+
 
   @override
 

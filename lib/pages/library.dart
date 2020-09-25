@@ -6,19 +6,18 @@ import '../row_widgets/video_row.dart';
 class Library extends StatelessWidget{
 	String category;
 	List<String> videos = <String>[];
-	List<String> courses = <String>['course1.png', 'course2.png', 'course3.png'];
+	List<String> trainingModules = <String>[];
 
 	@override
 
 	Widget build(BuildContext context){
 			return
 		 		ListView(
-						padding: const EdgeInsets.only(top:40),
+					padding: const EdgeInsets.only(top:40),
 				  children:<Widget>[
 				  	VideoRow(category:"Trending Videos", videos:videos),
-				  	CourseRow(category: "Recommended Courses", courses:courses),
+				  	CourseRow(category: "Recommended Courses", trainingModules:trainingModules),
 				  	VideoRow(category:"Recommended Videos", videos:videos),
-
 				  ],
 				);
 	}

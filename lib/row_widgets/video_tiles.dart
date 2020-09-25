@@ -11,7 +11,7 @@ class VideoTiles extends StatelessWidget {
   int index;
 
   VideoTiles({ this.videos, this.index});
-
+  bool hasViewed = true;
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -26,7 +26,7 @@ class VideoTiles extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                     child:
                     CachedNetworkImage(
-                      imageUrl: '${videos[index].image}',
+                      imageUrl: videos[index].image,
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -40,11 +40,26 @@ class VideoTiles extends StatelessWidget {
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
+                  Positioned(
+                    top: 10,
+                    right:10,
+                    child:
+                        hasViewed
+                    ? Icon(
+                      Icons.check_box,
+                      size: 25.0,
+                      color: Colors.white38,
+                        ) : Icon(
+                      Icons.circle,
+                      size: 55.0,
+                      color: Colors.white,
+                    )
+                  ),
                   Center(
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FlickVideoScreen(videos[index].file);
+                          return FlickVideoScreen(videos[index].file, videos[index].id);
                         }));
                       },
                       elevation: 2.0,

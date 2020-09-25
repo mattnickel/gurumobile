@@ -19,7 +19,7 @@ class BigRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-      FutureBuilder<List<Video>>(
+      FutureBuilder<List<dynamic>>(
           future: fetchVideos(http.Client(), category, context),
           builder: (context, snapshot) {
 

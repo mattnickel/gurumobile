@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 
 
@@ -13,14 +12,19 @@ class VideoRow extends StatelessWidget {
   String category;
   List<String> videos;
   int index;
+  bool notUpdated = true;
+
 
   VideoRow({ this.category, this.videos, this.index});
 
   @override
   Widget build(BuildContext context) {
     return
-      FutureBuilder<List<Video>>(
-          future: checkThenUpdateVideos(http.Client(), category),
+    FutureBuilder<List<Video>>(
+          future: notUpdated
+              ? updateVideos(http.Client(), category)
+              : cachedVideos(category),
+
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
@@ -66,12 +70,12 @@ class VideoRow extends StatelessWidget {
                       )
                     ]
                   )
-                  : Center(child: Text("Woah"));
+                  : Center(child: Text("No videos found"));
 
             }
             else
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
           }
-      );
+    );
   }
 }
