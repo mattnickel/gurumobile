@@ -12,7 +12,7 @@ class VideoRow extends StatelessWidget {
   String category;
   List<String> videos;
   int index;
-  bool notUpdated = true;
+  bool notUpdated = false;
 
 
   VideoRow({ this.category, this.videos, this.index});
