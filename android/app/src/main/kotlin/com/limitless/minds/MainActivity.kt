@@ -1,4 +1,4 @@
-package com.example.gurumobile
+package com.limitless.minds
 
 import io.flutter.embedding.android.FlutterActivity
 

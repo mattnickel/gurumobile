@@ -102,5 +102,5 @@ Future signOut(context) async {
   );
   prefs?.clear();
   await storage.deleteAll();
-  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MyApp()), (Route<dynamic> route) => false);
+  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainApp()), (Route<dynamic> route) => false);
 }

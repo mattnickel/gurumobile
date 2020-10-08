@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sidebar_animation/models/training_module_course_model.dart';
 import 'package:sidebar_animation/services/api_calls2.dart';
 import 'package:http/http.dart' as http;
@@ -16,10 +17,10 @@ class CourseRow extends StatelessWidget {
 
     return
       FutureBuilder<List<TrainingModule>>(
-          future: updateTrainingModules(http.Client(), category),
+          future: fetchCourses(category),
           builder: (context, snapshot) {
 
-            if(snapshot.connectionState == ConnectionState.done) {
+            if(snapshot.connectionState == ConnectionState.done)  {
 
               if(snapshot.hasError)print(snapshot.error);
 
@@ -65,7 +66,65 @@ class CourseRow extends StatelessWidget {
                   : Center(child: Text("No courses available"));
             }
             else
-              return Center(child: CircularProgressIndicator());
+              return
+                Column(
+                    children: <Widget>[
+                      Row(children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 20.0, bottom:10.0),
+                          child: Text(
+                              category,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              )
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Color(0xFF00ebcc),
+                          ),
+                        ),
+                      ],
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(left: 10.0, bottom:30.0),
+                          height: 380,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              Wrap(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.all(10.0),
+                                      height: 365,
+                                      width: 300,
+                                        child: Stack(
+                                          children: <Widget>[
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(18.0),
+                                              child: Shimmer.fromColors(
+                                                baseColor: Colors.black54,
+                                                highlightColor: Colors.black45,
+                                                child: Container(
+                                                        color: Colors.black54
+                                                )
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      )
+
+                                    ]
+                              )
+                            ]
+
+                          )
+                      ),
+                    ]
+                );
           }
       );
   }

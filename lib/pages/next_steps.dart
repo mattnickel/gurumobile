@@ -24,7 +24,6 @@ class _NextStepsState extends State<NextSteps>{
   }
 
   String category;
-  List<String> videos = <String>[];
   List<String> gurus = <String>['guru1.png', 'guru2.png', 'guru3.png'];
 
 
@@ -37,9 +36,9 @@ class _NextStepsState extends State<NextSteps>{
   Widget build(BuildContext context){
     return ListView(
       children:<Widget>[
-        BigRow(category:"For $firstName Today", videos:videos),
+        BigRow(category:"For $firstName Today"),
         // GuruRow(category: "Recommended Gurus", gurus:gurus),
-        VideoRow(category:"Continue Watching", videos:videos),
+        VideoRow(category:"Continue Watching"),
       ],
       );
   }

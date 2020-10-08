@@ -21,29 +21,41 @@ class SplashPage extends StatefulWidget {
 
 class SplashPageState extends State<SplashPage> {
   Image splashImage;
+  String firstName;
+  bool skipLogin;
 
   @override
-  void initState() {
+  Future<void> initState() {
     super.initState();
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
-    loadData();
+    readName().then((value) {
+      setState(() {
+        firstName = value;
+      });
+    });
+    checkLoginStatus();
+
+  }
+  Future <String> readName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("first_name");
   }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
-  Future<Timer> loadData() async {
-    return Timer(
-        Duration(seconds: 3),
-        onDoneLoading);
-  }
+
   checkLoginStatus() async {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     print(token);
     if(token != null) {
-        await updateVideos(http.Client(), "For Today");
+      await updateVideos(http.Client(), "For $firstName Today");
+      await updateVideos(http.Client(), "Continue Watching");
+      await updateVideos(http.Client(), "Trending Videos");
+      await updateVideos(http.Client(), "Recommended Videos");
+      await updateCourses(http.Client(), "Recommended Courses");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
             builder: (BuildContext context) => FrameworkPage()), (
             Route<dynamic> route) => false);
@@ -55,9 +67,7 @@ class SplashPageState extends State<SplashPage> {
     }
   }
 
-  onDoneLoading() async {
-    checkLoginStatus();
-  }
+
 
   @override
   Widget build(BuildContext context) {

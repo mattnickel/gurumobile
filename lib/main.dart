@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sidebar_animation/framework_page.dart';
+import 'package:sidebar_animation/screens/splash_app.dart';
 import './screens/splash_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
-
-
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(MainApp());
 
 }
 
-class MyApp extends StatelessWidget {
+class MainApp extends StatelessWidget {
 
 
   @override
@@ -23,13 +21,13 @@ class MyApp extends StatelessWidget {
 
       MaterialApp(
 
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          primaryColor: Colors.white,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            primaryColor: Colors.white,
             splashColor: Color(0xFF00ebcc),
-        ),
-        home: SplashPage()
-    );
+          ),
+          home: SplashPage()
+      );
   }
 }

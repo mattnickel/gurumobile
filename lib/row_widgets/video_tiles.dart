@@ -2,16 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sidebar_animation/media_widgets/flick_manager.dart';
+import 'package:sidebar_animation/models/video_model.dart';
 
 
 
 class VideoTiles extends StatelessWidget {
 
-  List<dynamic> videos;
+  List<Video> videos;
   int index;
 
   VideoTiles({ this.videos, this.index});
-  bool hasViewed = true;
+  bool hasViewed = false;
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -39,21 +40,6 @@ class VideoTiles extends StatelessWidget {
                       placeholder: (context, url) => CircularProgressIndicator(),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    right:10,
-                    child:
-                        hasViewed
-                    ? Icon(
-                      Icons.check_box,
-                      size: 25.0,
-                      color: Colors.white38,
-                        ) : Icon(
-                      Icons.circle,
-                      size: 55.0,
-                      color: Colors.white,
-                    )
                   ),
                   Center(
                     child: RawMaterialButton(
