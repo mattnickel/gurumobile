@@ -9,6 +9,8 @@ import '../framework_page.dart';
 import '../services/api_calls2.dart';
 import '../featured.dart';
 import 'login_screen.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 
 class SplashPage extends StatefulWidget {
@@ -27,6 +29,10 @@ class SplashPageState extends State<SplashPage> {
   @override
   Future<void> initState() {
     super.initState();
+
+    Future<String> loadAsset() async {
+      return await rootBundle.loadString('assets/my_text.txt');
+    }
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
     readName().then((value) {
       setState(() {
@@ -36,6 +42,7 @@ class SplashPageState extends State<SplashPage> {
     checkLoginStatus();
 
   }
+
   Future <String> readName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("first_name");
@@ -50,7 +57,7 @@ class SplashPageState extends State<SplashPage> {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     print(token);
-    if(token != null && firstName != null ) {
+    if(token != null) {
       await updateVideos(http.Client(), "For $firstName Today");
       await updateVideos(http.Client(), "Continue Watching");
       await updateVideos(http.Client(), "Trending Videos");

@@ -77,6 +77,8 @@ flutter:
     - assets/videos/background.mp4
     - assets/fonts/druk_medium.otf
     - assets/images/adventure3.png
+    - assets/text/terms.txt
+    - assets/text/privacy.txt
 
 flutter_icons:
   android: "launcher_icon"
