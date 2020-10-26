@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sidebar_animation/media_widgets/playlist_manager.dart';
 import 'package:sidebar_animation/models/training_module_course_model.dart';
 import 'package:sidebar_animation/media_widgets/flick_manager.dart';
 import 'course_list_items.dart';
@@ -143,7 +144,7 @@ class CourseList extends StatelessWidget {
                                           backgroundColor: Color(0xFF00ebcc),
                                           onPressed: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (_) {
-                                              return FlickVideoScreen(module.videos[next].file, module.videos[next].id);
+                                              return PlaylistManager(module.videos, 0);
                                             }));
                                           },
                                         )

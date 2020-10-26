@@ -71,19 +71,20 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
               top:40,
               right:10,
               child: IconButton(
-                icon:Icon(Icons.close),
-                color: Colors.white,
-                onPressed: () {
-                  setState(() {
+                  icon:Icon(Icons.close),
+                  color: Colors.white,
+                  onPressed: () {
+                    setState(() {
 
-                    widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
-                  });
-                  markedViewed(widget.videoId, widget.positionValue);
-                  Navigator.of(context).pop(null);
-                  print(widget.positionValue);
-                }
+                      widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
+                    });
+                    markedViewed(widget.videoId, widget.positionValue);
+                    Navigator.of(context).pop(null);
+                    print(widget.positionValue);
+                  }
               ),
             ),
+
       ]
       ),
     );
