@@ -28,11 +28,9 @@ Future signIn(String email, String pass, context, prefs) async {
       body: {"email": email, "password": pass},
     );
     var jsonResponse = json.decode(response.body);
-    print(jsonResponse);
     if(response.statusCode == 200) {
 
       print("success");
-      print(jsonResponse["data"]);
       String auth_token = jsonResponse["data"]["authentication_token"] as String;
       String user_email = jsonResponse["data"]["email"] as String;
       String first_name = jsonResponse["data"]["first_name"] as String;

@@ -23,10 +23,6 @@ class _NextStepsState extends State<NextSteps>{
     });
   }
 
-  String category;
-  List<String> gurus = <String>['guru1.png', 'guru2.png', 'guru3.png'];
-
-
   Future <String> readName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("first_name");

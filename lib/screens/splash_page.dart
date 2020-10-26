@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sidebar_animation/pages/home.dart';
+import 'package:sidebar_animation/screens/start_screen.dart';
 import '../framework_page.dart';
 import '../services/api_calls2.dart';
 import '../featured.dart';
@@ -49,7 +50,6 @@ class SplashPageState extends State<SplashPage> {
   checkLoginStatus() async {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
-    print(token);
     if(token != null && firstName != null ) {
       await updateVideos(http.Client(), "For $firstName Today");
       await updateVideos(http.Client(), "Continue Watching");
@@ -60,9 +60,8 @@ class SplashPageState extends State<SplashPage> {
             builder: (BuildContext context) => FrameworkPage()), (
             Route<dynamic> route) => false);
     }else {
-      print("logged out");
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage("")), (
+          MaterialPageRoute(builder: (BuildContext context) => StartScreen()), (
           Route<dynamic> route) => false);
     }
   }

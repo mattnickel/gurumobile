@@ -74,6 +74,9 @@ flutter:
     - assets/images/post1.png
     - assets/images/post2.png
     - assets/images/post3.png
+    - assets/images/content.png
+    - assets/images/consistent.png
+    - assets/images/connect.png
     - assets/videos/background.mp4
     - assets/fonts/druk_medium.otf
     - assets/images/adventure3.png
@@ -97,10 +100,10 @@ flutter_icons:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+     - family: Druk
+       fonts:
+         - asset: assets/fonts/druk_medium.otf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
