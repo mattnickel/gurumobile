@@ -43,6 +43,7 @@ Future signIn(String email, String pass, context, prefs) async {
       prefs.setString("first_name", first_name);
       prefs.setString("tag_line", tag_line);
       prefs.setString("avatar_url", avatar_url);
+      print(prefs.getString(first_name));
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
     }else{
       print("nope");

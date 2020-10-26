@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
             primaryColor: Colors.white,
             splashColor: Color(0xFF00ebcc),
           ),
-          home: StartScreen()
+          home: SplashPage()
       );
   }
 }

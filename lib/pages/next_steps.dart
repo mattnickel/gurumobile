@@ -13,6 +13,13 @@ class NextSteps extends StatefulWidget {
 
 class _NextStepsState extends State<NextSteps>{
   String firstName;
+
+  Future <String> readName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('first_name');
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -23,10 +30,7 @@ class _NextStepsState extends State<NextSteps>{
     });
   }
 
-  Future <String> readName() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("first_name");
-  }
+
 
   @override
   Widget build(BuildContext context){
