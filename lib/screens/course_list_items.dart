@@ -75,7 +75,7 @@ class CourseListItems extends StatelessWidget {
                        ),
                        _connectingDots(),
                        Padding(
-                         padding: const EdgeInsets.only(left:20.0, top:8.0, bottom:20,),
+                         padding: const EdgeInsets.only(left:20.0, top:8.0),
 
                          child: Container(
                            width: MediaQuery.of(context).size.width * 0.6,
@@ -89,6 +89,7 @@ class CourseListItems extends StatelessWidget {
                        ),
                      ],
                    ),
+
                   ],
                 ),
         )
