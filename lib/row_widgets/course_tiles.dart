@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:sidebar_animation/screens/course_list.dart';
+import 'package:sidebar_animation/row_widgets/course_list.dart';
 
 class CourseTiles extends StatelessWidget {
 

@@ -35,5 +35,20 @@ Future<String>markedViewed(videoId, seconds) async {
   return null;
 
 }
+Future<String>saveGoals(goals) async {
 
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+
+  final msg = jsonEncode({"goals": goals});
+  final response = await http.post(
+    "$base_url/goals",
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print (response.body);
+  return null;
+
+}
 
