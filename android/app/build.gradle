@@ -1,4 +1,4 @@
-android.buildTypes.release.ndk.debugSymbolLevel = { SYMBOL_TABLE | FULL }
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -14,15 +14,16 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2'
+    flutterVersionCode = '6'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = 'Beta 1.01'
+    flutterVersionName = 'Beta 1.06'
 }
 
 apply plugin: 'com.android.application'
+apply plugin: "com.google.gms.google-services"
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -33,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -49,9 +50,9 @@ android {
 
     defaultConfig {
         applicationId "com.limitless.minds"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 2
+        versionCode 6
         versionName flutterVersionName
     }
     signingConfigs {
@@ -64,8 +65,6 @@ android {
     }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
         }
     }
@@ -77,5 +76,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
 }
+
 

@@ -6,10 +6,9 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:sidebar_animation/framework_page.dart';
-import 'package:sidebar_animation/models/logged_in_user_model.dart';
-import 'package:sidebar_animation/screens/login_screen.dart';
-import 'package:sidebar_animation/screens/signup_screen.dart';
+import '../framework_page.dart';
+import '../screens/login_screen.dart';
+import '../screens/signup_screen.dart';
 
 import '../main.dart';
 

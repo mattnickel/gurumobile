@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "697425064363",
+    "firebase_url": "https://limitlessmobile-32688.firebaseio.com",
+    "project_id": "limitlessmobile-32688",
+    "storage_bucket": "limitlessmobile-32688.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697425064363:android:8752caa4e925c6101e62ee",
+        "android_client_info": {
+          "package_name": "com.limitless.minds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697425064363-egle465rotnt7id2lh3ad2late5vobe7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCype_EL3j0gEEVhiAu5h1ES81n7LEemb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697425064363-egle465rotnt7id2lh3ad2late5vobe7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697425064363-qo30ak6gjo560d8fs6qg7vhog02nl3a4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.limitless.gurumobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697425064363:android:2c2ad2b6d20bdfa21e62ee",
+        "android_client_info": {
+          "package_name": "com.limitless.minds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697425064363-egle465rotnt7id2lh3ad2late5vobe7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCype_EL3j0gEEVhiAu5h1ES81n7LEemb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697425064363-egle465rotnt7id2lh3ad2late5vobe7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697425064363-qo30ak6gjo560d8fs6qg7vhog02nl3a4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.limitless.gurumobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

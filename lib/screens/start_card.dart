@@ -62,7 +62,7 @@ class StartCard extends StatelessWidget {
                   description.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Colors.white),
                   ),
             ),

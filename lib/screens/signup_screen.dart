@@ -384,12 +384,13 @@ Container passwordInfoSection(){
   }
 
   Stack headerSection() {
+    double topHeight =  MediaQuery.of(context).size.height/15;
     return Stack(
       children: [
         Container(
           // margin: EdgeInsets.only(top: 150.0),
-          padding: EdgeInsets.only(top:120, left: 20.0),
-         height: 200,
+          padding: EdgeInsets.only(top:topHeight, left: 20.0),
+         height: 120,
          width: double.infinity,
          child: Text("Get Started!",
              style: TextStyle(

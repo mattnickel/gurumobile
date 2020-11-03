@@ -238,15 +238,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Container headerSection() {
     return Container(
-      margin: EdgeInsets.only(top: 200.0),
+      margin: EdgeInsets.only(top: 120.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-//      child: Text("Sign In",
-//          style: TextStyle(
-//              color: Color(0xff606060),
-//              fontSize: 30.0,
-//              fontWeight: FontWeight.bold
-//          )
-//      ),
+     child: Text("Welcome back!",
+         style: TextStyle(
+             color: Color(0xff606060),
+             fontSize: 30.0,
+             fontWeight: FontWeight.bold
+         )
+     ),
     );
   }
 }

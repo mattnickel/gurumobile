@@ -81,7 +81,7 @@ class _PlaylistManagerState extends State<PlaylistManager> {
                         widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
                       });
                       markedViewed(widget.videoList[widget._next].id, widget.positionValue);
-                      Navigator.of(context).pop(null);
+                      Navigator.of(context).pop();
 
                     }
                 ),
@@ -121,7 +121,7 @@ class _PlaylistManagerState extends State<PlaylistManager> {
                         setState(() {
                           widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
                         });
-                        Navigator.of(context).pop(null);
+                        Navigator.of(context).pop();
                         markedViewed(widget.videoList[widget._next].id, widget.positionValue);
                       }
                     )

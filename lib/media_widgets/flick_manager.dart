@@ -79,7 +79,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                       widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
                     });
                     markedViewed(widget.videoId, widget.positionValue);
-                    Navigator.of(context).pop(null);
+                    Navigator.of(context).pop();
                     print(widget.positionValue);
                   }
               ),

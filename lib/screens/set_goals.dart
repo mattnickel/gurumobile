@@ -2,19 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sidebar_animation/pages/home.dart';
-import 'package:sidebar_animation/screens/signup_screen.dart';
-import 'package:sidebar_animation/screens/splash_page.dart';
-import 'package:sidebar_animation/screens/start_card.dart';
-import 'package:sidebar_animation/services/api_posts.dart';
-import '../framework_page.dart';
-import '../services/api_calls2.dart';
-import '../featured.dart';
-import 'login_screen.dart';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:notification_permissions/notification_permissions.dart';
+import 'package:sidebar_animation/screens/signup_screen.dart';
+import 'package:sidebar_animation/services/api_posts.dart';
+import '../services/notifications_manager.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class SetGoals extends StatefulWidget {
@@ -24,18 +18,49 @@ class SetGoals extends StatefulWidget {
 }
 
 class _SetGoalsState extends State<SetGoals> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  Future<String> permissionStatusFuture;
+  var permGranted = "granted";
+  var permDenied = "denied";
+  var permUnknown = "unknown";
+  var permProvisional = "provisional";
+
+  // PushNotificationsManager push;
+
+  @override
+
+
 
   List<String> goals =[
     "Practicing gratitude",
     "Reducing Negativity",
-    "staying neutral",
-    "overcoming adversity",
-    "making better choices",
-    "setting goals",
+    "Staying neutral",
+    "Overcoming adversity",
+    "Making better choices",
+    "Setting goals",
     "visualizing success",
 
   ];
+
+  Future<String> getCheckNotificationPermStatus() {
+    return NotificationPermissions.getNotificationPermissionStatus()
+        .then((status) {
+      switch (status) {
+        case PermissionStatus.denied:
+          return permDenied;
+        case PermissionStatus.granted:
+          return permGranted;
+        case PermissionStatus.unknown:
+          return permUnknown;
+        case PermissionStatus.provisional:
+          return permProvisional;
+        default:
+          return null;
+      }
+    });
+  }
   Widget build(BuildContext context) {
+    double tenPercentHeight = MediaQuery.of(context).size.height/20;
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -55,7 +80,7 @@ class _SetGoalsState extends State<SetGoals> {
             ),
           ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 70.0, left:22.0, right:22.0),
+          padding: EdgeInsets.only(top: tenPercentHeight, left:22.0, right:22.0),
           child: Theme(
             data: ThemeData(canvasColor:Colors.transparent, shadowColor:Colors.white.withOpacity(0.2)),
             child: ReorderableListView(
@@ -141,10 +166,11 @@ class _SetGoalsState extends State<SetGoals> {
 
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
                 onPressed: (){
-                  saveGoals(goals);
+                  // saveGoals(goals);
+                  _firebaseMessaging.requestNotificationPermissions();
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => FrameworkPage()),
+                    MaterialPageRoute(builder: (context) => SignupPage()),
                         (Route<dynamic> route) => false,
                   );
                 },
