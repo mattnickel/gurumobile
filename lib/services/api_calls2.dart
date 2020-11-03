@@ -51,7 +51,9 @@ Future<List<Video>> fetchVideos(category) async {
     var cachedVideos = file.readAsStringSync();
     return parseVideos(cachedVideos);
   } else {
+    print("update now");
     updateVideos(client, category);
+
   }
 }
 Future<List<TrainingModule>> fetchCourses(category) async {

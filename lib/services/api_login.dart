@@ -27,6 +27,7 @@ Future signIn(String email, String pass, context, prefs) async {
       body: {"email": email, "password": pass},
     );
     var jsonResponse = json.decode(response.body);
+    print(jsonResponse);
     if(response.statusCode == 200) {
 
       print("success");
