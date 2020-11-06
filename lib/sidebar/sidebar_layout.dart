@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_login.dart';
 import 'menu_item.dart';
+import 'notifications.dart';
 
 
 class SideBarMenu extends StatefulWidget {
@@ -54,7 +55,7 @@ class _SideBarMenuState extends State<SideBarMenu>{
           ),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child:
-          Column(
+          ListView(
             children:<Widget>[
               Row(
                 children:<Widget>[
@@ -102,7 +103,11 @@ class _SideBarMenuState extends State<SideBarMenu>{
             MenuItem(
               icon: Icons.notifications,
               title: "Notifications",
-              onTap: () {
+              onTap: () {print("here");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Notifications()),
+              );
               }
             ),
             MenuItem(

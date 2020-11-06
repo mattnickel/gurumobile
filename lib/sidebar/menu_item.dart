@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'notifications.dart';
+
 class MenuItem extends StatelessWidget {
 
   final IconData icon;
@@ -14,27 +16,31 @@ class MenuItem extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
-          children: <Widget>[
-            Icon(
-                icon,
-                color: Colors.white,
-                size:24,
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: 22,
-                color: Colors.white,
+        child:
+        FlatButton(
+          child: Row(
+            children: <Widget>[
+              Icon(
+                  icon,
+                  color: Colors.white,
+                  size:24,
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 22,
+                  color: Colors.white,
+                )
               )
-            )
-          ],
-        )
+            ],
+        ),
+
       ),
+    ),
     );
   }
 }

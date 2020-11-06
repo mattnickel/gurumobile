@@ -53,9 +53,9 @@ class SplashPageState extends State<SplashPage> {
     if(token != null && firstName != null ) {
       await updateVideos(http.Client(), "For $firstName Today");
       await updateVideos(http.Client(), "Continue Watching");
-      await updateVideos(http.Client(), "Trending Videos");
-      await updateVideos(http.Client(), "Recommended Videos");
-      await updateCourses(http.Client(), "Recommended Courses");
+      // await updateVideos(http.Client(), "Trending Videos");
+      // await updateVideos(http.Client(), "Recommended Videos");
+      // await updateCourses(http.Client(), "Recommended Courses");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
             builder: (BuildContext context) => FrameworkPage()), (
             Route<dynamic> route) => false);

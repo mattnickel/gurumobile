@@ -1,28 +1,34 @@
-// import 'package:firebase_messaging/firebase_messaging.dart';
+
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rxdart/rxdart.dart';
+
+// final BehaviorSubject<ReminderNotification> didReceiveLocalNotificationSubject =
+// BehaviorSubject<ReminderNotification>();
 //
-// class PushNotificationsManager {
+// final BehaviorSubject<String> selectNotificationSubject =
+// BehaviorSubject<String>();
 //
-//   PushNotificationsManager._();
-//
-//   factory PushNotificationsManager() => _instance;
-//
-//   static final PushNotificationsManager _instance = PushNotificationsManager._();
-//
-//   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-//   bool _initialized = false;
-//
-//   Future<void> init() async {
-//     print("here");
-//     if (!_initialized) {
-//       // For iOS request permission first.
-//       _firebaseMessaging.requestNotificationPermissions();
-//       _firebaseMessaging.configure();
-//
-//       // For testing purposes print the Firebase Messaging token
-//       String token = await _firebaseMessaging.getToken();
-//       print("FirebaseMessaging token: $token");
-//
-//       _initialized = true;
-//     }
-//   }
+// Future<void> initNotifications(
+//     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+//   var initializationSettingsAndroid = AndroidInitializationSettings('lm_app_icon');
+//   var initializationSettingsIOS = IOSInitializationSettings(
+//       requestAlertPermission: false,
+//       requestBadgePermission: false,
+//       requestSoundPermission: false,
+//       onDidReceiveLocalNotification:
+//           (int id, String title, String body, String payload) async {
+//         didReceiveLocalNotificationSubject.add(ReminderNotification(
+//             id: id, title: title, body: body, payload: payload));
+//       });
+//   var initializationSettings = InitializationSettings(
+//       initializationSettingsAndroid, initializationSettingsIOS);
+//   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//       onSelectNotification: (String payload) async {
+//         if (payload != null) {
+//           debugPrint('notification payload: ' + payload);
+//         }
+//         selectNotificationSubject.add(payload);
+//       });
 // }

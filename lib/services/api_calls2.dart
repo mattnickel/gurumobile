@@ -1,14 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-// import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:sidebar_animation/models/training_module_course_model.dart';
-import 'package:sidebar_animation/screens/login_screen.dart';
 import '../models/video_model.dart';
 import 'dart:io';
 
@@ -39,10 +35,8 @@ Future<List<Video>> cachedVideos (category)async {
 }
 
 Future<List<Video>> fetchVideos(category) async {
-  String media_type = "videos";
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
 
@@ -52,8 +46,7 @@ Future<List<Video>> fetchVideos(category) async {
     return parseVideos(cachedVideos);
   } else {
     print("update now");
-    updateVideos(client, category);
-
+    return updateVideos(client, category);
   }
 }
 Future<List<TrainingModule>> fetchCourses(category) async {
@@ -63,9 +56,11 @@ Future<List<TrainingModule>> fetchCourses(category) async {
   if (file.existsSync()) {
     print("Fetching from cache: $category");
     var cachedCourses = file.readAsStringSync();
+
     return parseTrainingModules(cachedCourses);
   } else {
-    updateCourses(client, category);
+    print("update");
+    return updateCourses(client, category);
   }
 }
 
@@ -75,6 +70,7 @@ Future<List<Video>>updateVideos(http.Client client, category) async {
   print("update: $category");
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
+
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   final response = await client.get(
     "$base_url/videos", headers: tokenHeaders,

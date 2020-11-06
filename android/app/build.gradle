@@ -9,17 +9,17 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw new FileNotFoundException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '6'
+    flutterVersionCode = '8'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = 'Beta 1.06'
+    flutterVersionName = 'Beta 1.08'
 }
 
 apply plugin: 'com.android.application'
@@ -52,7 +52,7 @@ android {
         applicationId "com.limitless.minds"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
+        versionCode 8
         versionName flutterVersionName
     }
     signingConfigs {
