@@ -150,7 +150,7 @@ class CourseList extends StatelessWidget {
                                               backgroundColor: Color(0xFF00ebcc),
                                               onPressed: () {
                                                 Navigator.push(context, MaterialPageRoute(builder: (_) {
-                                                  return PlaylistManager(module.videos, 0);
+                                                  // return PlaylistManager(module.videos, 0);
                                                 }));
                                               },
                                             )

@@ -20,13 +20,17 @@ dependencies:
   flutter:
     sdk: flutter
   video_player: ^0.10.8+1
+#  video_player: ^1.0.0
   flick_video_player: ^0.1.1
   flutter_widgets: ^0.1.12
   flutter_secure_storage: ^3.3.1+1
   flutter_form_builder: 3.14.0-alpha.1
   json_annotation: 3.0.1
   flutter_launcher_icons: ^0.8.1
-  wakelock: ^0.1.1
+  wakelock: ^0.1.4+1
+  intl: ^0.16.1
+  datetime_picker_formfield: ^1.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,11 +43,12 @@ dependencies:
   flutter_cache_manager: ^1.4.1
   cached_network_image: ^2.2.0+1
   shimmer: ^1.1.1
-  shared_preferences: ^0.5.8
+  shared_preferences: ^0.5.12+4
   flutter_session: ^0.1.1
   notification_permissions: ^0.4.8
   flutter_local_notifications: ^3.0.1+2
   rxdart: ^0.24.1
+  path_provider: ^1.6.24
 #  firebase_core: ^0.5.0+1
 #  cloud_firestore: ^0.13.0+1
   firebase_messaging: ^6.0.9
@@ -67,15 +72,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/logo.png
     - assets/images/lmlogo.png
     - assets/images/guru1.png
     - assets/images/guru2.png
     - assets/images/guru3.png
     - assets/images/menu_background.png
-    - assets/images/course1.png
-    - assets/images/course2.png
-    - assets/images/course3.png
     - assets/images/post1.png
     - assets/images/post2.png
     - assets/images/post3.png

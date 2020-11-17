@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/row_widgets/big_row.dart';
+import 'package:sidebar_animation/row_widgets/guru_row.dart';
+import 'package:sidebar_animation/row_widgets/habits_row.dart';
 import '../row_widgets/video_row.dart';
 import 'dart:async';
 import 'dart:async' show Future;
@@ -36,6 +38,7 @@ class _NextStepsState extends State<NextSteps>{
   Widget build(BuildContext context){
     return ListView(
       children:<Widget>[
+        HabitsRow(category: "Daily Habits"),
         BigRow(category:"For $firstName Today"),
         // GuruRow(category: "Recommended Gurus", gurus:gurus),
         VideoRow(category:"Continue Watching"),
