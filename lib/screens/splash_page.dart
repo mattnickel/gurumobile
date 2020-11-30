@@ -52,7 +52,7 @@ class SplashPageState extends State<SplashPage> {
     String token = await storage.read(key: "token");
     if(token != null && firstName != null ) {
       await updateVideos(http.Client(), "For $firstName Today");
-      await updateVideos(http.Client(), "Continue Watching");
+      // await updateVideos(http.Client(), "Continue Watching");
       // await updateVideos(http.Client(), "Trending Videos");
       // await updateVideos(http.Client(), "Recommended Videos");
       // await updateCourses(http.Client(), "Recommended Courses");

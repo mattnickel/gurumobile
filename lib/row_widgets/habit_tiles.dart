@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sidebar_animation/helpers/database_helpers.dart';
 
 class HabitTiles extends StatelessWidget {
 
-  List<String> habits;
+  List<Habit> habits;
   int index;
 
  HabitTiles({ this.habits, this.index});
@@ -13,44 +14,39 @@ class HabitTiles extends StatelessWidget {
     return Wrap(
         children: <Widget>[
           Container(
-              margin: const EdgeInsets.all(10.0),
-              height:150,
-              width: 150,
-              child: Stack(
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18.0),
-                    child:
-                      Image.asset("assets/images/" + habits[index],
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
-                      color: Colors.black38,
-                      colorBlendMode: BlendMode.darken,)
-                  ),
-                  Positioned(
-                    bottom: 50,
-                    left:0,
-                    child: Text(
-                            "Guru Name",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.white)
-                            ),
-                  ),
-                  Positioned(
-                    bottom: 30,
-                    left:10,
-                        child: Text(
-                          "Guru tagline",
-                          style: TextStyle(
-                            color: Colors.white,
-                          )
+              margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
+              height: 120,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18.0),
+                  child: Stack(
+                    children: [
+                      Container(
+                        color: Colors.greenAccent,
+                        width: 120,
+                        height: 120,
+                        child: Center(
+                            child: Icon(Icons.add_circle,
+                              color: Colors.black26,
+                              size: 55,)
+
                         ),
                       ),
+                      Align(
+                        alignment:Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.all(10.0),
+                          width: 120,
+                          child: Text(habits[index].habit,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
                     ],
-                  )
+                  ),
+                ),
               )
         ],
     );

@@ -41,7 +41,7 @@ class _NextStepsState extends State<NextSteps>{
         HabitsRow(category: "Daily Habits"),
         BigRow(category:"For $firstName Today"),
         // GuruRow(category: "Recommended Gurus", gurus:gurus),
-        VideoRow(category:"Continue Watching"),
+        // VideoRow(category:"Continue Watching"),
       ],
       );
   }

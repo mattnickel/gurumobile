@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
 import 'dart:io' show Platform;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+
+Future<void> _configureLocalTimeZone() async {
+  tz.initializeTimeZones();
+  final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(currentTimeZone));
+}
 
 class LocalNotificationsManager{
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   var initSetting;
   BehaviorSubject<ReceiveNotification> get didReceiveLocalNotificationSubject =>
@@ -17,7 +27,7 @@ class LocalNotificationsManager{
     initializePlatform();
   }
   requestIOSPermission(){
-    FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation <IOSFlutterLocalNotificationsPlugin>().requestPermissions(
+    FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
       alert:true,
       badge: true,
       sound: true
@@ -51,19 +61,28 @@ class LocalNotificationsManager{
       onNotificationClick(payload);
     });
   }
-  Future<void> showNotification() async {
+  Future<void> showDailyNotification(selectedTime) async {
     var androidChannel = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
       'CHANNEL_DESCRIPTION',
       importance:Importance.max,
       priority: Priority.high,
-      playSound: true
+      playSound: true,
+      timeoutAfter:5000,
     );
     var iosChannel = IOSNotificationDetails();
     var platformChannel = NotificationDetails(android: androidChannel, iOS: iosChannel);
-    await flutterLocalNotificationsPlugin.show(
-      0, "Test Title", "Test Body", platformChannel, payload: 'New Payload'
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      "Test Title",
+      "Test Body",
+      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      const NotificationDetails(
+          android: AndroidNotificationDetails('your channel id',
+              'your channel name', 'your channel description')),
+      androidAllowWhileIdle: true,
+      matchDateTimeComponents: selectedTime, uiLocalNotificationDateInterpretation: null,
     );
   }
 }

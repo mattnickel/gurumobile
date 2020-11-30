@@ -3,7 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-class ManageHabits extends StatelessWidget {
+
+class ManageHabits extends StatefulWidget {
+
+  @override
+  _ManageHabitsState createState() => _ManageHabitsState();
+}
+
+class _ManageHabitsState extends State<ManageHabits> {
+  final timeController = TextEditingController();
+  final habitController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // timeController.addListener();
+    // habitController.addListener();
+  }
 
   Widget build(BuildContext context) {
 
@@ -95,18 +110,19 @@ class ManageHabits extends StatelessWidget {
                           showDialog(
                           context:context,
                           builder:(BuildContext context){
-                          return habitPopup("Schedule Gratitude Reminder", context);
+                          return habitPopup("New Habit Reminder", context);
                           }
     );}
 
                 ),
                   )
                 ),
-                
+
                 ]
             )
         );
   }
+
   AlertDialog habitPopup(title, context) {
     final format = DateFormat.jm();
     return AlertDialog(
@@ -131,6 +147,7 @@ class ManageHabits extends StatelessWidget {
                     //
                     // ),
                     DateTimeField(
+                      controller: timeController,
                       format: format,
                       initialValue: DateFormat('dd-MM-yyyy h:mm:ssa', 'en_US').parseLoose('01-11-2020 7:00:00AM'),
                       onShowPicker: (context, currentValue) async {
@@ -173,7 +190,7 @@ class ManageHabits extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  onPressed: () {
+                  onPressed: habitController.text == "" || timeController.text == "" ? null :() {
                     //saveIssue();
                     Navigator.of(context).pop();
                   },
