@@ -36,7 +36,7 @@ class Habit {
   String habit;
   String description;
   String time;
-  bool active;
+  int active;
 
   Habit(this.id, this.habit, this.description, this.time, this.active);
 

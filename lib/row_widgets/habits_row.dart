@@ -33,6 +33,61 @@ class _HabitsRowState extends State<HabitsRow> {
     super.dispose();
   }
 
+  Container addHabitWidget(){
+    return Container(
+        // margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
+        height: 120,
+        child: FlatButton(
+          onPressed: () {
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => ManageHabits())
+            // );
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return habitPopup(
+                      "New Habit Reminder", context);
+                }
+            ).then((_){
+              setState((){});
+            });
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18.0),
+            child: Stack(
+              children: [
+                Container(
+                  color: Colors.black12,
+                  width: 120,
+                  height: 120,
+                  child: Center(
+                      child: Icon(Icons.add_circle,
+                        color: Colors.black26,
+                        size: 55,)
+
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    width: 120,
+                    child: Text("Add Habit",
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _read() async {
@@ -71,12 +126,15 @@ class _HabitsRowState extends State<HabitsRow> {
                 ),
                 snapshot.hasData
                     ? Container(
-                    margin: EdgeInsets.only(left: 10.0, bottom: 30.0),
+                    margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
                     height: 120,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: snapshot == null ? 0 : snapshot.data.length,
+                      itemCount: snapshot == null ? 1 : snapshot.data.length +1,
                       itemBuilder: (context, index) {
+                        if (index == snapshot.data.length || index == null){
+                          return addHabitWidget();
+                        }
                         return HabitTiles(
                           habits: snapshot.data,
                           index: index,
@@ -84,62 +142,7 @@ class _HabitsRowState extends State<HabitsRow> {
                       },
                     )
                 )
-                    : Container(),
-                Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
-                        height: 120,
-                        child: FlatButton(
-                          onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(builder: (context) => ManageHabits())
-                            // );
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return habitPopup(
-                                      "New Habit Reminder", context);
-                                }
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(18.0),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  color: Colors.black12,
-                                  width: 120,
-                                  height: 120,
-                                  child: Center(
-                                      child: Icon(Icons.add_circle,
-                                        color: Colors.black26,
-                                        size: 55,)
-
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    width: 120,
-                                    child: Text("Add Habit",
-                                      style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.black54),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                    ),
-                  ],
-                ),
-
+                    : Container()
               ],
             );
           } else
@@ -227,22 +230,22 @@ class _HabitsRowState extends State<HabitsRow> {
       },
     ];
 
-    void saveIssue(selected_habit, time) async{
-      String selected_description;
+    void saveIssue(selectedHabit, time) async{
+      String selectedDescription;
       print('here');
       // habitFormKey.currentState.save();
       Habit newHabit;
-      if (selected_habit =="gratitude"){
-        selected_description = 'What are you grateful for today?';
-      }else if (selected_habit == "objective"){
-        selected_description = 'What is your one objective for today?';
+      if (selectedHabit =="gratitude"){
+        selectedDescription = 'What are you grateful for today?';
+      }else if (selectedHabit == "objective"){
+        selectedDescription = 'What is your one objective for today?';
       } else {
-        selected_description = 'Did you accomplish this today?';
+        selectedDescription = 'Did you accomplish this today?';
       };
-      newHabit.habit = selected_habit;
-      newHabit.description = selected_description;
-      newHabit.time =time;
-      newHabit.active =true;
+      newHabit.habit = selectedHabit;
+      newHabit.description = selectedDescription;
+      newHabit.time = time;
+      newHabit.active =1;
       print('still moving');
       print("time is $time");
       DatabaseHelper helper = DatabaseHelper.instance;

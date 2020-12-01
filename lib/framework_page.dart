@@ -50,7 +50,7 @@ class FrameworkPage extends StatelessWidget{
 							      	},
 							      	backgroundColor: Colors.white,
 							      	borderRadius: 100,
-							      	selectedItemColor: Color(0xFF00ebcc),
+							      	selectedItemColor: Color(0xFF09eebc),
 							      	selectedBackgroundColor: null,
 							      	unselectedItemColor: Colors.black54,
 							      	currentIndex: (model.currentTab),
