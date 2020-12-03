@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sidebar_animation/helpers/database_helpers.dart';
-import 'package:sidebar_animation/pages/manage_habits.dart';
-import 'package:sidebar_animation/row_widgets/habit_tiles.dart';
+import 'package:sidebar_animation/pages/home.dart';
 
-import 'guru_tiles.dart';
+import '../services/local_notifications_manager.dart';
+import '../helpers/database_helpers.dart';
+import './habit_tiles.dart';
+
 
 class HabitsRow extends StatefulWidget {
   String category;
@@ -25,6 +26,8 @@ class HabitsRow extends StatefulWidget {
 class _HabitsRowState extends State<HabitsRow> {
   final habitController = TextEditingController();
   final timeController = TextEditingController();
+  final localNotifications = LocalNotificationsManager.init();
+
 
   @override
   void dispose() {
@@ -35,23 +38,20 @@ class _HabitsRowState extends State<HabitsRow> {
 
   Container addHabitWidget(){
     return Container(
-        // margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
         height: 120,
         child: FlatButton(
-          onPressed: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => ManageHabits())
-            // );
+          onPressed: ()async {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return habitPopup(
                       "New Habit Reminder", context);
                 }
-            ).then((_){
-              setState((){});
-            });
+            );
+            // widget._read();
+            // setState(() {
+            //   widget._read();
+            // });
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18.0),
@@ -64,7 +64,7 @@ class _HabitsRowState extends State<HabitsRow> {
                   child: Center(
                       child: Icon(Icons.add_circle,
                         color: Colors.black26,
-                        size: 55,)
+                        size: 45,)
 
                   ),
                 ),
@@ -91,7 +91,6 @@ class _HabitsRowState extends State<HabitsRow> {
   @override
   Widget build(BuildContext context) {
     _read() async {
-      print("hello");
       DatabaseHelper helper = DatabaseHelper.instance;
       List<Habit> habitList = await helper.queryAll();
       print(habitList.length);
@@ -225,16 +224,31 @@ class _HabitsRowState extends State<HabitsRow> {
       {
         'value': 'affirmations',
         'label': 'Affirmations',
-        'enable': false,
         'text' : 'affirmations'
       },
     ];
-
-    void saveIssue(selectedHabit, time) async{
+    DateTime calcTime(time){
+      DateTime now = new DateTime.now();
+      var formatter = new DateFormat('yyyy-MM-dd');
+      String today = formatter.format(now);
+      var timeFormatter = new DateFormat("HH:mm");
+      print("ouch_");
+      String militaryTime = timeFormatter.format(time);
+      print(militaryTime);
+      String bestest = today+" "+militaryTime;
+      DateTime best = DateTime.parse(bestest);
+      print(now);
+      if (best.isBefore(DateTime.now())){
+        print("it's before");
+         best = best.add(Duration(days:1));
+      }
+      return best;
+    };
+    void saveIssue(selectedHabit, time, timeValue) async{
       String selectedDescription;
-      print('here');
+      print(timeValue);
       // habitFormKey.currentState.save();
-      Habit newHabit;
+
       if (selectedHabit =="gratitude"){
         selectedDescription = 'What are you grateful for today?';
       }else if (selectedHabit == "objective"){
@@ -242,18 +256,22 @@ class _HabitsRowState extends State<HabitsRow> {
       } else {
         selectedDescription = 'Did you accomplish this today?';
       };
+      Habit newHabit=Habit();
+      newHabit.time = time;
       newHabit.habit = selectedHabit;
       newHabit.description = selectedDescription;
-      newHabit.time = time;
-      newHabit.active =1;
-      print('still moving');
-      print("time is $time");
+      newHabit.active = 1;
+
       DatabaseHelper helper = DatabaseHelper.instance;
       int id = await helper.insert(newHabit);
-      print('inserted row: $id');
-      print(newHabit.time);
+      // DateTime betterTime = timeValue;
+      print("on to notifications");
+      print(id);
+      localNotifications.showDailyNotification(id, selectedDescription, timeValue);
+
     }
     final format = DateFormat.jm();
+
     return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -279,10 +297,8 @@ class _HabitsRowState extends State<HabitsRow> {
                       children: <Widget>[
                         SelectFormField(
                           controller: habitController,
-                          // initialValue: _items[0],
                           decoration: InputDecoration(
                               labelText: "Select Habit:",
-                            // labelStyle: TextStyle(fontSize: 12.0),
                           ),
                           labelText: "Select Habit:",
                           items: _items,
@@ -339,14 +355,18 @@ class _HabitsRowState extends State<HabitsRow> {
                           fontSize: 16),
 
                     ),
-                    color: Color(0xff00eebc),
+                    color: Color(0xff09eebc),
                     disabledColor: Color.fromRGBO(0,238,188, 0.25),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     onPressed:  habitController.text ==''|| timeController.text =='' ? null : () async {
-                      saveIssue(habitController.text,timeController.text);
-                      Navigator.of(context).pop();
+                      DateTime best = DateFormat.jm().parse(timeController.text);
+                      DateTime bester = calcTime(best);
+                      saveIssue(habitController.text,timeController.text, bester);
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()), (
+                          Route<dynamic> route) => false);
 
                     },
                   ),

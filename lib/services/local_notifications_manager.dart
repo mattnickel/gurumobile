@@ -6,13 +6,15 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
-Future<void> _configureLocalTimeZone() async {
-  tz.initializeTimeZones();
-  final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(currentTimeZone));
-}
+
 
 class LocalNotificationsManager{
+  String currentTimeZone;
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
+  }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   var initSetting;
@@ -34,6 +36,7 @@ class LocalNotificationsManager{
     );
   }
   initializePlatform(){
+    _configureLocalTimeZone();
     var initSettingAndroid = AndroidInitializationSettings('lm_app_icon');
     var initSettingIOS = IOSInitializationSettings(
       requestSoundPermission: true,
@@ -61,7 +64,15 @@ class LocalNotificationsManager{
       onNotificationClick(payload);
     });
   }
-  Future<void> showDailyNotification(selectedTime) async {
+  Future<void> showDailyNotification(id, selectedDescription, selectedTime) async {
+    tz.initializeTimeZones();
+    String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    final location = await tz.getLocation(currentTimeZone);
+    print("so $selectedTime");
+    print("here $location");
+    final scheduledDate = tz.TZDateTime.from(selectedTime, location);
+    print("scheduled date $scheduledDate");
+
     var androidChannel = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
@@ -73,17 +84,51 @@ class LocalNotificationsManager{
     );
     var iosChannel = IOSNotificationDetails();
     var platformChannel = NotificationDetails(android: androidChannel, iOS: iosChannel);
+    print("ahhh");
+
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      "Test Title",
-      "Test Body",
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      id,
+      "Daily Habit Reminder",
+      selectedDescription,
+      scheduledDate,
+
       const NotificationDetails(
           android: AndroidNotificationDetails('your channel id',
               'your channel name', 'your channel description')),
       androidAllowWhileIdle: true,
-      matchDateTimeComponents: selectedTime, uiLocalNotificationDateInterpretation: null,
+      matchDateTimeComponents: DateTimeComponents.time, uiLocalNotificationDateInterpretation: null,
+
     );
+  }
+  // tz.TZDateTime _nextInstance() {
+  //   tz.TZDateTime scheduledDate = _nextInstanceOfTenAM();
+  //   while (scheduledDate != DateTime.) {
+  //     scheduledDate = scheduledDate.add(const Duration(days: 1));
+  //   }
+  //   return scheduledDate;
+  // }
+  tz.TZDateTime _nextInstance(selectedTime, locationName){
+    DateTime now = tz.TZDateTime.now(tz.local);
+    print('ok');
+    // final timeZone = TimeZone();
+    // String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    // print(timeZoneName);
+    final location = tz.getLocation(locationName);
+    print(location);
+    // var locations = tz.timeZoneDatabase.locations;
+    tz.TZDateTime scheduledDate = tz.TZDateTime.from(selectedTime, location);
+    print('?');
+    // if (scheduledDate.isBefore(now)) {
+    //   scheduledDate = scheduledDate.add(const Duration(days: 1));
+    // }
+    print(scheduledDate);
+    return scheduledDate;
+  }
+
+  Future<void> turnOffNotificationById(id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+    print("cancelled ${id}");
   }
 }
 

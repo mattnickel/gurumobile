@@ -38,7 +38,7 @@ class Habit {
   String time;
   int active;
 
-  Habit(this.id, this.habit, this.description, this.time, this.active);
+  Habit();
 
 
   Habit.fromMap(Map<String, dynamic> map) {
@@ -121,10 +121,34 @@ class DatabaseHelper {
 
   // Database helper methods:
 
-  Future<int> insert(Habit habit) async {
+  insert(Habit habit) async {
     Database db = await database;
     int id = await db.insert(tableHabits, habit.toMap());
     return id;
+  }
+  Future<void> deleteHabit(int id) async {
+    // Get a reference to the database.
+    final db = await database;
+
+    // Remove the Dog from the Database.
+    await db.delete(
+      'habits',
+      where: '$columnId=?',
+      whereArgs: [id],
+    );
+  }
+
+  updateHabitActivity(id, activeStatus) async {
+    Database db = await database;
+    Map<String, dynamic> row = {
+      columnActive : activeStatus
+    };
+    int updateHabit = await db.update(
+        tableHabits,
+        row,
+      where: '$columnId=?',
+      whereArgs: [id]
+    );
   }
 
   Future<Habit> queryHabit(int id) async {
@@ -148,7 +172,6 @@ class DatabaseHelper {
   Future<List<Habit>> queryAll() async {
     print("yo");
     Database db = await DatabaseHelper.instance.database;
-
     // get all rows
     var allResults = await db.query(tableHabits);
     int count = allResults.length;
