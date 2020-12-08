@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sidebar_animation/sidebar/profile.dart';
 
 import '../services/api_login.dart';
 import 'menu_item.dart';
@@ -17,8 +18,8 @@ class _SideBarMenuState extends State<SideBarMenu>{
 
   Future <List> readName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     String firstName = prefs.getString("first_name");
+    print(firstName);
     String tagLine= prefs.getString("tag_line")??
         "Add a tagline to people get to know you better";
     String avatarUrl= prefs.getString("avatar_url")?? "no";
@@ -43,9 +44,8 @@ class _SideBarMenuState extends State<SideBarMenu>{
   @override
   Widget build(BuildContext context) {
 
-    return firstName == null
-    ? Text('Loading')
-    : Drawer( child:
+    return
+  Drawer( child:
       Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -113,9 +113,12 @@ class _SideBarMenuState extends State<SideBarMenu>{
             MenuItem(
               icon: Icons.perm_identity,
               title: "Profile",
-              onTap: () {
-
-              }
+                onTap: () {print("here");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile()),
+                );
+                }
             ),
             MenuItem(
               icon: Icons.settings,

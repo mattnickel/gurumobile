@@ -22,7 +22,7 @@ class VideoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return
     FutureBuilder<List<Video>>(
-          future: fetchVideos(category),
+          future: fetchVideos(http.Client(), category),
 
           builder: (context, snapshot) {
 

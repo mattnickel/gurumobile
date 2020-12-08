@@ -51,7 +51,7 @@ class SplashPageState extends State<SplashPage> {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     if(token != null && firstName != null ) {
-      await updateVideos(http.Client(), "For $firstName Today");
+      await fetchVideos(http.Client(), "For $firstName Today");
       // await updateVideos(http.Client(), "Continue Watching");
       // await updateVideos(http.Client(), "Trending Videos");
       // await updateVideos(http.Client(), "Recommended Videos");

@@ -73,129 +73,129 @@ class _HabitTilesState extends State<HabitTiles> {
     return Visibility(
       visible: here,
       child: Wrap(
-          children: <Widget>[
-            Container(
-               padding:EdgeInsets.only(left:10),
-                margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
-                height: 120,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18.0),
-                    child: Stack(
-                      children: [
-                        Container(
-                            decoration:
-                            widget.isSwitched ? BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                stops: [0.0, 0.24, 0.9],
-                                colors: [
-                                  Color(0xFFffffff),
-                                  Color(0xFFc4ece7),
-                                  Color(0xFF09eebc),
-                                ],
+            children: <Widget>[
+              Container(
+                 padding:EdgeInsets.only(left:10),
+                  margin: EdgeInsets.only(left: 5.0, bottom: 30.0),
+                  height: 120,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18.0),
+                      child: Stack(
+                        children: [
+                          Container(
+                              decoration:
+                              widget.isSwitched ? BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  stops: [0.0, 0.24, 0.9],
+                                  colors: [
+                                    Color(0xFFffffff),
+                                    Color(0xFFc4ece7),
+                                    Color(0xFF09eebc),
+                                  ],
+                                ),
+                              )
+                              : BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  stops: [0.0, 0.24, 0.9],
+                                  colors: [
+                                    Colors.black12,
+                                    Colors.black12,
+                                    Colors.black26,
+                                  ],
+                                ),
                               ),
+                            width: 120,
+                            height: 120,
+                            child: Center(
+                                child: Text(widget.habits[widget.index].time,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 22.0,
+                                  color: Colors.white,
+                                ))
+
                             )
-                            : BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                stops: [0.0, 0.24, 0.9],
-                                colors: [
-                                  Colors.black12,
-                                  Colors.black12,
-                                  Colors.black26,
-                                ],
-                              ),
-                            ),
-                          width: 120,
-                          height: 120,
-                          child: Center(
-                              child: Text(widget.habits[widget.index].time,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 22.0,
-                                color: Colors.white,
-                              ))
+                          ),
+                          widget.isSwitched
+                              ?  Positioned(
+                            right:55,
+                            child:Container(),
 
                           )
-                        ),
-                        widget.isSwitched
-                            ?  Positioned(
-                          right:55,
-                          child:Container(),
-
-                        )
-                        :Positioned(
-                            right:55,
-                            child: FlatButton(
-                                child: Icon(Icons.cancel,
-                                    color: Colors.black26),
-                                onPressed:(){
-                                    deleteIt(widget.habits[widget.index].id);
-                                    setState((){
-                                      here = false;
-                                      print("cool");
-                                    });
-                                })
+                          :Positioned(
+                              right:55,
+                              child: FlatButton(
+                                  child: Icon(Icons.cancel,
+                                      color: Colors.black26),
+                                  onPressed:(){
+                                      deleteIt(widget.habits[widget.index].id);
+                                      setState((){
+                                        here = false;
+                                        print("cool");
+                                      });
+                                  })
 
 
-                        ),
-                        Positioned(
-                            left:40.0,
-                            bottom: 25.0,
-                            child: Text("DAILY",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 14.0,
-                                color: Colors.white
-                                ),
-                                textAlign: TextAlign.center,
-                            )
-                        ),
-                        Align(
-                          alignment:Alignment.bottomCenter,
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            width: 120,
-                            child: Text(widget.habits[widget.index].habit.toUpperCase(),
-                              style: TextStyle(
+                          ),
+                          Positioned(
+                              left:40.0,
+                              bottom: 25.0,
+                              child: Text("DAILY",
+                                style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 14.0,
-                                  color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
+                                  color: Colors.white
+                                  ),
+                                  textAlign: TextAlign.center,
+                              )
                           ),
-                        ), Positioned(
-                          right:5.0,
-                          child: Switch(
-                              value:  widget.isSwitched,
-                              onChanged: (value)async {
-                                updateIt(widget.habits[widget.index].id, value);
-                                if (value == false) {
-                                  cancelIt(widget.habits[widget.index].id);
-                                }else {
-                                  restoreIt();
-                                }
-
-                                setState(() {
-                                  widget.isSwitched = value;
-                                  print( widget.isSwitched);
-                                });
-
-                              },
-                              activeTrackColor: Colors.white70,
-                              activeColor: Colors.white,
+                          Align(
+                            alignment:Alignment.bottomCenter,
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              width: 120,
+                              child: Text(widget.habits[widget.index].habit.toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 14.0,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
+                          ), Positioned(
+                            right:5.0,
+                            child: Switch(
+                                value:  widget.isSwitched,
+                                onChanged: (value)async {
+                                  updateIt(widget.habits[widget.index].id, value);
+                                  if (value == false) {
+                                    cancelIt(widget.habits[widget.index].id);
+                                  }else {
+                                    restoreIt();
+                                  }
+
+                                  setState(() {
+                                    widget.isSwitched = value;
+                                    print( widget.isSwitched);
+                                  });
+
+                                },
+                                activeTrackColor: Colors.white70,
+                                activeColor: Colors.white,
+                              ),
+                            ),
 
 
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                )
-          ],
-      ),
+                  )
+            ],
+        ),
     );
   }
 }

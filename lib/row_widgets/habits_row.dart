@@ -15,6 +15,7 @@ class HabitsRow extends StatefulWidget {
   List<String> habits;
   int index;
 
+
   HabitsRow({ this.category, this.habits, this.index});
 
   @override
@@ -27,7 +28,7 @@ class _HabitsRowState extends State<HabitsRow> {
   final habitController = TextEditingController();
   final timeController = TextEditingController();
   final localNotifications = LocalNotificationsManager.init();
-
+  String addIt;
 
   @override
   void dispose() {
@@ -41,17 +42,17 @@ class _HabitsRowState extends State<HabitsRow> {
         height: 120,
         child: FlatButton(
           onPressed: ()async {
-            showDialog(
+            await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return habitPopup(
                       "New Habit Reminder", context);
                 }
             );
-            // widget._read();
-            // setState(() {
-            //   widget._read();
-            // });
+
+            setState(() {
+              addIt = "true";
+            });
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18.0),
@@ -171,14 +172,14 @@ class _HabitsRowState extends State<HabitsRow> {
                     Container(
                         margin: EdgeInsets.only(left: 10.0, bottom: 30.0),
                         height: 200,
-                        width: 330,
+                        width: 200,
                         child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
                               Container(
                                   margin: const EdgeInsets.all(10.0),
-                                  height: 365,
-                                  width: 300,
+                                  height: 120,
+                                  width: 120,
                                   child: Stack(
                                       children: <Widget>[
                                         ClipRRect(
@@ -188,7 +189,7 @@ class _HabitsRowState extends State<HabitsRow> {
                                                 baseColor: Colors.black54,
                                                 highlightColor: Colors.black45,
                                                 child: Container(
-                                                    color: Colors.black54
+                                                    color: Colors.black12
                                                 )
                                             )
                                         )
@@ -210,6 +211,7 @@ class _HabitsRowState extends State<HabitsRow> {
     final habitFormKey = GlobalKey<FormState>();
     String _habit;
     DateTime _habitTime;
+    _HabitsRowState parent;
     final List<Map<String, dynamic>> _items = [
       {
         'value': 'gratitude',
@@ -232,7 +234,6 @@ class _HabitsRowState extends State<HabitsRow> {
       var formatter = new DateFormat('yyyy-MM-dd');
       String today = formatter.format(now);
       var timeFormatter = new DateFormat("HH:mm");
-      print("ouch_");
       String militaryTime = timeFormatter.format(time);
       print(militaryTime);
       String bestest = today+" "+militaryTime;
@@ -364,9 +365,10 @@ class _HabitsRowState extends State<HabitsRow> {
                       DateTime best = DateFormat.jm().parse(timeController.text);
                       DateTime bester = calcTime(best);
                       saveIssue(habitController.text,timeController.text, bester);
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                          builder: (BuildContext context) => HomePage()), (
-                          Route<dynamic> route) => false);
+                      Navigator.pop(context, 'yep');
+                      // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                      //     builder: (BuildContext context) => HomePage()), (
+                      //     Route<dynamic> route) => false);
 
                     },
                   ),

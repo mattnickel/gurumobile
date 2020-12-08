@@ -6,6 +6,8 @@ import 'package:sidebar_animation/row_widgets/habits_row.dart';
 import '../row_widgets/video_row.dart';
 import 'dart:async';
 import 'dart:async' show Future;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 
 class NextSteps extends StatefulWidget {
 
@@ -14,7 +16,23 @@ class NextSteps extends StatefulWidget {
 }
 
 class _NextStepsState extends State<NextSteps>{
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  ScrollController _scrollController;
   String firstName;
+
+  void _onRefresh() async{
+    // call api
+    if(mounted){
+      setState(() {
+
+      });
+    }
+    _refreshController.refreshCompleted();
+  }
+  void _onLoading() async{
+    _refreshController.loadComplete();
+
+  }
 
   Future <String> readName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -36,14 +54,21 @@ class _NextStepsState extends State<NextSteps>{
 
   @override
   Widget build(BuildContext context){
-    return ListView(
-      children:<Widget>[
-        HabitsRow(category: "Daily Habits"),
-        BigRow(category:"For $firstName Today"),
-        // GuruRow(category: "Recommended Gurus", gurus:gurus),
-        // VideoRow(category:"Continue Watching"),
-      ],
-      );
+    return SmartRefresher(
+      controller:_refreshController,
+      onLoading: _onLoading,
+      onRefresh: _onRefresh,
+      enablePullDown: true,
+      enablePullUp: true,
+      child: ListView(
+        children:<Widget>[
+          HabitsRow(category: "Daily Habits"),
+          BigRow(category:"For $firstName Today"),
+          // GuruRow(category: "Recommended Gurus", gurus:gurus),
+          // VideoRow(category:"Continue Watching"),
+        ],
+        ),
+    );
   }
 
 }

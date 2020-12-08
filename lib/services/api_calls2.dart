@@ -34,12 +34,13 @@ Future<List<Video>> cachedVideos (category)async {
   return parseVideos(cachedVideos);
 }
 
-Future<List<Video>> fetchVideos(category) async {
+Future<List<Video>> fetchVideos(client, category) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   var dir = await getTemporaryDirectory();
+  print("here");
   File file = File(dir.path + "/" + category + ".json");
-
+  print('ok');
   if (file.existsSync()) {
     print("Fetching from cache: $category");
     var cachedVideos = file.readAsStringSync();
@@ -49,7 +50,7 @@ Future<List<Video>> fetchVideos(category) async {
     return updateVideos(client, category);
   }
 }
-Future<List<TrainingModule>> fetchCourses(category) async {
+Future<List<TrainingModule>> fetchCourses(client, category) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
 
@@ -82,7 +83,7 @@ Future<List<Video>>updateVideos(http.Client client, category) async {
   } else {
     if (response.statusCode != null) {
       print("$category not updated from api");
-      print(response.statusCode);
+      print(response.body);
     } else {
       print("no api response");
       return null;
