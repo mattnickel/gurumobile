@@ -14,12 +14,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '8'
+    flutterVersionCode = '9'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = 'Beta 1.08'
+    flutterVersionName = 'Beta 1.09'
 }
 
 apply plugin: 'com.android.application'
@@ -52,7 +52,7 @@ android {
         applicationId "com.limitless.minds"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 8
+        versionCode 9
         versionName flutterVersionName
     }
     signingConfigs {

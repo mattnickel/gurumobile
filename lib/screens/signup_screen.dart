@@ -151,9 +151,10 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
-  Padding signupInstead(){
-   return Padding(
-     padding: const EdgeInsets.only(left:23.0),
+  Container signupInstead(){
+   return Container(
+     height:40,
+     padding: const EdgeInsets.only(left:23.0, top:25),
      child: Row(
           // mainAxisAlignment: MainAxisAlignment.left,
           children:<Widget>[

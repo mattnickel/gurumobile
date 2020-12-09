@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/sidebar/profile.dart';
+import 'package:sidebar_animation/sidebar/support.dart';
+import 'package:sidebar_animation/sidebar/terms.dart';
 
 import '../services/api_login.dart';
 import 'menu_item.dart';
@@ -113,35 +115,43 @@ class _SideBarMenuState extends State<SideBarMenu>{
             MenuItem(
               icon: Icons.perm_identity,
               title: "Profile",
-                onTap: () {print("here");
+                onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Profile()),
                 );
                 }
             ),
-            MenuItem(
-              icon: Icons.settings,
-              title: "Settings",
-              onTap: () {
-              }
-            ),
-            MenuItem(
-              icon: Icons.account_circle,
-              title: "Account",
-              onTap: () {
-              }
-            ),
+            // MenuItem(
+            //   icon: Icons.settings,
+            //   title: "Settings",
+            //   onTap: () {
+            //   }
+            // ),
+            // MenuItem(
+            //   icon: Icons.account_circle,
+            //   title: "Account",
+            //   onTap: () {
+            //   }
+            // ),
             MenuItem(
               icon: Icons.live_help,
               title: "Support",
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Support()),
+                );
               }
             ),
             MenuItem(
               icon: Icons.filter_none,
               title: "Terms",
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Terms()),
+                );
               }
           ),
               MenuItem(
