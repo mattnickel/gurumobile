@@ -97,7 +97,8 @@ class LocalNotificationsManager{
           android: AndroidNotificationDetails('your channel id',
               'your channel name', 'your channel description')),
       androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.time, uiLocalNotificationDateInterpretation: null,
+      matchDateTimeComponents: DateTimeComponents.time, uiLocalNotificationDateInterpretation:
+    UILocalNotificationDateInterpretation.absoluteTime
 
     );
   }
