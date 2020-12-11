@@ -8,8 +8,8 @@ import 'package:sidebar_animation/models/video_model.dart';
 
 class VideoTiles extends StatelessWidget {
 
-  List<Video> videos;
-  int index;
+  final List<Video> videos;
+  final int index;
 
   VideoTiles({ this.videos, this.index});
   bool hasViewed = false;
@@ -45,7 +45,7 @@ class VideoTiles extends StatelessWidget {
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          // return FlickVideoScreen(videos[index].file, videos[index].id);
+                          return FlickVideoScreen(videos[index].file, videos[index].id);
                         }));
                       },
                       elevation: 2.0,

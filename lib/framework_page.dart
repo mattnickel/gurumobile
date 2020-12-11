@@ -1,12 +1,25 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:notification_permissions/notification_permissions.dart';
+import './services/local_notifications_manager.dart';
 import 'models/navbar_tab_selected_model.dart';
 
 import 'sidebar/sidebar_layout.dart';
 
 
-class FrameworkPage extends StatelessWidget{
+class FrameworkPage extends StatefulWidget{
+
+  @override
+  _FrameworkPageState createState() => _FrameworkPageState();
+}
+
+
+
+class _FrameworkPageState extends State<FrameworkPage> {
+
+	final localNotifications = LocalNotificationsManager.init();
+
 	@override
 	Widget build(BuildContext context) {
 		return ChangeNotifierProvider<NavbarTabSelectedModel>(
@@ -21,7 +34,7 @@ class FrameworkPage extends StatelessWidget{
 								),
 							drawer: SideBarMenu(),
 							bottomNavigationBar:
-							
+
 							Container(
 								height: 70,
 								margin: EdgeInsets.only(bottom: 20, left: 20, right:20),

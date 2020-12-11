@@ -18,10 +18,17 @@ class HabitTiles extends StatefulWidget {
 
 class _HabitTilesState extends State<HabitTiles> {
   bool here;
+
   final localNotifications = LocalNotificationsManager.init();
 
-  updateIt(id, activity){
+  updateIt(id, active){
+      int activity;
       DatabaseHelper helper = DatabaseHelper.instance;
+      if (active == true){
+        activity = 1;
+      } else{
+        activity = 0;
+      }
       helper.updateHabitActivity(id, activity);
   }
   deleteIt(id){
@@ -32,10 +39,6 @@ class _HabitTilesState extends State<HabitTiles> {
     localNotifications.turnOffNotificationById(id);
   }
   restoreIt()async{
-    var now = new DateTime.now();
-    var formatter = new DateFormat('yyyy-MM-dd');
-    String today = formatter.format(now);
-    // DateTime best = DateFormat.jm().parse(timeController.text);
     DateTime best = DateFormat.jm().parse(widget.habits[widget.index].time);
     DateTime bester = calcTime(best);
     localNotifications.showDailyNotification(widget.habits[widget.index].id, widget.habits[widget.index].description, bester);
@@ -46,14 +49,11 @@ class _HabitTilesState extends State<HabitTiles> {
     var formatter = new DateFormat('yyyy-MM-dd');
     String today = formatter.format(now);
     var timeFormatter = new DateFormat("HH:mm");
-    print("ouch_");
     String militaryTime = timeFormatter.format(time);
-    print(militaryTime);
     String bestest = today+" "+militaryTime;
     DateTime best = DateTime.parse(bestest);
     if (best.isBefore(DateTime.now())){
       best = best.add(Duration(days:1));
-      print(best);
     }
     return best;
   }
@@ -65,7 +65,6 @@ class _HabitTilesState extends State<HabitTiles> {
         : widget.isSwitched = false;
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,18 +134,15 @@ class _HabitTilesState extends State<HabitTiles> {
                                       deleteIt(widget.habits[widget.index].id);
                                       setState((){
                                         here = false;
-                                        print("cool");
                                       });
                                   })
-
-
                           ),
                           Positioned(
                               left:40.0,
                               bottom: 25.0,
                               child: Text("DAILY",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 14.0,
                                   color: Colors.white
                                   ),
@@ -160,7 +156,7 @@ class _HabitTilesState extends State<HabitTiles> {
                               width: 120,
                               child: Text(widget.habits[widget.index].habit.toUpperCase(),
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w600,
                                     fontSize: 14.0,
                                     color: Colors.white),
                                 textAlign: TextAlign.center,

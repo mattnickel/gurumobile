@@ -11,24 +11,6 @@ final String columnDescription = 'description';
 final String columnTime = 'time';
 final String columnActive = 'active';
 
-// data model class
-// class HabitsList {
-//   final List<Habit> habitsList;
-//
-//   HabitsList({
-//     this.habitsList,
-//   });
-//
-//   factory HabitsList.fromJson(List<dynamic> parsedJson) {
-//
-//     List<HabitsList> habits = new List<HabitsList>();
-//     habits = parsedJson.map((i)=>HabitsList.fromJson(i)).toList();
-//
-//     return new HabitsList(
-//         habitsList: habits
-//     );
-//   }
-// }
 
 class Habit {
 
@@ -114,7 +96,7 @@ class DatabaseHelper {
                 $columnHabit TEXT NOT NULL,
                 $columnDescription TEXT NOT NULL,
                 $columnTime TIME NOT NULL,
-                $columnActive BOOL NOT NULL
+                $columnActive INT NOT NULL
               )
               ''');
   }
@@ -137,7 +119,18 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
-
+  setAllInactive() async {
+    Database db = await database;
+    Map<String, dynamic> row = {
+      columnActive : 0
+    };
+    int updateHabit = await db.update(
+        tableHabits,
+        row,
+        where: '$columnActive=?',
+        whereArgs: [1]
+    );
+  }
   updateHabitActivity(id, activeStatus) async {
     Database db = await database;
     Map<String, dynamic> row = {
@@ -170,7 +163,6 @@ class DatabaseHelper {
   }
 
   Future<List<Habit>> queryAll() async {
-    print("yo");
     Database db = await DatabaseHelper.instance.database;
     // get all rows
     var allResults = await db.query(tableHabits);
@@ -184,6 +176,25 @@ class DatabaseHelper {
 
     return habitList;
     // return all_results;
+  }
+
+  Future<bool> anyActive() async {
+    Database db = await DatabaseHelper.instance.database;
+    // get all rows
+    List<Map> actives = await db.query(tableHabits,
+        columns: [
+          columnActive
+        ],
+        where: '$columnActive = ?',
+        whereArgs: [1]);
+    if (actives.length > 0) {
+      print(actives.length);
+      return true;
+    } else{
+      print("null");
+      return false;
+    }
+
   }
 
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sidebar_animation/row_widgets/big_row.dart';
-import 'package:sidebar_animation/row_widgets/guru_row.dart';
-import 'package:sidebar_animation/row_widgets/habits_row.dart';
-import '../row_widgets/video_row.dart';
 import 'dart:async';
 import 'dart:async' show Future;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../row_widgets/big_row.dart';
+import '../row_widgets/habits_row.dart';
+
 
 
 class NextSteps extends StatefulWidget {
@@ -17,7 +17,6 @@ class NextSteps extends StatefulWidget {
 
 class _NextStepsState extends State<NextSteps>{
   RefreshController _refreshController = RefreshController(initialRefresh: false);
-  ScrollController _scrollController;
   String firstName;
 
   void _onRefresh() async{
@@ -64,8 +63,6 @@ class _NextStepsState extends State<NextSteps>{
         children:<Widget>[
           HabitsRow(category: "Daily Habits"),
           BigRow(category:"For $firstName Today"),
-          // GuruRow(category: "Recommended Gurus", gurus:gurus),
-          // VideoRow(category:"Continue Watching"),
         ],
         ),
     );

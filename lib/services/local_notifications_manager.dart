@@ -84,15 +84,11 @@ class LocalNotificationsManager{
     );
     var iosChannel = IOSNotificationDetails();
     var platformChannel = NotificationDetails(android: androidChannel, iOS: iosChannel);
-    print("ahhh");
-
-
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       "Daily Habit Reminder",
       selectedDescription,
       scheduledDate,
-
       const NotificationDetails(
           android: AndroidNotificationDetails('your channel id',
               'your channel name', 'your channel description')),
@@ -102,34 +98,18 @@ class LocalNotificationsManager{
 
     );
   }
-  // tz.TZDateTime _nextInstance() {
-  //   tz.TZDateTime scheduledDate = _nextInstanceOfTenAM();
-  //   while (scheduledDate != DateTime.) {
-  //     scheduledDate = scheduledDate.add(const Duration(days: 1));
-  //   }
-  //   return scheduledDate;
-  // }
   tz.TZDateTime _nextInstance(selectedTime, locationName){
     DateTime now = tz.TZDateTime.now(tz.local);
-    print('ok');
-    // final timeZone = TimeZone();
-    // String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-    // print(timeZoneName);
     final location = tz.getLocation(locationName);
-    print(location);
-    // var locations = tz.timeZoneDatabase.locations;
     tz.TZDateTime scheduledDate = tz.TZDateTime.from(selectedTime, location);
-    print('?');
-    // if (scheduledDate.isBefore(now)) {
-    //   scheduledDate = scheduledDate.add(const Duration(days: 1));
-    // }
-    print(scheduledDate);
     return scheduledDate;
   }
 
   Future<void> turnOffNotificationById(id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
-    print("cancelled ${id}");
+  }
+  Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }
 

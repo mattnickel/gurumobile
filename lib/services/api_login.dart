@@ -6,6 +6,7 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../screens/set_goals.dart';
 import '../framework_page.dart';
 import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
@@ -82,7 +83,7 @@ Future signUp(String email, String pass, String firstName, context) async {
     prefs.setString("tag_line", tag_line);
     prefs.setString("avatar_url", avatar_url);
 
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SetGoals()), (Route<dynamic> route) => false);
   }else{
     print("nope");
     print(response.body);

@@ -5,8 +5,8 @@ import 'package:sidebar_animation/row_widgets/course_list.dart';
 
 class CourseTiles extends StatelessWidget {
 
-  List<dynamic> trainingModules;
-  int index;
+  final List<dynamic> trainingModules;
+  final int index;
 
   CourseTiles({ this.trainingModules, this.index});
 

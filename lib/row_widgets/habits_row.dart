@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sidebar_animation/pages/home.dart';
 
 import '../services/local_notifications_manager.dart';
 import '../helpers/database_helpers.dart';
@@ -15,9 +14,7 @@ class HabitsRow extends StatefulWidget {
   List<String> habits;
   int index;
 
-
   HabitsRow({ this.category, this.habits, this.index});
-
   @override
   _HabitsRowState createState() => _HabitsRowState();
 
@@ -94,14 +91,12 @@ class _HabitsRowState extends State<HabitsRow> {
     _read() async {
       DatabaseHelper helper = DatabaseHelper.instance;
       List<Habit> habitList = await helper.queryAll();
-      print(habitList.length);
       return habitList;
     }
     return FutureBuilder <List<Habit>>(
         future: _read(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            print(snapshot);
             return Column(
               children: <Widget>[
                 Row(children: [
@@ -247,15 +242,12 @@ class _HabitsRowState extends State<HabitsRow> {
     };
     void saveIssue(selectedHabit, time, timeValue) async{
       String selectedDescription;
-      print(timeValue);
-      // habitFormKey.currentState.save();
-
       if (selectedHabit =="gratitude"){
         selectedDescription = 'What are you grateful for today?';
       }else if (selectedHabit == "objective"){
         selectedDescription = 'What is your one objective for today?';
       } else {
-        selectedDescription = 'Did you accomplish this today?';
+        selectedDescription = 'Remember: You are smart. You are tough. You can do hard things.';
       };
       Habit newHabit=Habit();
       newHabit.time = time;
@@ -265,9 +257,6 @@ class _HabitsRowState extends State<HabitsRow> {
 
       DatabaseHelper helper = DatabaseHelper.instance;
       int id = await helper.insert(newHabit);
-      // DateTime betterTime = timeValue;
-      print("on to notifications");
-      print(id);
       localNotifications.showDailyNotification(id, selectedDescription, timeValue);
 
     }
@@ -366,10 +355,6 @@ class _HabitsRowState extends State<HabitsRow> {
                       DateTime bester = calcTime(best);
                       saveIssue(habitController.text,timeController.text, bester);
                       Navigator.pop(context, 'yep');
-                      // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                      //     builder: (BuildContext context) => HomePage()), (
-                      //     Route<dynamic> route) => false);
-
                     },
                   ),
                 ),

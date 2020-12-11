@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:notification_permissions/notification_permissions.dart';
-import 'package:sidebar_animation/screens/signup_screen.dart';
-import 'package:sidebar_animation/services/api_posts.dart';
-import '../services/notifications_manager.dart';
+import '../framework_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 
@@ -170,7 +166,7 @@ class _SetGoalsState extends State<SetGoals> {
                   _firebaseMessaging.requestNotificationPermissions();
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupPage()),
+                    MaterialPageRoute(builder: (context) => FrameworkPage()),
                         (Route<dynamic> route) => false,
                   );
                 },
