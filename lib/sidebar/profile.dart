@@ -16,7 +16,7 @@ class _ProfileState extends State<Profile> {
 		String firstName = prefs.getString("first_name");
 		print(firstName);
 		String tagLine = prefs.getString("tag_line") ??
-				"Add a tagline to people get to know you better";
+				"Add a tagline";
 		String avatarUrl = prefs.getString("avatar_url") ?? "no";
 		List userInfo = [tagLine, firstName, avatarUrl];
 		print(userInfo);
@@ -36,7 +36,7 @@ class _ProfileState extends State<Profile> {
 								iconTheme: IconThemeData(
 									color: Colors.white, //change your color here
 								),
-								title: Text("Profile",
+								title: Text("Update Profile",
 									style: TextStyle(color: Colors.white),
 								),
 								backgroundColor: Colors.transparent,
@@ -60,9 +60,9 @@ class _ProfileState extends State<Profile> {
 												borderRadius: BorderRadius.circular(18.0),
 												child: Container(
 													// margin: EdgeInsets.symmetric(horizontal: 20),
-													padding:EdgeInsets.only(top: 100, bottom:170),
+													padding:EdgeInsets.only(top: 10, bottom:170),
 													decoration: BoxDecoration(
-															color: Colors.white54
+															color: Colors.white
 													),
 													height: MediaQuery.of(context).size.height*2/3,
 													width: MediaQuery
@@ -76,14 +76,33 @@ class _ProfileState extends State<Profile> {
 																key: _formKey,
 																child: Column(
 																	children: [
-																		new Container(
-																			padding: EdgeInsets.symmetric(horizontal:70.0, vertical:5),
-																			child: new TextFormField(
-																				style: TextStyle(color: Colors.white),
-																				// decoration: InputDecoration(fillColor: Colors.orange, filled: true),
+																		Container(
+																			width: MediaQuery
+																					.of(context)
+																					.size
+																					.width,
+																		  padding:EdgeInsets.only(right:40),
+																		  child:
+																		    Align(
+																		    		alignment:Alignment.topRight,
+																		    		child: TextButton(
+																		    			child:Text("Save",
+																							style: TextStyle(fontSize: 18, color:Color(0XFF09EEBC) ),
+																							),
+																							onPressed: (){},
+																		    		),
 
+																		    ),
+
+																		),
+																		Divider(),
+																		new Container(
+																			padding: EdgeInsets.only(left:70.0,right:70.0, top:45, bottom:5),
+																			child: new TextFormField(
+																				style: TextStyle(color: Colors.black, fontSize: 18),
+																				// decoration: InputDecoration(fillColor: Colors.orange, filled: true),
 																				initialValue: snapshot.data[1],
-																				decoration: const InputDecoration(labelText: "YOUR FIRST NAME", labelStyle: TextStyle(color: Colors.white), hintText: "What do people call you?"),
+																				decoration: const InputDecoration(labelText: "YOUR FIRST NAME", hintText: "What do people call you?"),
 																				autocorrect: false,
 																				// controller: _firstNameController,
 																				onChanged: (String value) {
@@ -94,7 +113,7 @@ class _ProfileState extends State<Profile> {
 																		Container(
 																			padding: EdgeInsets.symmetric(horizontal:70.0, vertical:5),
 																			child: new TextFormField(
-																				style: TextStyle(color: Colors.white),
+																				style: TextStyle(color: Colors.black, fontSize: 18),
 																				initialValue: snapshot.data[0],
 																				decoration: const InputDecoration(labelText: "YOUR TAG LINE", hintText: "What do you want people to know about you?"),
 																				autocorrect: false,
@@ -107,7 +126,7 @@ class _ProfileState extends State<Profile> {
 																		Container(
 																			padding: EdgeInsets.symmetric(horizontal:70.0, vertical:5),
 																			child: new TextFormField(
-																				style: TextStyle(color: Colors.white),
+																				style: TextStyle(color: Colors.black, fontSize: 18),
 																				initialValue: "matt@test.com",
 																				decoration: const InputDecoration(labelText: "YOUR EMAIL ADDRESS", hintText: "Email address"),
 																				autocorrect: false,
@@ -120,7 +139,7 @@ class _ProfileState extends State<Profile> {
 																		Container(
 																			padding: EdgeInsets.symmetric(horizontal:70.0, vertical:5),
 																			child: new TextFormField(
-																				style: TextStyle(color: Colors.white),
+																				style: TextStyle(color: Colors.black, fontSize: 18),
 																				obscureText: true,
 																				initialValue: "123456",
 																				decoration: const InputDecoration(labelText: "YOUR PASSWORD", hintText: "Enter a new password"),
@@ -139,42 +158,62 @@ class _ProfileState extends State<Profile> {
 												),
 											),
 										),
-										Container(
-											margin: EdgeInsets.only(top: 100),
-											width: MediaQuery
-													.of(context)
-													.size
-													.width,
-											height: MediaQuery
-													.of(context)
-													.size
-													.height / 2.5,
-											child: Center(
-												child: ClipRRect(
-													borderRadius: BorderRadius.circular(200.0),
-													child: Image.asset("assets/images/guru1.png",
-														width: 200,
-														height: 200,
-														fit: BoxFit.cover,
+
+										Stack(
+										  children: [
+										    Container(
+										    	margin: EdgeInsets.only(top: 100),
+										    	width: MediaQuery
+										    			.of(context)
+										    			.size
+										    			.width,
+										    	height: MediaQuery
+										    			.of(context)
+										    			.size
+										    			.height / 2.5,
+										    	child: Center(
+										    		child: CircleAvatar(
+															child:
+															snapshot.data[2].length > 3
+																	? NetworkImage("$snapshot.data[2]")
+																	: Icon(
+																Icons.person,
+																color: Colors.white,
+																size: 75,
+															),
+															radius: 80,
+															backgroundColor: Color(0XFF09eebc),
+														),
+
+														// ClipRRect(
+										    		// 	borderRadius: BorderRadius.circular(200.0),
+										    		// 	child:
+														//
+														// 	Image.asset("assets/images/guru1.png",
+										    		// 		width: 180,
+										    		// 		height: 180,
+										    		// 		fit: BoxFit.cover,
+										    		// 	),
+										    		),
+										    	),
+
+												Positioned(
+													top:200,
+													right:MediaQuery
+							.of(context)
+							.size
+							.width*1/3.7,
+													child: FloatingActionButton(
+														child: Icon(Icons.photo_size_select_actual_outlined, color: Color(0xFF09EECA),size: 24,),
+														backgroundColor: Colors.white,
+														onPressed: () {},
 													),
 												),
-											),
+
+										  ],
 										),
 
-										Align(
-											alignment: Alignment.topCenter,
-											child: Container(
-												margin: EdgeInsets.only(top: MediaQuery
-														.of(context)
-														.size
-														.height / 2.25),
-												child: TextButton(
-													child: Text("Update Photo",
-														style: TextStyle(fontSize: 18,),),
-													onPressed: () {},
-												),
-											),
-										)
+
 									]
 							),
 						);
