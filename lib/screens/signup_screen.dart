@@ -55,106 +55,111 @@ class _SignupPageState extends State<SignupPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/adventure3.png'),
-                  fit:BoxFit.cover
-              )
-          ),
-        child: _isLoading ? Center (
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("Signing Up...",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500,
-                      )),
-                )
-              ],
-            )) : ListView(
-          children: <Widget>[
-            headerSection(),
-            formSection(),
-            passwordInfoSection(),
-            buttonSection(),
-            termsSection()
+      body: Stack(
+        children: [
+          Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/adventure3.png'),
+                      fit:BoxFit.cover
+                  )
+              ),
+            child: _isLoading ? Center (
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("Signing Up...",
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    )
+                  ],
+                )) : ListView(
+              children: <Widget>[
+                headerSection(),
+                formSection(),
+                passwordInfoSection(),
+                buttonSection(),
 
-          ],
-        ),
+
+              ],
+            ),
+          ),
+          termsSection(),
+        ],
       ),
     );
   }
-  Padding termsSection(){
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Align(
+  Align termsSection(){
+    return Align(
         alignment:Alignment.bottomCenter,
-        child: RichText(
-            textAlign: TextAlign.center,
-          text:TextSpan(
-            text: "By signing up, you're agreeing to our \n",
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 14,
-            ),
-            children: <TextSpan>[
-              TextSpan(
-                text: "Terms of Use",
-                  recognizer: new TapGestureRecognizer()
-                    ..onTap = () async {
-                      termsInfo = await rootBundle.loadString('assets/text/terms.txt');
-                      showDialog(
-                        context:context,
-                        builder:(BuildContext context){
-                          return infoPopup("Terms of Use", termsInfo);
-                        }
-                      );
-                    },
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  )
-                ),
-              TextSpan(
-                text: " and ",
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: RichText(
+              textAlign: TextAlign.center,
+            text:TextSpan(
+              text: "By signing up, you're agreeing to our \n",
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 14,
               ),
-              TextSpan(
-                  text: "Privacy Policy",
-                  recognizer: new TapGestureRecognizer()
-                    ..onTap = () async{
-                      privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
-                        print("here");
-                      showDialog(
+              children: <TextSpan>[
+                TextSpan(
+                  text: "Terms of Use",
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () async {
+                        termsInfo = await rootBundle.loadString('assets/text/terms.txt');
+                        showDialog(
                           context:context,
                           builder:(BuildContext context){
-                            return infoPopup("Privacy Policy", privacyInfo);
+                            return infoPopup("Terms of Use", termsInfo);
                           }
-                      );
-                    },
+                        );
+                      },
                   style: TextStyle(
-                    decoration: TextDecoration.underline,)
-              ),
-              TextSpan(
-                text: ".",
-              ),
-            ]
-          )
+                    decoration: TextDecoration.underline,
+                    )
+                  ),
+                TextSpan(
+                  text: " and ",
+                ),
+                TextSpan(
+                    text: "Privacy Policy",
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () async{
+                        privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
+                          print("here");
+                        showDialog(
+                            context:context,
+                            builder:(BuildContext context){
+                              return infoPopup("Privacy Policy", privacyInfo);
+                            }
+                        );
+                      },
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,)
+                ),
+                TextSpan(
+                  text: ".",
+                ),
+              ]
+            )
+          ),
         )
-      ),
-    );
+      );
   }
   Container signupInstead(){
    return Container(
      height:40,
-     padding: const EdgeInsets.only(left:23.0, top:25),
+     padding: const EdgeInsets.only(left:23.0, top:15, bottom:5),
      child: Row(
           // mainAxisAlignment: MainAxisAlignment.left,
           children:<Widget>[
@@ -204,8 +209,8 @@ Container passwordInfoSection(){
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35.0),
           child: Text(
-            "Your password must be 6 or more characters long & contain a mix of upper & lower case letters, numbers, and symbols.",
-              style: TextStyle(color: Colors.black54, fontSize: 12)
+            "Password must have 6 characters, upper & lower case letters, numbers, and symbols.",
+              style: TextStyle(color: Colors.black54, fontSize: 10)
           ),
         )
     );
@@ -283,7 +288,7 @@ Container passwordInfoSection(){
 
   Container formSection() {
     return Container(
-      padding: EdgeInsets.only(top: 15, bottom: 10, left:20, right:20),
+      padding: EdgeInsets.only(top: 5, bottom: 10, left:20, right:20),
       child: FormBuilder(
         key: _formBKey,
         child: Column(
@@ -391,7 +396,7 @@ Container passwordInfoSection(){
         Container(
           // margin: EdgeInsets.only(top: 150.0),
           padding: EdgeInsets.only(top:topHeight, left: 20.0),
-         height: 120,
+         height: 100,
          width: double.infinity,
          child: Text("Get Started!",
              style: TextStyle(

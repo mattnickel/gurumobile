@@ -52,12 +52,12 @@ class StartScreen extends StatelessWidget {
                           description: "Access mindset content when you need it most.",
                           startImage: "content.png"),
                         StartCard(
-                          title1:"Get",
-                          title2:"Consistent",
+                          title1:"Build",
+                          title2:"Habits",
                           description:"Build daily habits that fuel your future success.",
                             startImage: "consistent.png"),
                         StartCard(
-                            title1:"Get",
+                            title1:"Stay",
                             title2:"Connected",
                             description:"Share your mindset with friends and coworkers.",
                             startImage: "connect.png"),

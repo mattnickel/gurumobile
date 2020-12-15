@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Support extends StatefulWidget {
   @override
@@ -7,6 +8,23 @@ class Support extends StatefulWidget {
 }
 
 class _SupportState extends State<Support> {
+	final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+	final _issueController = TextEditingController();
+	final _descriptionController = TextEditingController();
+	// final _emailController = TextEditingController();
+	bool _isEnabled;
+
+	@override
+	void initState() {
+		super.initState();
+		_isEnabled = false;
+
+	}
+	_enableSignin() {
+		setState(() {
+			_isEnabled = true;
+		});
+	}
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -28,13 +46,121 @@ class _SupportState extends State<Support> {
 								fit: BoxFit.cover,
 							)
 					),
-					padding: const EdgeInsets.symmetric(horizontal: 20),
-				  child: Center(
-			child: Text(
-				  "Support",
-				  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
-			),
-		),
+					padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+				  child: Column(
+				    children: [
+				    	Container(
+								height: 150,
+								width: MediaQuery
+										.of(context)
+										.size
+										.width,
+							),
+					ClipRRect(
+						borderRadius: BorderRadius.circular(18.0),
+				        child: Container(
+						// padding:EdgeInsets.only(top: 10, bottom:10),
+								decoration: BoxDecoration(
+									color: Colors.white
+								),
+								height: 450,
+								width: MediaQuery.of(context)
+								.size
+								.width,
+						child:  Container(
+								child: Form(
+									key: _formKey,
+									child: Column(
+										children: [
+											Container(
+												height: 100,
+												width: MediaQuery
+														.of(context)
+														.size
+														.width,
+												padding:EdgeInsets.only(top:20),
+												child: Center(child: Text("How can we help you?",
+												style: TextStyle(
+													fontSize: 22,
+													fontWeight: FontWeight.w800,
+													color: Colors.black54,
+												))),
+											),
+							Divider(),
+							ClipRRect(
+								borderRadius: BorderRadius.circular(18.0),
+								child:
+											Container(
+												padding: EdgeInsets.only(left:70.0,right:70.0, bottom:5),
+												child: new TextFormField(
+													style: TextStyle(color: Colors.black, fontSize: 18),
+													// decoration: InputDecoration(fillColor: Colors.orange, filled: true),
+													decoration: const InputDecoration(labelText: "ISSUE NAME", hintText: "What's the issue?"),
+													autocorrect: false,
+													controller: _issueController,
+													onChanged: (String value) {
+														// firstName = value;
+													},
+												),
+											),
+							),
+											Container(
+												// height: 150,
+												padding: EdgeInsets.only(left:70.0,right:70.0, bottom:5),
+												child:  SizedBox(
+													height:150,
+												  child: TextFormField(
+												    	keyboardType: TextInputType.multiline,
+												    	maxLines: 5,
+												    	style: TextStyle(color: Colors.black, fontSize: 18),
+												    	decoration: const InputDecoration(labelText: "DESCRIBE THE ISSUE", hintText: "Give us a little more information."),
+												    	autocorrect: false,
+												    	controller: _descriptionController,
+												    	onChanged: (String value) {
+												    		// firstName = value;
+												    	},
+												    ),
+												),
+											),
+											// Container(
+											// 	padding: EdgeInsets.symmetric(horizontal:70.0, vertical:5),
+											// 	child: new TextFormField(
+											// 		style: TextStyle(color: Colors.black, fontSize: 18),
+											// 		// initialValue: "matt@test.com",
+											// 		decoration: const InputDecoration(labelText: "YOUR EMAIL ADDRESS", hintText: "Email address"),
+											// 		autocorrect: false,
+											// 		controller: _emailController,
+											// 		onChanged: (String value) {
+											//
+											// 		},
+											// 	),
+											// ),
+											Divider(),
+											Padding(
+											  padding: const EdgeInsets.only(top: 28.0),
+											  child: RaisedButton(
+											  			color: Color(0xFF00ebcc),
+											  		child: Padding(
+											  				padding: const EdgeInsets.only(left: 20.0, right:20, top:10.0, bottom:10.0),
+											  				child: Text("Submit to support",
+											  				style: TextStyle(
+											  					fontSize: 16,
+											  					color: Colors.white,
+											  				))),
+											  		shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+											  		onPressed:_issueController.text == "" || _descriptionController.text == "" ? null :(){
+
+														}),
+											)
+										],
+									),
+								),
+							),
+						),
+				      ),
+				    ],
+				  ),
+
 				),
 		);
 	}

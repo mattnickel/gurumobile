@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartCard extends StatelessWidget {
 
@@ -31,22 +32,26 @@ class StartCard extends StatelessWidget {
 
             text: TextSpan(
                 text: title1.toUpperCase(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 46,
-                  fontFamily: "Druk",
+                style: GoogleFonts.roboto(
+                  textStyle:TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 children: <TextSpan>[
                 TextSpan(text:" "),
                   TextSpan(
                     text:
                       title2.toUpperCase(),
-                      style: TextStyle(
-                        color: Color(0xFF00ebcc),
-                        fontSize: 46,
-                        fontFamily: "Druk",
+                      style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                          color: Color(0xFF00ebcc),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                        )
                       ),
-                    ),
+                  ),
                         ]
                   )
               ),

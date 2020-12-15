@@ -90,7 +90,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 									height: 20,
 								)
 							]),
-							Text("You will no longer receive notifications if you disable notifications in device Settings.",
+							Text("To no longer receive notifications, you must disable in device Settings.",
 								textAlign: TextAlign.center,
 								style: TextStyle(fontSize: 16),)
 						],
@@ -152,7 +152,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 						child: Column(
 						  children: [
 						    Text(
-						    	"All Notifications are turned off for \"Limitless Minds.\"",
+						    	"Turn on notifications for \"Limitless Minds.\"",
 						    	textAlign: TextAlign.center,
 						    	style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
 						    ),
@@ -211,16 +211,16 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		bool isGranted;
 		return Scaffold(
 				extendBodyBehindAppBar: true,
-			// appBar: AppBar(
-			// 	elevation: 0,
-			// 	iconTheme: IconThemeData(
-			// 		color: Colors.white, //change your color here
-			// 	),
-			// 	title: Text("Notifications",
-			// 		style: TextStyle(color: Colors.white),
-			// 	),
-			// 	backgroundColor: Colors.transparent,
-			// ),
+			appBar: AppBar(
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: Colors.white, //change your color here
+				),
+				title: Text("Notifications",
+					style: TextStyle(color: Colors.white),
+				),
+				backgroundColor: Colors.transparent,
+			),
 				body: Stack(
 				  children: [
 				    Container(
@@ -230,35 +230,34 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 				    				fit: BoxFit.cover,
 				    			)
 				    	),
-				    	// padding: const EdgeInsets.symmetric(horizontal: 20),
 				      child: FutureBuilder(
-		future: permissionStatusFuture,
-		builder: (context, snapshot) {
-		// if we are waiting for data, show a progress indicator
-		if (snapshot.connectionState == ConnectionState.waiting) {
-		return CircularProgressIndicator();
-		}
-		if (snapshot.hasData) {
+								future: permissionStatusFuture,
+									builder: (context, snapshot) {
+									// if we are waiting for data, show a progress indicator
+								if (snapshot.connectionState == ConnectionState.waiting) {
+									return CircularProgressIndicator();
+								}
+								if (snapshot.hasData) {
 
-		// The permission is granted, then just show the text
-		if (snapshot.data == permGranted) {
-		 isGranted = true;
+								// The permission is granted, then just show the text
+								if (snapshot.data == permGranted) {
+								 isGranted = true;
 
 
-		} else {
-			isGranted = false;
-			habitsCheck = false;
-			messagesCheck = false;
-			contentCheck = false;
+								} else {
+									isGranted = false;
+									habitsCheck = false;
+									messagesCheck = false;
+									contentCheck = false;
 
-		}
+								}
 
-		// else, we'll show a button to ask for the permissions
-		return ListView(
-		children:<Widget>[
+								// else, we'll show a button to ask for the permissions
+								return ListView(
+									children:<Widget>[
 
 		Container(
-		margin:const EdgeInsets.only(top:50),
+		margin:const EdgeInsets.only(top:100),
 		padding: const EdgeInsets.only(left: 20),
 		height:60,
 		decoration: BoxDecoration(

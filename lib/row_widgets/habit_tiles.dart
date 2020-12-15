@@ -109,14 +109,19 @@ class _HabitTilesState extends State<HabitTiles> {
                               ),
                             width: 120,
                             height: 120,
-                            child: Center(
-                                child: Text(widget.habits[widget.index].time,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 22.0,
-                                  color: Colors.white,
-                                ))
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal:8.0),
+                              child: Center(
+                                  child: Text(widget.habits[widget.index].time,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20.0,
+                                      color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
 
+                              ),
                             )
                           ),
                           widget.isSwitched

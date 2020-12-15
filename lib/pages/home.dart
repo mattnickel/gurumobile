@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'next_steps.dart';
 import 'stats.dart';
 
-import '../sidebar/sidebar_layout.dart';
 
 
 class HomePage extends StatelessWidget {

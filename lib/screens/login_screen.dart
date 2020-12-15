@@ -238,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Container headerSection() {
     return Container(
-      margin: EdgeInsets.only(top: 120.0),
+      margin: EdgeInsets.only(top: 100.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
      child: Text("Welcome back!",
          style: TextStyle(
