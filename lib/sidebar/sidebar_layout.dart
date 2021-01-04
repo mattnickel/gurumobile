@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/sidebar/profile.dart';
 import 'package:sidebar_animation/sidebar/support.dart';
@@ -17,19 +21,28 @@ class _SideBarMenuState extends State<SideBarMenu> {
 
   Future <List> setProfileInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String firstName = prefs.getString("first_name");
-    print(firstName);
-    String tagLine = prefs.getString("tag_line") ??
-        "Add a tagline to people get to know you better";
-    String avatarUrl = prefs.getString("avatar_url") ?? "no";
+    String firstName = prefs.getString("firstName");
+    String tagLine = prefs.getString("tagLine") ??
+        "Add a tagline...";
+    String avatarUrl = prefs.getString("avatarUrl") ?? "no";
     List userInfo = [tagLine, firstName, avatarUrl];
-    print(userInfo);
     return userInfo;
   }
+  String received;
+  int id =0;
 
+  void refreshData() {
+    id++;
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    refreshData();
+    setState(() {});
+  }
 
   @override
   void initState() {
+    setProfileInfo();
     super.initState();
   }
 
@@ -52,7 +65,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           fit: BoxFit.cover,
                         )
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.only(left: 20, right:10),
                     child:
                     ListView(
                         children: <Widget>[
@@ -65,11 +78,21 @@ class _SideBarMenuState extends State<SideBarMenu> {
                               ]
                           ),
                           ListTile(
-                            title: Text(
+                            title:
+                            snapshot.data[1] != null ?
+                            Text(
                               snapshot.data[1],
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 30, fontWeight:
+                                  fontSize: 20, fontWeight:
+                              FontWeight.w800
+                              ),
+                            )
+                            :Text(
+                              "unknown",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20, fontWeight:
                               FontWeight.w800
                               ),
                             ),
@@ -81,17 +104,33 @@ class _SideBarMenuState extends State<SideBarMenu> {
                                   fontWeight: FontWeight.w200
                               ),
                             ),
-                            leading: CircleAvatar(
-                              child:
+                            leading:
                               snapshot.data[2].length > 3
-                                  ? NetworkImage("$snapshot.data[2]")
-                                  : Icon(
-                                Icons.perm_identity,
-                                color: Colors.white,
-                              ),
-                              radius: 40,
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(snapshot.data[2]),
+                                  radius: 40,
+                                )
+
+                              : CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Color(0xff00eebc),
+                                  child: Text(
+                                      'M',
+                                      style: GoogleFonts.roboto(
+                                        textStyle: TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.white,
+                                        )
+                                      ),
+                                  ),
+                                ),
                             ),
                           ),
+
                           Divider(
                             height: 60,
                             thickness: 0.5,
@@ -103,22 +142,19 @@ class _SideBarMenuState extends State<SideBarMenu> {
                               icon: Icons.notifications,
                               title: "Notifications",
                               onTap: () async{
-                          String received = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Notifications()),
-                                );
+                                Route route = MaterialPageRoute(
+                                    builder: (context) => Notifications());
+                                Navigator.push(context, route).then(onGoBack);
                               }
                           ),
                           MenuItem(
                               icon: Icons.perm_identity,
                               title: "Profile",
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Profile(),
-                                ));
+                              onTap: () async {
+                                Route route = MaterialPageRoute(
+                                  builder: (context) => Profile(),
+                                );
+                                Navigator.push(context, route).then(onGoBack);
                               }
                           ),
                           // MenuItem(
@@ -133,17 +169,17 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           //   onTap: () {
                           //   }
                           // ),
-                          MenuItem(
-                              icon: Icons.live_help,
-                              title: "Support",
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Support()),
-                                );
-                              }
-                          ),
+                          // MenuItem(
+                          //     icon: Icons.live_help,
+                          //     title: "Support",
+                          //     onTap: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => Support()),
+                          //       );
+                          //     }
+                          // ),
                           MenuItem(
                               icon: Icons.filter_none,
                               title: "Terms",

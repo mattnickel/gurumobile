@@ -33,6 +33,10 @@
 	<string>We might need your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app would like access to the photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app would like access to the camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app would like access to the microphone.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

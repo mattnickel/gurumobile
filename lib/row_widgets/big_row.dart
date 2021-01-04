@@ -20,8 +20,8 @@ class BigRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-      FutureBuilder<List<dynamic>>(
-          future: fetchVideos(http.Client(), category),
+      FutureBuilder<Video>(
+          future: fetchRandom(http.Client(), category),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
@@ -56,11 +56,10 @@ class BigRow extends StatelessWidget {
                           height: 575,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data == null ? 0 : snapshot.data.length,
+                            itemCount: 1,
                             itemBuilder: (context, index) {
                               return BigTiles(
-                                videos: snapshot.data,
-                                index: index,
+                                video: snapshot.data
                               );
                             },
                           )

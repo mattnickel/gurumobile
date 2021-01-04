@@ -73,7 +73,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 			}
 		});
 	}
-	areYouSurePopup(context){
+	AlertDialog areYouSurePopup(context){
 		return AlertDialog(
 		contentPadding: EdgeInsets.only(left: 25, right: 25, bottom: 15),
 		title: Center(
@@ -143,7 +143,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		)
 		);
 	}
-	askAgainPopup(context){
+	AlertDialog askAgainPopup(context){
 		return AlertDialog(
 				contentPadding: EdgeInsets.only(left: 25, right: 25, bottom: 20),
 				title: Center(
@@ -186,8 +186,8 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 										borderRadius: BorderRadius.circular(30.0),
 									),
 									onPressed: () async {
-										AppSettings.openNotificationSettings();
 										Navigator.pop(context, 'yep');
+										AppSettings.openNotificationSettings();
 									},
 								),
 							),
@@ -216,7 +216,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 				iconTheme: IconThemeData(
 					color: Colors.white, //change your color here
 				),
-				title: Text("Notifications",
+				title: Text("Manage Notifications",
 					style: TextStyle(color: Colors.white),
 				),
 				backgroundColor: Colors.transparent,
@@ -457,16 +457,16 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		}
 				    ),
 		),
-						Positioned(
-								top:55,
-								right:0,
-								child: FlatButton(
-									child:Icon(Icons.close, color: Colors.white,),
-								onPressed: (){
-
-								Navigator.popAndPushNamed(context, '/framework' );
-									},
-						))
+						// Positioned(
+						// 		top:55,
+						// 		right:0,
+						// 		child: FlatButton(
+						// 			child:Icon(Icons.close, color: Colors.white,),
+						// 		onPressed: (){
+						//
+						// 		Navigator.popAndPushNamed(context, '/framework' );
+						// 			},
+						// ))
 				  ],
 				)
 		);

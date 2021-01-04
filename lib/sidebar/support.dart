@@ -9,8 +9,8 @@ class Support extends StatefulWidget {
 
 class _SupportState extends State<Support> {
 	final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-	final _issueController = TextEditingController();
-	final _descriptionController = TextEditingController();
+	final issueController = TextEditingController();
+	final descriptionController = TextEditingController();
 	// final _emailController = TextEditingController();
 	bool _isEnabled;
 
@@ -18,6 +18,8 @@ class _SupportState extends State<Support> {
 	void initState() {
 		super.initState();
 		_isEnabled = false;
+		issueController.addListener(_enableSignin);
+		descriptionController.addListener(_enableSignin);
 
 	}
 	_enableSignin() {
@@ -83,7 +85,7 @@ class _SupportState extends State<Support> {
 												style: TextStyle(
 													fontSize: 22,
 													fontWeight: FontWeight.w800,
-													color: Colors.black54,
+													color: Color(0xFF00ebcc),
 												))),
 											),
 							Divider(),
@@ -97,8 +99,11 @@ class _SupportState extends State<Support> {
 													// decoration: InputDecoration(fillColor: Colors.orange, filled: true),
 													decoration: const InputDecoration(labelText: "ISSUE NAME", hintText: "What's the issue?"),
 													autocorrect: false,
-													controller: _issueController,
+													controller: issueController,
 													onChanged: (String value) {
+														setState(){
+															_isEnabled = true;
+														};
 														// firstName = value;
 													},
 												),
@@ -110,15 +115,26 @@ class _SupportState extends State<Support> {
 												child:  SizedBox(
 													height:150,
 												  child: TextFormField(
+														controller: descriptionController,
+														validator: (value){
+															if(value.isEmpty){
+																return 'Password cannot be empty';
+															}
+															return null;
+														},
 												    	keyboardType: TextInputType.multiline,
 												    	maxLines: 5,
 												    	style: TextStyle(color: Colors.black, fontSize: 18),
 												    	decoration: const InputDecoration(labelText: "DESCRIBE THE ISSUE", hintText: "Give us a little more information."),
-												    	autocorrect: false,
-												    	controller: _descriptionController,
-												    	onChanged: (String value) {
-												    		// firstName = value;
-												    	},
+												    	autocorrect: true,
+
+												    	// onChanged: (String value) {
+															// 	print(value);
+												    	// 	setState(value){
+												    	// 		print(value);
+															// 		_isEnabled = true;
+															// 	};
+												    	// },
 												    ),
 												),
 											),
@@ -148,7 +164,10 @@ class _SupportState extends State<Support> {
 											  					color: Colors.white,
 											  				))),
 											  		shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-											  		onPressed:_issueController.text == "" || _descriptionController.text == "" ? null :(){
+											  		onPressed: issueController.text == "" || descriptionController.text == "" ? null : (){
+																print(true);
+																// postToDb();
+																// popUpConfirmation();
 
 														}),
 											)

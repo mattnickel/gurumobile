@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sidebar_animation/pages/home.dart';
 import 'package:sidebar_animation/screens/start_screen.dart';
+import 'package:sidebar_animation/services/api_login.dart';
 import '../framework_page.dart';
 import '../services/api_calls2.dart';
 import '../featured.dart';
@@ -29,43 +30,13 @@ class SplashPageState extends State<SplashPage> {
   Future<void> initState() {
     super.initState();
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
-    readName().then((value) {
-      setState(() {
-        firstName = value;
-      });
-    });
-    checkLoginStatus();
+    checkLoginStatus(context);
+  }
 
-  }
-  Future <String> readName() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("first_name");
-  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-
-
-  checkLoginStatus() async {
-    final storage = FlutterSecureStorage();
-    String token = await storage.read(key: "token");
-    if(token != null && firstName != null ) {
-      await fetchVideos(http.Client(), "For $firstName Today");
-      // await updateVideos(http.Client(), "Continue Watching");
-      // await updateVideos(http.Client(), "Trending Videos");
-      // await updateVideos(http.Client(), "Recommended Videos");
-      // await updateCourses(http.Client(), "Recommended Courses");
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-            builder: (BuildContext context) => FrameworkPage()), (
-            Route<dynamic> route) => false);
-    }else {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => StartScreen()), (
-          Route<dynamic> route) => false);
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {

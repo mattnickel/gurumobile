@@ -34,6 +34,9 @@ dependencies:
   pull_to_refresh: ^1.6.3
   app_settings: 4.0.4
   google_fonts: ^1.1.1
+  image_picker: ^0.6.7+15
+  dio: ^3.0.10
+  progress_indicator_button: ^0.0.3
 
 
 

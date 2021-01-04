@@ -7,13 +7,17 @@ import '../pages/library.dart';
 
 
 class NavbarTabSelectedModel extends ChangeNotifier {
+
   int _currentTab = 0;
+
   List <Widget> _pages = [
+
     HomePage(),
     Library(),
     // Gurus(),
     Social(),
   ];
+
 
   set currentTab(int tab) { this._currentTab = tab; notifyListeners();}
   get currentTab => this._currentTab;

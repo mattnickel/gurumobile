@@ -11,13 +11,18 @@ import 'dart:io';
 http.Client client;
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
 String base_url = 'https://limitlessguru.herokuapp.com/api/v1';
-// String local_url = 'http://localhost:3000/api/v1/';
+// String localUrl = 'http://localhost:3000/api/v1/';
 
 List<Video> parseVideos(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   final parsedList = parsed.map<Video>((json) => Video.fromJson(json))
           .toList();
   return parsedList;
+}
+Video parseOneVideo(random){
+  final parsed = json.decode(random);
+  final parsedVideo = Video.fromJson(parsed);
+  return parsedVideo;
 }
 
 List<TrainingModule> parseTrainingModules(String responseBody) {
@@ -35,21 +40,48 @@ Future<List<Video>> cachedVideos (category)async {
 }
 
 Future<List<Video>> fetchVideos(client, category) async {
-  final storage = FlutterSecureStorage();
-  String token = await storage.read(key: "token");
   var dir = await getTemporaryDirectory();
-  print("here");
   File file = File(dir.path + "/" + category + ".json");
-  print('ok');
   if (file.existsSync()) {
-    print("Fetching from cache: $category");
-    var cachedVideos = file.readAsStringSync();
-    return parseVideos(cachedVideos);
+    print("file exists");
+    DateTime update = await file.lastModified();
+    var now = new DateTime.now();
+    if (update.day == now.day) {
+      print("Fetching from cache: $category");
+      var cachedVideos = file.readAsStringSync();
+      return parseVideos(cachedVideos);
+    } else{
+      print("go for updates");
+      return updateVideos(client, category);
+    }
   } else {
-    print("update now");
+    print("go for updates");
     return updateVideos(client, category);
   }
 }
+Future<Video> fetchRandom(client, category) async {
+  var dir = await getTemporaryDirectory();
+  File file = File(dir.path + "/" + category + ".json");
+  //if file updated today
+  if (file.existsSync()) {
+    DateTime update = await file.lastModified();
+    if (update.day == DateTime
+        .now()
+        .day) {
+      print("update random from cache");
+      var randomVideo = file.readAsStringSync();
+      print(randomVideo);
+      return parseOneVideo(randomVideo);
+    } else {
+      print("go get it");
+      return updateOneVideo(client, category, "random");
+    }
+  }else{
+    print("go get it");
+    return updateOneVideo(client, category, "random");
+  }
+}
+
 Future<List<TrainingModule>> fetchCourses(client, category) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
@@ -64,57 +96,90 @@ Future<List<TrainingModule>> fetchCourses(client, category) async {
     return updateCourses(client, category);
   }
 }
-
-Future<List<Video>>updateVideos(http.Client client, category) async {
+Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
   var dir = await getTemporaryDirectory();
-  File file = File(dir.path + "/$category.json");
+  File file = File(dir.path + "/" + category + ".json");
   print("update: $category");
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final url = "$base_url/videos/$customUrl";
   final response = await client.get(
-    "$base_url/videos", headers: tokenHeaders,
+    url, headers: tokenHeaders,
   );
-  if (response.statusCode == 200) {
-    print("updated $category from api");
-    file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
-    return compute(parseVideos, response.body);
-  } else {
-    if (response.statusCode != null) {
+  if (response != null) {
+    if (response.statusCode == 200) {
+      print("updated $category from api");
+      file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
+      print("so far so good");
+      print(response.body);
+      return parseOneVideo(response.body);
+    } else {
       print("$category not updated from api");
       print(response.body);
-    } else {
-      print("no api response");
       return null;
     }
   }
 }
-Future<List<TrainingModule>>updateCourses(http.Client client, category) async {
+
+
+Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) async {
+  var updateResponse;
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/$category.json");
   print("update: $category");
   final storage = FlutterSecureStorage();
+  var url;
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  final response = await client.get(
-    "$base_url/training_modules", headers: tokenHeaders,
-  );
-  print(response.body);
-  if (response.statusCode == 200) {
-    print("updated courses from api");
-    file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
-    return compute(parseTrainingModules, response.body);
+  if (customUrl != null) {
+    url = "$base_url/videos/$customUrl";
   } else {
-    if (response.statusCode != null) {
-      print("media not updated from api");
-      print(response.statusCode);
+    url = "$base_url/videos";
+  }
+  final response = await client.get(
+    url, headers: tokenHeaders,
+  );
+
+  if (response != null) {
+    if (response.statusCode == 200) {
+      print("updated $category from api");
+      file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
+      print("so far so good");
+      print(response.body);
+      return parseVideos(response.body);
     } else {
-      print("no api response");
+      print("$category not updated from api");
+      print(response.body);
       return null;
     }
   }
 }
+  Future<List<TrainingModule>>updateCourses(http.Client client, category) async {
+    var dir = await getTemporaryDirectory();
+    File file = File(dir.path + "/$category.json");
+    print("update: $category");
+    final storage = FlutterSecureStorage();
+    String token = await storage.read(key: "token");
+    final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+    final response = await client.get(
+      "$base_url/training_modules", headers: tokenHeaders,
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("updated courses from api");
+      file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
+      return compute(parseTrainingModules, response.body);
+    } else {
+      if (response.statusCode != null) {
+        print("media not updated from api");
+        print(response.statusCode);
+      } else {
+        print("no api response");
+        return null;
+      }
+    }
+  }
   Future<List<Video>> checkThenUpdateVideos(http.Client client,
       category) async {
     String media_type = "videos";

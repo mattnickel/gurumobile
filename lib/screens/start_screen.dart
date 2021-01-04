@@ -19,6 +19,7 @@ import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 
 class StartScreen extends StatelessWidget {
 
+
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,

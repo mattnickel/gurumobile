@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   Image backgroundImage;
   bool _isLoading = false;
   bool _isEnabled = false;
+  String email;
 
 
   final emailController = TextEditingController();
@@ -32,12 +33,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-
+    _getEmail();
     // Start listening to changes.
     emailController.addListener(_enableSignin);
     passwordController.addListener(_enableSignin);
   }
+  _getEmail() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    email = prefs.getString("email");
+    if (email != null) {
+      print("here");
+      setState(() {
+        emailController.text = email;
+      });
 
+    }
+  }
   _enableSignin() {
       setState(() {
         _isEnabled = true;

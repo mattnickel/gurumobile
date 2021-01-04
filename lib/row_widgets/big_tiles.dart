@@ -2,15 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sidebar_animation/media_widgets/flick_manager.dart';
+import 'package:sidebar_animation/models/video_model.dart';
 
 
 
 class BigTiles extends StatelessWidget {
 
-  List<dynamic> videos;
-  int index;
+ Video video;
 
-  BigTiles({ this.videos, this.index});
+
+  BigTiles({ this.video});
   bool hasViewed = false;
 
   @override
@@ -27,7 +28,7 @@ class BigTiles extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18.0),
                     child:
                     CachedNetworkImage(
-                      imageUrl: '${videos[index].image}',
+                      imageUrl: '${video.image}',
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -56,7 +57,7 @@ class BigTiles extends StatelessWidget {
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FlickVideoScreen(videos[index].file, videos[index].id);
+                          return FlickVideoScreen(video.file, video.id);
                         }));
                       },
                       elevation: 2.0,
@@ -74,7 +75,7 @@ class BigTiles extends StatelessWidget {
                     bottom: 50,
                     left:10,
                     child: Text(
-                        videos[index].title,
+                        video.title,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
@@ -85,7 +86,8 @@ class BigTiles extends StatelessWidget {
                     bottom: 30,
                     left:10,
                     child: Text(
-                        videos[index].author,
+                        video.author != null ?
+                        video.author : "unknown",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

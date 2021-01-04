@@ -10,13 +10,14 @@ import 'sidebar/sidebar_layout.dart';
 
 class FrameworkPage extends StatefulWidget{
 
-  @override
+	@override
   _FrameworkPageState createState() => _FrameworkPageState();
 }
 
 
 
 class _FrameworkPageState extends State<FrameworkPage> {
+
 
 	final localNotifications = LocalNotificationsManager.init();
 
@@ -68,7 +69,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 							      	unselectedItemColor: Colors.black54,
 							      	currentIndex: (model.currentTab),
 							      	items: [
-							      		FloatingNavbarItem(icon: Icons.home, title: 'Home'),
+							      		FloatingNavbarItem(icon: Icons.home, title: 'Home', ),
 							      		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
 							      		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
 							      	],

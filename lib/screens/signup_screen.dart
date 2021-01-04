@@ -396,7 +396,7 @@ Container passwordInfoSection(){
         Container(
           // margin: EdgeInsets.only(top: 150.0),
           padding: EdgeInsets.only(top:topHeight, left: 20.0),
-         height: 100,
+         height: 130,
          width: double.infinity,
          child: Text("Get Started!",
              style: TextStyle(
@@ -407,7 +407,7 @@ Container passwordInfoSection(){
          ),
         ),
         Positioned(
-          bottom: 10,
+          top: 80,
              child: signupInstead(),
         )
       ],
