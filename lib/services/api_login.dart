@@ -15,7 +15,7 @@ import '../screens/signup_screen.dart';
 import '../main.dart';
 
 String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
-// String localUrl = "http://localhost:3000/api/v1/";
+String localUrl = "http://localhost:3000/api/v1/";
 
 checkLoginStatus(context) async {
   final storage = FlutterSecureStorage();

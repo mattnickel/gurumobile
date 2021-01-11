@@ -46,7 +46,7 @@ class StartCard extends StatelessWidget {
                       title2.toUpperCase(),
                       style: GoogleFonts.roboto(
                         textStyle: TextStyle(
-                          color: Color(0xFF00ebcc),
+                          color: Color(0xFF09ebcc),
                           fontSize: 32,
                           fontWeight: FontWeight.w800,
                         )

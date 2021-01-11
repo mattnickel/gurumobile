@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widgets/flutter_widgets.dart';
+import 'package:sidebar_animation/screens/social_post_screen.dart';
 import 'package:sidebar_animation/services/api_posts.dart';
 import 'package:video_player/video_player.dart';
 
@@ -12,7 +13,8 @@ class FlickVideoScreen extends StatefulWidget {
   int positionValue;
   final String videoFile;
   final int videoId;
-  FlickVideoScreen(this.videoFile, this.videoId);
+  final String image;
+  FlickVideoScreen(this.videoFile, this.videoId, this.image);
 
   @override
   _FlickVideoScreenState createState() => _FlickVideoScreenState(
@@ -32,6 +34,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
       VideoPlayerController.network(widget.videoFile),
 
     );
+    flickManager.flickVideoManager.videoPlayerController.addListener(checkVideo);
     // void positionValue = flickManager.flickVideoManager.videoPlayerController.value.position;
   }
 
@@ -39,6 +42,16 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
   void dispose() {
     flickManager.dispose();
     super.dispose();
+  }
+  void checkVideo(){
+    if(flickManager.flickVideoManager.videoPlayerController.value.position == flickManager.flickVideoManager.videoPlayerController.value.duration) {
+      print('video Ended');
+      // Navigator.of(context).push(PageRouteBuilder(
+      //     opaque: false,
+      //     pageBuilder: (BuildContext context, _, __) =>
+      //         SocialPostScreen()));
+    }
+
   }
 
   @override
@@ -84,7 +97,20 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                   }
               ),
             ),
-
+            // Positioned(
+            //   top:100,
+            //   right:10,
+            //   child: IconButton(
+            //       icon:Icon(Icons.tag_faces),
+            //       color: Colors.white,
+            //       onPressed: () {
+            //         Navigator.of(context).push(PageRouteBuilder(
+            //             opaque: false,
+            //             pageBuilder: (BuildContext context, _, __) =>
+            //                 SocialPostScreen(image: widget.image)));
+            //       }
+            //   ),
+            // ),
       ]
       ),
     );

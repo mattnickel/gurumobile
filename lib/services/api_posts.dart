@@ -10,14 +10,13 @@ import 'package:http_parser/http_parser.dart';
 
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
 String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-String localUrl = 'http://localhost:3000/api/v1';
+// String localUrl = 'http://localhost:3000/api/v1';
 
 Future<String> postImage(_image) async{
-  var jsonResponse;
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token};
-  var postUri = Uri.parse("$localUrl/users/1");
+  var postUri = Uri.parse("$baseUrl/users/1");
   String fileName = _image.path.split('/').last;
     FormData data = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(
@@ -108,7 +107,7 @@ Future<String>updateUser(update) async {
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);
-  String thisUrl = "$localUrl/users/$userId";
+  String thisUrl = "$baseUrl/users/$userId";
   print(thisUrl);
 
   final response = await http.put(

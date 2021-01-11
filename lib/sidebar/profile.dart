@@ -63,10 +63,10 @@ class _ProfileState extends State<Profile> {
 			final SharedPreferences prefs = await SharedPreferences.getInstance();
 			prefs.setString("avatarUrl", updated);
 			print('savedImage');
-			setState()async {
+			setState(()async {
 				avatarUrl= updated;
 				_image = null;
-			}
+			});
 
 		}
 		Future saveUserInfo() async {
@@ -162,25 +162,15 @@ class _ProfileState extends State<Profile> {
 																									Align(
 																										alignment: Alignment.topRight,
 																											  child: Container(
-																											  	width: MediaQuery
-																											  			.of(context)
-																											  			.size
-																											  			.width/3,
-
+																											  	width: 120,
+																											  		height: 40,
+																											  		margin: EdgeInsets.only(right:15),
 																											  		child: ProgressButton(
 																											  		borderRadius: BorderRadius.all(Radius.circular(18)),
-																											  			strokeWidth: 2,
+																											  			// strokeWidth: 2,
 																											  			color: Color(
 																											  					0xff00eebc),
 																											  			child:
-																											  			// Padding(
-																											  				// padding: const EdgeInsets
-																											  				// 		.only(
-																											  				// 		left: 10.0,
-																											  				// 		right: 10,
-																											  				// 		top: 10.0,
-																											  				// 		bottom: 10.0),
-																											  				// child:
 																											  				Text(
 																											  						("Save")
 																											  								.toUpperCase(),
@@ -190,12 +180,6 @@ class _ProfileState extends State<Profile> {
 																											  								fontSize: 18,
 																											  								fontWeight: FontWeight
 																											  										.bold)),
-																											  			// ),
-																											  			// shape: RoundedRectangleBorder(
-																											  			// 		borderRadius: BorderRadius
-																											  			// 				.circular(
-																											  			// 				18.0)),
-
 																											  			onPressed: (AnimationController controller) async {
 																																List update = [
 																																	userId,
@@ -235,11 +219,8 @@ class _ProfileState extends State<Profile> {
 																																			.reset();
 																																}
 																															}
-
 																											  		),
-
 																											  	),
-
 																											  ),
 
 																											Divider(),

@@ -23,7 +23,6 @@ class VideoRow extends StatelessWidget {
     return
     FutureBuilder<List<Video>>(
           future: fetchVideos(http.Client(), category),
-
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {
