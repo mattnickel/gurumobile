@@ -1,15 +1,12 @@
-
-import 'dart:convert';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sidebar_animation/services/api_login.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'login_screen.dart';
 
+import '../popups/terms_popup.dart';
+import '../services/api_login.dart';
+import 'login_screen.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -89,7 +86,6 @@ class _SignupPageState extends State<SignupPage> {
                 passwordInfoSection(),
                 buttonSection(),
 
-
               ],
             ),
           ),
@@ -102,7 +98,7 @@ class _SignupPageState extends State<SignupPage> {
     return Align(
         alignment:Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.only(bottom: 30.0),
           child: RichText(
               textAlign: TextAlign.center,
             text:TextSpan(
@@ -117,10 +113,10 @@ class _SignupPageState extends State<SignupPage> {
                     recognizer: new TapGestureRecognizer()
                       ..onTap = () async {
                         termsInfo = await rootBundle.loadString('assets/text/terms.txt');
-                        showDialog(
+                        await showDialog(
                           context:context,
                           builder:(BuildContext context){
-                            return infoPopup("Terms of Use", termsInfo);
+                            return termsPopup("Terms of Use", termsInfo, context);
                           }
                         );
                       },
@@ -137,12 +133,13 @@ class _SignupPageState extends State<SignupPage> {
                       ..onTap = () async{
                         privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
                           print("here");
-                        showDialog(
+                        await showDialog(
                             context:context,
                             builder:(BuildContext context){
-                              return infoPopup("Privacy Policy", privacyInfo);
+                              return termsPopup("Privacy Policy", privacyInfo, context);
                             }
                         );
+
                       },
                     style: TextStyle(
                       decoration: TextDecoration.underline,)
@@ -215,66 +212,6 @@ Container passwordInfoSection(){
         )
     );
 }
-  AlertDialog infoPopup(title, info) {
-    return AlertDialog(
-        contentPadding: EdgeInsets.only(left: 25, right: 25),
-        title: Center(
-          child: Padding(
-            padding:EdgeInsets.only(bottom: 15),
-            child: Text(
-            title,
-            style: TextStyle(fontSize:18,fontWeight: FontWeight.bold ),
-
-          ),),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        content: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                  Container(
-                    child: Text(info) ,
-
-                  ),
-              ]
-            )
-          ),
-        ),
-        actions: <Widget>[
-          Container(
-            width:MediaQuery.of(context).size.width,
-            child: Align(
-              alignment: Alignment.center,
-              child:
-                Container(
-                    width: MediaQuery.of(context).size.width * 0.60,
-                    child: RaisedButton(
-                        child: Text(
-                          'CONTINUE',
-
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-
-                        ),
-                      color: Color(0xff00eebc),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-    onPressed: () {
-    //saveIssue();
-    Navigator.of(context).pop();
-    },
-    ),
-    ),
-
-    ),
-          ),
-  ]
-    );
-
-  }
-
-
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the
@@ -284,8 +221,6 @@ Container passwordInfoSection(){
     firstNameController.dispose();
     super.dispose();
   }
-
-
   Container formSection() {
     return Container(
       padding: EdgeInsets.only(top: 5, bottom: 10, left:20, right:20),

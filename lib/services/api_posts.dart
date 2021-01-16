@@ -9,14 +9,14 @@ import 'package:http_parser/http_parser.dart';
 
 
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-// String localUrl = 'http://localhost:3000/api/v1';
+// String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
+String localUrl = 'http://localhost:3000/api/v1';
 
 Future<String> postImage(_image) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token};
-  var postUri = Uri.parse("$baseUrl/users/1");
+  var postUri = Uri.parse("$localUrl/users/1");
   String fileName = _image.path.split('/').last;
     FormData data = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(
@@ -70,7 +70,7 @@ Future<String>markedViewed(videoId, seconds) async {
   print(now);
   final msg = jsonEncode({"video_id": videoId, "last_second_viewed":seconds, "date":"$now"});
   final response = await http.post(
-      "$baseUrl/viewings",
+      "$localUrl/viewings",
       headers: tokenHeaders,
       body: msg,
     );
@@ -88,7 +88,7 @@ Future<String>saveGoals(goals) async {
   final msg = [{"goals": message}];
   print(msg);
   final response = await http.post(
-    "$baseUrl/users",
+    "$localUrl/users",
     headers: tokenHeaders,
     body: msg,
   );
@@ -107,7 +107,7 @@ Future<String>updateUser(update) async {
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);
-  String thisUrl = "$baseUrl/users/$userId";
+  String thisUrl = "$localUrl/users/$userId";
   print(thisUrl);
 
   final response = await http.put(
@@ -118,4 +118,17 @@ Future<String>updateUser(update) async {
   print (response.body);
   return "success";
 
+}
+
+Future submitSupportTicket(message)async {
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final msg = jsonEncode({"message": message});
+  final response = await http.post(
+    "$localUrl/support_messages",
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print(response.body);
 }

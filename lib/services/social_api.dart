@@ -12,8 +12,8 @@ import 'package:dio/dio.dart';
 
 http.Client client;
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-// String localUrl = 'http://localhost:3000/api/v1';
+// String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
+String localUrl = 'http://localhost:3000/api/v1';
 
 List<SocialPost> parseSocial(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -43,33 +43,44 @@ Future<List<SocialPost>> fetchSocial(client) async {
   }
 }
 savePost(message, image) async {
-  final storage = FlutterSecureStorage();
-  String token = await storage.read(key: "token");
-  final tokenHeaders = {'token': token};
-  var postUri = Uri.parse("$baseUrl/social_posts");
-  print(postUri);
-  String fileName = image.path.split('/').last;
-  final msg = [{"message": message, "image":image}];
+  try {
+    final storage = FlutterSecureStorage();
+    String token = await storage.read(key: "token");
+    final tokenHeaders = {'token': token};
+    var postUri = Uri.parse("$localUrl/social_posts");
+    print(postUri);
+    if (image == null) {
+      final msg = [{"message": message}];
+    }
+    String fileName = image.path
+        .split('/')
+        .last;
+    final msg = [{"message": message, "image": image}];
 
-  FormData data = FormData.fromMap({
-    "image": await MultipartFile.fromFile(
-      image.path,
-      filename: fileName,
-    ),
-    "message": message
+    FormData data = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+      ),
+      "message": message
+    });
 
-  });
+    Dio dio = new Dio();
+    dio.options.headers = tokenHeaders;
+    Response response = await dio.post("$postUri", data: data);
 
-  Dio dio = new Dio();
-  dio.options.headers = tokenHeaders;
-  Response response = await dio.post("$postUri", data: data);
-
-  if (response != null) {
-    print(response);
-    return false;
-  }else{
-    return true;
+    if (response != null) {
+      print(response);
+      return false;
+    } else {
+      return true;
+    }
+  }on TimeoutException catch (_) {
+    // A timeout occurred.
+  } on SocketException catch (_) {
+    // Other exception
   }
+
 }
 
 
@@ -81,7 +92,7 @@ Future <List<SocialPost>> updateSocial(http.Client client) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/social_posts";
+  var url = "$localUrl/social_posts";
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -103,8 +114,9 @@ Future <List<SocialPost>> updateSocial(http.Client client) async {
 Future mostRecentPostTime(http.Client client) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
+  print(token);
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/social_posts/recent";
+  var url = "$localUrl/social_posts/recent";
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -126,7 +138,7 @@ Future bumpThisPost(postId)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/post_bumps";
+  var url = "$localUrl/post_bumps";
 
   final msg = jsonEncode({"bump": "true", "postId":"$postId"});
   final response = await http.post(
@@ -141,7 +153,7 @@ Future unbumpThisPost(postId) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/post_bumps";
+  var url = "$localUrl/post_bumps";
 
   final msg = jsonEncode({"bump": "false", "post_id":"$postId"});
   print(msg);

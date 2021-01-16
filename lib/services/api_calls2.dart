@@ -102,6 +102,7 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
   print("update: $category");
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
+  print(token);
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   final url = "$base_url/videos/$customUrl";
   final response = await client.get(
@@ -119,6 +120,8 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
       print(response.body);
       return null;
     }
+  }else{
+    return null;
   }
 }
 
@@ -174,6 +177,7 @@ Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) asy
       if (response.statusCode != null) {
         print("media not updated from api");
         print(response.statusCode);
+        return null;
       } else {
         print("no api response");
         return null;
@@ -213,6 +217,7 @@ Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) asy
         if (response.statusCode != null) {
           print("$category not updated from api");
           print(response.statusCode);
+
         } else {
           print("no api response");
           return null;

@@ -169,17 +169,17 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           //   onTap: () {
                           //   }
                           // ),
-                          // MenuItem(
-                          //     icon: Icons.live_help,
-                          //     title: "Support",
-                          //     onTap: () {
-                          //       Navigator.push(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //             builder: (context) => Support()),
-                          //       );
-                          //     }
-                          // ),
+                          MenuItem(
+                              icon: Icons.live_help,
+                              title: "Support",
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Support()),
+                                );
+                              }
+                          ),
                           MenuItem(
                               icon: Icons.filter_none,
                               title: "Terms",

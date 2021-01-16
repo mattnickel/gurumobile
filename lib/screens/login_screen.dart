@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/framework_page.dart';
+import 'package:sidebar_animation/screens/reset_password.dart';
 import 'package:sidebar_animation/screens/signup_screen.dart';
 import 'package:sidebar_animation/services/api_login.dart';
 
@@ -89,35 +90,58 @@ class _LoginPageState extends State<LoginPage> {
             )) : ListView(
           children: <Widget>[
             headerSection(),
-            textSection(),
+            newUserSection(),
+            formSection(),
             errorSection(),
             buttonSection(),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:<Widget>[
-                  Text('New user?', style: TextStyle(
-                      color: Colors.black54
-                  ),
-                  ),
-                  FlatButton(child:
-                  Text(
-                    'Sign up',
-                    style: TextStyle(
-                        color: Colors.black54,
-                        decoration: TextDecoration.underline,
-                    ),
-                  ),
-                    onPressed: (){
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage()), (Route<dynamic> route) => false);
-                    },)
-                ]
-            )
+            forgotPasswordSection(),
+
           ],
         ),
       ),
     );
   }
-
+  Align forgotPasswordSection(){
+    return Align(
+      alignment: Alignment.center,
+      child: FlatButton(child:
+      Text(
+        'Forgot Password?',
+        style: TextStyle(
+          color: Colors.black54,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+        onPressed: (){
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ResetPassword()));
+        },),
+    );
+  }
+  Padding newUserSection(){
+    return Padding(
+      padding: const EdgeInsets.only(left:25.0),
+      child: Row(
+          children:<Widget>[
+            Text('New user?', style: TextStyle(
+                color: Colors.black54
+            ),
+            ),
+            FlatButton(child:
+            Text(
+              'Sign up',
+              style: TextStyle(
+                color: Colors.black54,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+              onPressed: (){
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage()), (Route<dynamic> route) => false);
+              },)
+          ]
+      ),
+    );
+  }
   Container errorSection(){
     return Container(
         child:
@@ -172,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Container textSection() {
+  Container formSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
       child: Column(
@@ -250,7 +274,7 @@ class _LoginPageState extends State<LoginPage> {
   Container headerSection() {
     return Container(
       margin: EdgeInsets.only(top: 100.0),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
      child: Text("Welcome back!",
          style: TextStyle(
              color: Color(0xff606060),

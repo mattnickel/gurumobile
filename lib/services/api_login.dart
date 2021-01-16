@@ -14,7 +14,7 @@ import '../screens/signup_screen.dart';
 
 import '../main.dart';
 
-String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
+// String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
 String localUrl = "http://localhost:3000/api/v1/";
 
 checkLoginStatus(context) async {
@@ -58,7 +58,7 @@ Future setLocals(response) async{
 Future signIn(String email, String pass, context, prefs) async {
 
   String errorMessage;
-  String loginUrl = authUrl +"login";
+  String loginUrl = localUrl +"login";
 
   final response = await http.post(
     loginUrl,
@@ -80,7 +80,7 @@ Future signIn(String email, String pass, context, prefs) async {
 
 Future signUp(String email, String pass, String firstName, context) async {
 
-  String signUpUrl = authUrl +'signup';
+  String signUpUrl = localUrl +'signup';
 
   final response = await http.post(
     signUpUrl,
@@ -97,7 +97,7 @@ Future signUp(String email, String pass, String firstName, context) async {
   }
 }
 Future signOut(context) async {
-  String signoutUrl = authUrl +'logout';
+  String signoutUrl = localUrl +'logout';
   final storage = FlutterSecureStorage();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userEmail = await storage.read(key: "email");
@@ -108,4 +108,65 @@ Future signOut(context) async {
   );
   await storage.deleteAll();
   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainApp()), (Route<dynamic> route) => false);
+}
+
+Future createVerificationCode(email)async{
+  String params = "email="+email;
+  String url = localUrl + 'passwords/forgot?'+params;
+  var response = await http.get(
+    url,
+    headers: {"Accept": "Application/json"},
+  );
+  if(response.statusCode == 200) {
+    print(response.body);
+    return true;
+  }else{
+    print("nope");
+    print(response.body);
+    return false;
+  }
+}
+
+Future confirmReset(code)async{
+  final storage = FlutterSecureStorage();
+
+
+  String params = "verify="+code;
+
+  String url = localUrl + 'passwords/confirm?'+params;
+  var response = await http.get(
+    url,
+    headers: {"Accept": "Application/json"},
+  );
+  if(response.statusCode == 200) {
+    await storage.write(key:"resetToken", value: code);
+    print(response.body);
+    return true;
+  }else{
+    print("nope");
+    print(response.body);
+    return false;
+  }
+}
+Future setPasswordAndLogin(password, context) async{
+  final storage = FlutterSecureStorage();
+  String resetToken= await storage.read(key:"resetToken");
+
+String url = localUrl + 'passwords/reset';
+
+  final response = await http.put(
+    url,
+    headers: {"Accept": "Application/json"},
+    body: {"reset":resetToken, "password":password},
+  );
+  if(response.statusCode == 200) {
+    await setLocals(response);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
+    print(response.body);
+    return true;
+  }else{
+    print("nope");
+    print(response.body);
+    return false;
+  }
 }
