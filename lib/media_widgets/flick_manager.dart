@@ -14,7 +14,8 @@ class FlickVideoScreen extends StatefulWidget {
   final String videoFile;
   final int videoId;
   final String image;
-  FlickVideoScreen(this.videoFile, this.videoId, this.image);
+  final String socialImage;
+  FlickVideoScreen(this.videoFile, this.videoId, this.image, this.socialImage);
 
   @override
   _FlickVideoScreenState createState() => _FlickVideoScreenState(
@@ -44,12 +45,14 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
     super.dispose();
   }
   void checkVideo(){
-    if(flickManager.flickVideoManager.videoPlayerController.value.position == flickManager.flickVideoManager.videoPlayerController.value.duration) {
-      print('video Ended');
-      // Navigator.of(context).push(PageRouteBuilder(
-      //     opaque: false,
-      //     pageBuilder: (BuildContext context, _, __) =>
-      //         SocialPostScreen()));
+    if (widget.socialImage != null) {
+      if (flickManager.flickVideoManager.videoPlayerController.value.position ==
+          flickManager.flickVideoManager.videoPlayerController.value.duration) {
+        print('video Ended');
+        Route route = MaterialPageRoute(
+            builder: (context) => SocialPostScreen());
+        Navigator.pushReplacement(context, route);
+      }
     }
 
   }
@@ -97,20 +100,29 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                   }
               ),
             ),
-            // Positioned(
-            //   top:100,
-            //   right:10,
-            //   child: IconButton(
-            //       icon:Icon(Icons.tag_faces),
-            //       color: Colors.white,
-            //       onPressed: () {
-            //         Navigator.of(context).push(PageRouteBuilder(
-            //             opaque: false,
-            //             pageBuilder: (BuildContext context, _, __) =>
-            //                 SocialPostScreen(image: widget.image)));
-            //       }
-            //   ),
-            // ),
+            Positioned(
+              top:100,
+              right:10,
+              child: widget.socialImage != null
+                  ? FloatingActionButton(
+                    backgroundColor: Color(0xFF09ebcc),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child:
+                          Icon(Icons.upload_sharp, color: Colors.white,),
+
+                    ),
+                    onPressed: () {
+                      flickManager.flickVideoManager.videoPlayerController.pause();
+                      Navigator.of(context).push(PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (BuildContext context, _, __) =>
+                              SocialPostScreen(image: widget.socialImage)));
+                    }
+
+              )
+                  :Container()
+            ),
       ]
       ),
     );

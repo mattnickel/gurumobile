@@ -9,14 +9,14 @@ import 'package:http_parser/http_parser.dart';
 
 
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-// String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-String localUrl = 'http://localhost:3000/api/v1';
+String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
+// String localUrl = 'http://localhost:3000/api/v1';
 
-Future<String> postImage(_image) async{
+Future<String> postImage(_image, id) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token};
-  var postUri = Uri.parse("$localUrl/users/1");
+  var postUri = Uri.parse("$baseUrl/users/$id");
   String fileName = _image.path.split('/').last;
     FormData data = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(
@@ -28,38 +28,10 @@ Future<String> postImage(_image) async{
     Dio dio = new Dio();
     dio.options.headers = tokenHeaders;
     Response response = await dio.put("$postUri", data: data);
+    print("respond here");
     print(response);
-    String avatar = await response.data[0]["avatar"];
-    print(avatar);
-    return avatar;
+    return response.toString();
   }
-
-
-
-
-
-  // var request = http.MultipartRequest(
-  //     "PUT",
-  //     postUri
-  // );
-  //List<int> imageBytes = await _imagePath.readAsBytes();
-  // print(imageBytes);
-  // String base64Image = base64Encode(imageBytes);
-
-  // request.fields['user'] = 'blah';
-  // request.files.add(
-  //     await http.MultipartFile.fromPath('avatar', _imagePath, contentType: MediaType('image', 'png'))
-  // );
-  // // request.headers.addAll(tokenHeaders);
-  // http.StreamedResponse response = await request.send();
-
-  // request.send().then((response) {
-  //   print (response.statusCode);
-  //   if (response.statusCode == 200) {
-  //     print("Uploaded!");
-  //   }
-  // });
-// }
 
 Future<String>markedViewed(videoId, seconds) async {
 
@@ -70,7 +42,7 @@ Future<String>markedViewed(videoId, seconds) async {
   print(now);
   final msg = jsonEncode({"video_id": videoId, "last_second_viewed":seconds, "date":"$now"});
   final response = await http.post(
-      "$localUrl/viewings",
+      "$baseUrl/viewings",
       headers: tokenHeaders,
       body: msg,
     );
@@ -88,7 +60,7 @@ Future<String>saveGoals(goals) async {
   final msg = [{"goals": message}];
   print(msg);
   final response = await http.post(
-    "$localUrl/users",
+    "$baseUrl/users",
     headers: tokenHeaders,
     body: msg,
   );
@@ -107,7 +79,7 @@ Future<String>updateUser(update) async {
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);
-  String thisUrl = "$localUrl/users/$userId";
+  String thisUrl = "$baseUrl/users/$userId";
   print(thisUrl);
 
   final response = await http.put(
@@ -117,7 +89,6 @@ Future<String>updateUser(update) async {
   );
   print (response.body);
   return "success";
-
 }
 
 Future submitSupportTicket(message)async {
@@ -126,7 +97,7 @@ Future submitSupportTicket(message)async {
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   final msg = jsonEncode({"message": message});
   final response = await http.post(
-    "$localUrl/support_messages",
+    "$baseUrl/support_messages",
     headers: tokenHeaders,
     body: msg,
   );

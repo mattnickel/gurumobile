@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
-
-import 'package:sidebar_animation/models/video_model.dart';
-import 'package:sidebar_animation/services/api_calls2.dart';
-
+import '../models/video_model.dart';
+import '../services/api_calls2.dart';
 import 'video_tiles.dart';
 
 class VideoRow extends StatelessWidget {

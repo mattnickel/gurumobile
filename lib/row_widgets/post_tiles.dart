@@ -7,10 +7,9 @@ import 'package:sidebar_animation/services/social_api.dart';
 
 class PostTiles extends StatefulWidget {
 
-  List<SocialPost> posts;
-  int index;
+  final SocialPost post;
 
- PostTiles({ this.posts, this.index});
+ PostTiles({ this.post});
 
   @override
   _PostTilesState createState() => _PostTilesState();
@@ -79,11 +78,11 @@ class _PostTilesState extends State<PostTiles> {
                         margin: EdgeInsets.only(top: 25),
 
                         child:
-                        widget.posts[widget.index].userAvatar != null
+                        widget.post.userAvatar != null
                             ? Center(child:
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundImage:   NetworkImage(widget.posts[widget.index].userAvatar)
+                                  backgroundImage:   NetworkImage(widget.post.userAvatar)
                                 ),
                             )
                             : Center(child:
@@ -115,7 +114,7 @@ class _PostTilesState extends State<PostTiles> {
                       children: [
                         Container(
                           child: Text(
-                              widget.posts[widget.index].userName,
+                              widget.post.userName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -125,7 +124,7 @@ class _PostTilesState extends State<PostTiles> {
                         Spacer(),
                         Container(
                           child: Text(
-                            convertTime(widget.posts[widget.index].time),
+                            convertTime(widget.post.time),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black26,
@@ -139,9 +138,14 @@ class _PostTilesState extends State<PostTiles> {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       width:MediaQuery.of(context).size.width-120,
-                      child: Text(
-                         widget.posts[widget.index].userTagline,
+                      child:
+
+                      Text(
+                        widget.post.userTagline != null
+                            ? widget.post.userTagline
+                            : " "
                        ),
+
                     ),
                   ),
                 ],
@@ -158,7 +162,7 @@ class _PostTilesState extends State<PostTiles> {
                       borderRadius: BorderRadius.circular(18.0),
                       child:
                       CachedNetworkImage(
-                        imageUrl: widget.posts[widget.index].image,
+                        imageUrl: widget.post.image,
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -185,7 +189,7 @@ class _PostTilesState extends State<PostTiles> {
                   child: RichText(
                       textAlign: TextAlign.left,
                       text:TextSpan(
-                          text: widget.posts[widget.index].userName+": ",
+                          text: widget.post.userName+": ",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w800,
@@ -193,10 +197,10 @@ class _PostTilesState extends State<PostTiles> {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: widget.posts[widget.index].message,
+                              text: widget.post.message,
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.w200,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 14,
                               ),
                             )
@@ -209,21 +213,21 @@ class _PostTilesState extends State<PostTiles> {
                  width:40,
                  child: Padding(
                    padding: const EdgeInsets.only(top:5.0),
-                   child: Text((widget.posts[widget.index].bumpCount + number).toString() , textAlign: TextAlign.right,),
+                   child: Text((widget.post.bumpCount + number).toString() , textAlign: TextAlign.right,),
                  ),
                ),
                 Spacer(),
                 GestureDetector(
                   onTap: () {
                     if (bumped== false) {
-                      bumpThisPost(widget.posts[widget.index].id);
+                      bumpThisPost(widget.post.id);
                       setState(() {
                         localBumped = true;
                         localFalse = true;
                         number += 1;
                       });
                     }else{
-                      unbumpThisPost(widget.posts[widget.index].id);
+                      unbumpThisPost(widget.post.id);
                       setState(() {
                         localBumped = false;
                         localFalse = false;
@@ -233,7 +237,7 @@ class _PostTilesState extends State<PostTiles> {
 
                   },
 
-                  child:  bumpCheck(widget.posts[widget.index].myBump)
+                  child:  bumpCheck(widget.post.myBump)
                       ? Image.asset('assets/images/bump_filled.png', height: 20, width:20 )
                       : Image.asset('assets/images/bump_black.png', height: 20, width:20 )
 

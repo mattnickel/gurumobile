@@ -22,7 +22,7 @@ class _SocialCreateState extends State<SocialCreate> {
   final messageController = TextEditingController();
 
   getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
     setState(() {
       pickedPath = pickedFile.path;
       image = pickedFile;

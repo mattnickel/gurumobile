@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sidebar_animation/services/api_calls2.dart';
 import 'package:sidebar_animation/services/api_posts.dart';
 import 'dart:io';
 import 'package:progress_indicator_button/button_stagger_animation.dart';
 import 'package:progress_indicator_button/progress_button.dart';
+import 'package:http/http.dart' as http;
 
 
 class Profile extends StatefulWidget {
@@ -22,6 +24,7 @@ class _ProfileState extends State<Profile> {
 	final emailController = TextEditingController();
 	final passwordController = TextEditingController();
 	bool textChanged = false;
+	http.Client client;
 
 	final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 	String userId;
@@ -33,8 +36,8 @@ class _ProfileState extends State<Profile> {
 	String avatarUrl;
 
 	Future getImage() async {
-		final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 240.0,
-			maxWidth: 240.0);
+		final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200.0,
+			maxWidth: 200.0);
 
 		setState(() {
 			if (pickedFile != null) {
@@ -181,43 +184,28 @@ class _ProfileState extends State<Profile> {
 																											  								fontWeight: FontWeight
 																											  										.bold)),
 																											  			onPressed: (AnimationController controller) async {
-																																List update = [
+																																controller
+																																		.forward();
+																																if (textChanged !=
+																																		false) {
+																											  			List update = [
 																																	userId,
 																																	firstName,
 																																	tagLine,
 																																	email
 																																];
-
-																																if (textChanged !=
-																																		false) {
-																																	controller
-																																			.forward();
-																																	await updateUser(
+																											  			await updateUser(
 																																			update);
-																																	await saveUserInfo();
-																																	await Future
-																																			.delayed(
-																																			Duration(
-																																					seconds: 2), () {});
-																																	controller
-																																			.reset();
+																											  			await saveUserInfo();
 																																}
 																																else
 																																if (_image !=
 																																		null) {
-																																	controller
-																																			.forward();
-																																	String updated = await postImage(
-																																			_image);
-																																	saveImage(
-																																			updated);
-																																	await Future
-																																			.delayed(
-																																			Duration(
-																																					seconds: 3), () {});
-																																	controller
-																																			.reset();
+																																	_pickedPath =await postImage(
+																																				_image, client);
 																																}
+																																controller
+																																		.reset();
 																															}
 																											  		),
 																											  	),

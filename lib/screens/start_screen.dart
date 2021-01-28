@@ -1,24 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sidebar_animation/pages/home.dart';
-import 'package:sidebar_animation/screens/set_goals.dart';
-import 'package:sidebar_animation/screens/signup_screen.dart';
-import 'package:sidebar_animation/screens/splash_page.dart';
-import 'package:sidebar_animation/screens/start_card.dart';
-import '../framework_page.dart';
-import '../services/api_calls2.dart';
-import '../featured.dart';
-import 'login_screen.dart';
-import 'dart:async' show Future;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 
+import '../screens/signup_screen.dart';
+import '../screens/start_card.dart';
+import 'login_screen.dart';
 
 class StartScreen extends StatelessWidget {
-
 
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -110,7 +98,7 @@ class StartScreen extends StatelessWidget {
                       preferredSize: Size(5.0, 5.0),
                       child: TabBar(
                           indicatorColor: Colors.transparent,
-                          labelColor: Color(0xFF00ebcc),
+                          labelColor: Color(0xFF09ebcc),
                           unselectedLabelColor: Colors.white38,
                           isScrollable: true,
                         tabs: <Widget> [

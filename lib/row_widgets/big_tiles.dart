@@ -57,7 +57,7 @@ class BigTiles extends StatelessWidget {
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FlickVideoScreen(video.file, video.id, video.image);
+                          return FlickVideoScreen(video.file, video.id, video.image, video.socialImage);
                         }));
                       },
                       elevation: 2.0,

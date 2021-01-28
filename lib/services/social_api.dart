@@ -12,34 +12,36 @@ import 'package:dio/dio.dart';
 
 http.Client client;
 // String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-// String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-String localUrl = 'http://localhost:3000/api/v1';
+String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
+// String localUrl = 'http://localhost:3000/api/v1';
 
-List<SocialPost> parseSocial(String responseBody) {
+List<Map> parseSocial(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  final parsedList = parsed.map<SocialPost>((json) => SocialPost.fromJson(json))
-          .toList();
-  return parsedList;
+  // var parsedList = parsed.map<SocialPost>((json) => SocialPost.fromServerMap(json))
+  //         .toList();
+  return parsed;
 }
 
-Future<List<SocialPost>> fetchSocial(client) async {
+Future<List<Map>> fetchSocial(client, page) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/social.json");
   if (file.existsSync()) {
     print("file exists");
     DateTime update = await file.lastModified();
     var now = new DateTime.now();
-    if (update.day == now.day) {
-      print("Fetching social from cache");
-      var cachedSocial = file.readAsStringSync();
-      return parseSocial(cachedSocial);
+    if (page == 0){
+      if (update.day == now.day) {
+        print("Fetching social from cache");
+        var cachedSocial = file.readAsStringSync();
+        return parseSocial(cachedSocial);
+      }
     } else{
       print("go for updates");
-      return updateSocial(client);
+      return updateSocial(client, page);
     }
   } else {
     print("go for updates");
-    return updateSocial(client);
+    return updateSocial(client, page);
   }
 }
 savePost(message, image) async {
@@ -47,7 +49,7 @@ savePost(message, image) async {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     final tokenHeaders = {'token': token};
-    var postUri = Uri.parse("$localUrl/social_posts");
+    var postUri = Uri.parse("$baseUrl/social_posts");
     print(postUri);
     if (image == null) {
       final msg = [{"message": message}];
@@ -84,15 +86,11 @@ savePost(message, image) async {
 }
 
 
-Future <List<SocialPost>> updateSocial(http.Client client) async {
-  var updateResponse;
-  var dir = await getTemporaryDirectory();
-  File file = File(dir.path + "/social.json");
-  print("update social");
+Future <List<Map>> updateSocial(http.Client client, page) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/social_posts";
+  var url = "$baseUrl/social_posts?page=$page";
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -101,7 +99,13 @@ Future <List<SocialPost>> updateSocial(http.Client client) async {
   if (response != null) {
     if (response.statusCode == 200) {
       print("updated social from api");
-      file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
+      if (page== 1) {
+        print("update file");
+        var dir = await getTemporaryDirectory();
+        File file = File(dir.path + "/social.json");
+        file.writeAsStringSync(
+            response.body, flush: true, mode: FileMode.write);
+      }
       print(response.body);
       return parseSocial(response.body);
     } else {
@@ -109,6 +113,8 @@ Future <List<SocialPost>> updateSocial(http.Client client) async {
       print(response.body);
       return null;
     }
+  }else{
+    return null;
   }
 }
 Future mostRecentPostTime(http.Client client) async {
@@ -116,7 +122,7 @@ Future mostRecentPostTime(http.Client client) async {
   String token = await storage.read(key: "token");
   print(token);
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/social_posts/recent";
+  var url = "$baseUrl/social_posts/recent";
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -138,7 +144,7 @@ Future bumpThisPost(postId)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/post_bumps";
+  var url = "$baseUrl/post_bumps";
 
   final msg = jsonEncode({"bump": "true", "postId":"$postId"});
   final response = await http.post(
@@ -153,7 +159,7 @@ Future unbumpThisPost(postId) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/post_bumps";
+  var url = "$baseUrl/post_bumps";
 
   final msg = jsonEncode({"bump": "false", "post_id":"$postId"});
   print(msg);

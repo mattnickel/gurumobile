@@ -45,7 +45,7 @@ class VideoTiles extends StatelessWidget {
                     child: RawMaterialButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return FlickVideoScreen(videos[index].file, videos[index].id, videos[index].image);
+                          return FlickVideoScreen(videos[index].file, videos[index].id, videos[index].image, videos[index].socialImage);
                         }));
                       },
                       elevation: 2.0,

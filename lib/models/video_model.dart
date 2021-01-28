@@ -26,6 +26,7 @@ class Video {
   int seconds;
   String url;
   String image;
+  String socialImage;
   String file;
 
   Video(
@@ -37,6 +38,7 @@ class Video {
         this.seconds,
         this.url,
         this.image,
+        this.socialImage,
         this.file});
 
   Video.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class Video {
     seconds = json['seconds'];
     url = json['url'];
     image = json['image'];
+    socialImage = json['social_image'];
     file = json['file'];
   }
 
@@ -61,6 +64,7 @@ class Video {
     data['seconds'] = this.seconds;
     data['url'] = this.url;
     data['image'] = this.image;
+    data['social_image']=this.socialImage;
     data['file'] = this.file;
     return data;
   }
