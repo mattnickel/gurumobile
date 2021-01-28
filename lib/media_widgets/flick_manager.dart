@@ -50,7 +50,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
           flickManager.flickVideoManager.videoPlayerController.value.duration) {
         print('video Ended');
         Route route = MaterialPageRoute(
-            builder: (context) => SocialPostScreen());
+            builder: (context) => SocialPostScreen(image: widget.socialImage));
         Navigator.pushReplacement(context, route);
       }
     }
@@ -109,7 +109,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child:
-                          Icon(Icons.upload_sharp, color: Colors.white,),
+                      Image.asset('assets/images/share.png', height: 25, width:25 ),
 
                     ),
                     onPressed: () {

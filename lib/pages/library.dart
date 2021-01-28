@@ -39,10 +39,16 @@ class _LibraryState extends State<Library> {
 
 									? ListView.builder(
 										padding: const EdgeInsets.only(top:40),
-										itemCount: snapshot.data.length,
+										itemCount: snapshot.data.length+1,
 										itemBuilder: (context, index){
+											if (index < snapshot.data.length){
 													return VideoRow(category: snapshot.data[index].name);
-												}
+												}else{
+												return Container(
+													height:100
+												);
+											}
+							}
 									)
 									: Container();
 						}else{

@@ -42,14 +42,18 @@ class _PostTilesState extends State<PostTiles> {
      var timeFormatter = new DateFormat('E h:mm a');
      var timeSpan = now.difference(then);
      var timeSpanFormat = new DateFormat('h:mm');
-      if (timeSpan.inHours <=1 ){
+      if (timeSpan.inMinutes <= 59 ){
         if (timeSpan.inMinutes < 2){
           time = "now";
         }else {
           time = timeSpan.inMinutes.toString() + " min ago";
         }
      } else if (timeSpan.inHours < 24){
-        time = timeSpan.inHours.toString() + " hrs ago";
+        if(timeSpan.inHours < 2){
+          time = timeSpan.inHours.toString() + " hr ago";
+        }else {
+          time = timeSpan.inHours.toString() + " hrs ago";
+        }
      } else if (timeSpan.inHours < 48){
         time = timeSpan.inDays.toString()  + " day ago";
       }else{
