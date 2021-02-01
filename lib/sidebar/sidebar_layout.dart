@@ -18,18 +18,25 @@ class SideBarMenu extends StatefulWidget {
   _SideBarMenuState createState() => _SideBarMenuState();
 }
 class _SideBarMenuState extends State<SideBarMenu> {
+  String username;
+  String initial;
+  String tagLine;
+  String avatarUrl;
+  List userInfo;
 
   Future <List> setProfileInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String firstName = prefs.getString("firstName");
-    String tagLine = prefs.getString("tagLine") ??
+    username = prefs.getString("username");
+    initial = username.substring(0,0);
+    tagLine = prefs.getString("tagLine") ??
         "Add a tagline...";
-    String avatarUrl = prefs.getString("avatarUrl") ?? "no";
-    List userInfo = [tagLine, firstName, avatarUrl];
+    avatarUrl = prefs.getString("avatarUrl") ?? "no";
+    userInfo = [tagLine, username, avatarUrl];
     return userInfo;
   }
   String received;
   int id =0;
+  bool loading = false;
 
   void refreshData() {
     id++;
@@ -118,7 +125,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                                   radius: 60,
                                   backgroundColor: Color(0xff00eebc),
                                   child: Text(
-                                      'M',
+                                      initial,
                                       style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                           fontSize: 32,
@@ -193,8 +200,12 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           ),
                           MenuItem(
                               icon: Icons.logout,
-                              title: "Logout",
+                              title:"Logout",
+                              loading: loading,
                               onTap: () {
+                                setState(() {
+                                  loading=true;
+                                });
                                 signOut(context);
                               }
                           ),

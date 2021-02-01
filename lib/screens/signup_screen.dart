@@ -10,6 +10,9 @@ import 'login_screen.dart';
 
 
 class SignupPage extends StatefulWidget {
+  final String errorMessage;
+  SignupPage(this.errorMessage);
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -25,7 +28,7 @@ class _SignupPageState extends State<SignupPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final firstNameController = TextEditingController();
+  final userNameController = TextEditingController();
 
   @override
   void initState() {
@@ -34,7 +37,7 @@ class _SignupPageState extends State<SignupPage> {
     // Start listening to changes.
     emailController.addListener(_enableSignin);
     passwordController.addListener( _enableSignin);
-    firstNameController.addListener( _enableSignin);
+    userNameController.addListener( _enableSignin);
 
   }
   _enableSignin() {
@@ -83,6 +86,7 @@ class _SignupPageState extends State<SignupPage> {
               children: <Widget>[
                 headerSection(),
                 formSection(),
+                errorSection(),
                 passwordInfoSection(),
                 buttonSection(),
 
@@ -92,6 +96,27 @@ class _SignupPageState extends State<SignupPage> {
           termsSection(),
         ],
       ),
+    );
+  }
+  Container errorSection(){
+    return Container(
+      child:
+      widget.errorMessage.length > 1
+          ? Center(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline), SizedBox(width: 5.0),
+                Text(
+                    widget.errorMessage
+                ),
+              ],
+            ),
+          ))
+          : null,
     );
   }
   Align termsSection(){
@@ -153,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
         )
       );
   }
-  Container signupInstead(){
+  Container signUpInstead(){
    return Container(
      height:40,
      padding: const EdgeInsets.only(left:23.0, top:15, bottom:5),
@@ -165,6 +190,7 @@ class _SignupPageState extends State<SignupPage> {
             ),
             ),
             FlatButton(child:
+
             Text(
               'Log in',
               style: TextStyle(
@@ -186,15 +212,21 @@ class _SignupPageState extends State<SignupPage> {
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 5.0),
       child: RaisedButton(
-        onPressed: emailController.text == "" || passwordController.text == "" || firstNameController.text == "" ? null : () {
+        onPressed: emailController.text == "" || passwordController.text == "" || userNameController.text == "" ? null : () {
+          setState(() {
+            _isLoading = true;
+          });
           if (_formBKey.currentState.validate()) {
-            signUp(emailController.text, passwordController.text, firstNameController.text, context);
+            signUp(emailController.text, passwordController.text, userNameController.text, context);
           };
         },
         elevation: 0.2,
         color: Color(0xff00eebc),
         disabledColor: Color.fromRGBO(0,238,188, 0.25),
-        child: Text("Sign Up", style: TextStyle(color: Colors.white)),
+        child:
+        _isLoading
+            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),)
+            :Text("Sign Up", style: TextStyle(color: Colors.white)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
     );
@@ -218,7 +250,7 @@ Container passwordInfoSection(){
     // widget tree.
     emailController.dispose();
     passwordController.dispose();
-    firstNameController.dispose();
+    userNameController.dispose();
     super.dispose();
   }
   Container formSection() {
@@ -233,8 +265,8 @@ Container passwordInfoSection(){
                   child: FormBuilderTextField(
                     keyboardType: TextInputType.text,
                     maxLines:1,
-                    attribute:"firstName",
-                    controller: firstNameController,
+                    attribute:"userName",
+                    controller: userNameController,
                     validators: [FormBuilderValidators.required(),FormBuilderValidators.maxLength(25) ],
                     cursorColor: Colors.black54,
                     style: TextStyle(color: Colors.black54),
@@ -244,7 +276,7 @@ Container passwordInfoSection(){
                       filled:true,
                       fillColor: Colors.white,
                       focusColor: Colors.white,
-                      hintText: "First Name",
+                      hintText: "Username",
                       border: InputBorder.none,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -294,7 +326,7 @@ Container passwordInfoSection(){
                   child: FormBuilderTextField(
                     attribute:"password",
                     controller: passwordController,
-                    validators:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
+                    validators:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
                     cursorColor: Colors.black54,
                     obscureText: true,
                     style: TextStyle(color: Colors.black54),
@@ -343,7 +375,7 @@ Container passwordInfoSection(){
         ),
         Positioned(
           top: 80,
-             child: signupInstead(),
+             child: signUpInstead(),
         )
       ],
     );

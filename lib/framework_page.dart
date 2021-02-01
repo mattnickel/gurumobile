@@ -1,6 +1,7 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 import './services/local_notifications_manager.dart';
 import 'models/navbar_tab_selected_model.dart';
@@ -18,7 +19,12 @@ class FrameworkPage extends StatefulWidget{
 
 class _FrameworkPageState extends State<FrameworkPage> {
 
-
+	@override
+	void initState(){
+		super.initState();
+		final _firebaseMessaging = FirebaseMessaging();
+		_firebaseMessaging.requestNotificationPermissions();
+	}
 	final localNotifications = LocalNotificationsManager.init();
 
 	@override

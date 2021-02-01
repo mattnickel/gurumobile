@@ -163,7 +163,7 @@ class _SetGoalsState extends State<SetGoals> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
                 onPressed: (){
                   // saveGoals(goals);
-                  _firebaseMessaging.requestNotificationPermissions();
+
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => FrameworkPage()),

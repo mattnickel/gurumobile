@@ -67,7 +67,7 @@ class StartScreen extends StatelessWidget {
                       onPressed: (){
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => SignupPage()),
+                          MaterialPageRoute(builder: (context) => SignupPage("")),
                               (Route<dynamic> route) => false,
                         );
                       },

@@ -19,7 +19,7 @@ class _ProfileState extends State<Profile> {
 	File _image;
 	final picker = ImagePicker();
 	String _pickedPath;
-	final _firstNameController = TextEditingController();
+	final _usernameController = TextEditingController();
 	final tagLineController = TextEditingController();
 	final emailController = TextEditingController();
 	final passwordController = TextEditingController();
@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
 	final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 	String userId;
 	String name;
-	String firstName;
+	String username;
 	String tagLine;
 	String email;
 	String password;
@@ -51,40 +51,41 @@ class _ProfileState extends State<Profile> {
 
 		Future <List> getUserInfo() async {
 			final SharedPreferences prefs = await SharedPreferences.getInstance();
-			firstName = prefs.getString("firstName");
-			print(firstName);
+			username = prefs.getString("username");
+			print(username);
 			tagLine = prefs.getString("tagLine") ??
 					"Add a tagline";
 			email = prefs.getString("email");
 			password = prefs.getString("password");
 			avatarUrl = prefs.getString("avatarUrl") ?? "no";
 			userId = prefs.getString("userId");
-			List userInfo = [tagLine, firstName, email, avatarUrl, password];
+			List userInfo = [tagLine, username, email, avatarUrl, password];
 			return userInfo;
 		}
-		Future saveImage(updated) async{
+		Future saveImageLocally(postedImage) async{
 			final SharedPreferences prefs = await SharedPreferences.getInstance();
-			prefs.setString("avatarUrl", updated);
-			print('savedImage');
-			setState(()async {
-				avatarUrl= updated;
+			prefs.setString("avatarUrl", postedImage);
+			avatarUrl = postedImage ?? "no";
+			print(avatarUrl);
+			setState((){
 				_image = null;
 			});
 
 		}
 		Future saveUserInfo() async {
 			final SharedPreferences prefs = await SharedPreferences.getInstance();
-			prefs.setString("firstName", firstName);
+			prefs.setString("username", username);
 			prefs.setString("email", email);
 			prefs.setString("tagLine", tagLine);
 		}
 		@override
 		void initState() {
 			super.initState();
-			_firstNameController.text = firstName;
+			_usernameController.text = username;
 			tagLineController.text = tagLine;
 			emailController.text = email;
 			passwordController.text = password;
+			_pickedPath = null;
 		}
 
 		@override
@@ -129,89 +130,80 @@ class _ProfileState extends State<Profile> {
 																		borderRadius: BorderRadius.circular(18.0),
 																		child: Container(
 																			// margin: EdgeInsets.only(top: 100),
-																			height: MediaQuery
-																					.of(context)
-																					.size
-																					.height,
-																			width: MediaQuery
-																					.of(context)
-																					.size
-																					.width,
-																			// height: MediaQuery.of(context).size.height/1.5,
-																			child: ListView(
-																				children: <Widget>[
-																					Container(
-																						padding: EdgeInsets.only(
-																								top: 10, bottom: 170),
-																						decoration: BoxDecoration(
-																								color: Colors.white
-																						),
-																						height: MediaQuery
-																								.of(context)
-																								.size
-																								.height,
-																						width: MediaQuery
-																								.of(context)
-																								.size
-																								.width,
-																						child: ClipRRect(
-																							borderRadius: BorderRadius
-																									.circular(18.0),
-																							child: Container(
-																								child: Form(
-																									key: _formKey,
-																									child: Column(
-																										children: [
-																									Align(
-																										alignment: Alignment.topRight,
-																											  child: Container(
-																											  	width: 120,
-																											  		height: 40,
-																											  		margin: EdgeInsets.only(right:15),
-																											  		child: ProgressButton(
-																											  		borderRadius: BorderRadius.all(Radius.circular(18)),
-																											  			// strokeWidth: 2,
-																											  			color: Color(
-																											  					0xff00eebc),
-																											  			child:
-																											  				Text(
-																											  						("Save")
-																											  								.toUpperCase(),
-																											  						style: TextStyle(
-																											  								color: Colors
-																											  										.white,
-																											  								fontSize: 18,
-																											  								fontWeight: FontWeight
-																											  										.bold)),
-																											  			onPressed: (AnimationController controller) async {
-																																controller
-																																		.forward();
-																																if (textChanged !=
-																																		false) {
-																											  			List update = [
-																																	userId,
-																																	firstName,
-																																	tagLine,
-																																	email
-																																];
-																											  			await updateUser(
-																																			update);
-																											  			await saveUserInfo();
-																																}
-																																else
-																																if (_image !=
-																																		null) {
-																																	_pickedPath =await postImage(
-																																				_image, client);
-																																}
-																																controller
-																																		.reset();
+																		height: MediaQuery
+																				.of(context)
+																				.size
+																				.height,
+																		width: MediaQuery
+																				.of(context)
+																				.size
+																				.width,
+																		// height: MediaQuery.of(context).size.height/1.5,
+																		child: ListView(
+																			children: <Widget>[
+																				Container(
+																					padding: EdgeInsets.only(
+																							top: 10, bottom: 170),
+																					decoration: BoxDecoration(
+																							color: Colors.white
+																					),
+																					height: MediaQuery
+																							.of(context)
+																							.size
+																							.height,
+																					width: MediaQuery
+																							.of(context)
+																							.size
+																							.width,
+																					child: ClipRRect(
+																						borderRadius: BorderRadius
+																								.circular(18.0),
+																						child: Container(
+																							child: Form(
+																								key: _formKey,
+																								child: Column(
+																									children: [
+																								Align(
+																									alignment: Alignment.topRight,
+																											child: Container(
+																												width: 120,
+																													height: 40,
+																													margin: EdgeInsets.only(right:15),
+																													child: ProgressButton(
+																													borderRadius: BorderRadius.all(Radius.circular(18)),
+																														// strokeWidth: 2,
+																														color: Color(
+																																0xff00eebc),
+																														child:
+																															Text(
+																																	"Save",
+																																	style: TextStyle(
+																																			color: Colors
+																																					.white,
+																																			fontSize: 18,
+																																			fontWeight: FontWeight
+																																					.bold)),
+																														onPressed: (AnimationController controller) async {
+																															controller
+																																	.forward();
+																															if (textChanged == true) {
+																																List update = [userId, username, tagLine, email];
+																																await updateUser(update);
+																																await saveUserInfo();
 																															}
-																											  		),
-																											  	),
-																											  ),
+																															else if (_image != null) {
+																																String postedImage = await postImage(_image, client);
+																																await saveImageLocally(postedImage);
 
-																											Divider(),
+																															}
+																															controller
+																																	.reset();
+																														}
+																													),
+																												),
+																											),
+
+																										Divider(),
 																											Container(
 																												padding: EdgeInsets
 																														.only(left: 70.0,
@@ -226,14 +218,14 @@ class _ProfileState extends State<Profile> {
 																													initialValue: snapshot
 																															.data[1],
 																													decoration: const InputDecoration(
-																															labelText: "YOUR FIRST NAME",
+																															labelText: "YOUR USERNAME",
 																															hintText: "What do people call you?"),
 																													autocorrect: false,
 																													// controller: _firstNameController,
 																													onChanged: (
 																															String value) {
-																														if(firstName != value) {
-																															firstName = value;
+																														if(username != value) {
+																															username = value;
 																															print(value);
 																															textChanged =
 																															true;

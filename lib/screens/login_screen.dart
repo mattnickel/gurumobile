@@ -13,8 +13,8 @@ import 'package:sidebar_animation/services/api_login.dart';
 
 
 class LoginPage extends StatefulWidget {
-final String error_message;
-const LoginPage(this.error_message);
+final String errorMessage;
+const LoginPage(this.errorMessage);
   @override
 
   _LoginPageState createState() => _LoginPageState();
@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
               onPressed: (){
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage()), (Route<dynamic> route) => false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage("")), (Route<dynamic> route) => false);
               },)
           ]
       ),
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
   Container errorSection(){
     return Container(
         child:
-          widget.error_message.length > 1
+          widget.errorMessage.length > 1
          ? Center(
             child: Padding(
               padding: EdgeInsets.only(bottom: 10.0),
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                   Icon(Icons.error_outline), SizedBox(width: 5.0),
                   Text(
-                  widget.error_message
+                  widget.errorMessage
                   ),
                 ],
               ),

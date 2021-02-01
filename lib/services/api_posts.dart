@@ -15,7 +15,7 @@ String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
 Future<String> postImage(_image, id) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-  final tokenHeaders = {'token': token};
+  final tokenHeaders = {'token':token};
   var postUri = Uri.parse("$baseUrl/users/$id");
   String fileName = _image.path.split('/').last;
     FormData data = FormData.fromMap({
@@ -29,8 +29,8 @@ Future<String> postImage(_image, id) async{
     dio.options.headers = tokenHeaders;
     Response response = await dio.put("$postUri", data: data);
     print("respond here");
-    print(response);
-    return response.toString();
+    final avatarUrl = response.data["avatar"].toString();
+    return avatarUrl;
   }
 
 Future<String>markedViewed(videoId, seconds) async {
@@ -75,7 +75,7 @@ Future<String>updateUser(update) async {
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   print(update);
-  final msg = jsonEncode({"first_name": update[1], "description":update[2], "email":update[3]});
+  final msg = jsonEncode({"username": update[1], "description":update[2], "email":update[3]});
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);

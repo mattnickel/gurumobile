@@ -91,12 +91,15 @@ class _PostTilesState extends State<PostTiles> {
                             )
                             : Center(child:
                                 CircleAvatar(
-                                  child: Icon(
-                                    Icons.account_circle,
-                                    size: 75,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.white70,
+                                    ),
                                   ),
                                 radius: 30,
-                              backgroundColor: Color(0XFF09eebc),
+                              backgroundColor: Colors.black12,
                               ),
                               )
                           ),

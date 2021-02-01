@@ -14,16 +14,16 @@ import '../screens/signup_screen.dart';
 
 import '../main.dart';
 
-  String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
- // String localUrl = "http://localhost:3000/api/v1/";
+  // String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
+  String localUrl = "http://localhost:3000/api/v1/";
 
 checkLoginStatus(context) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String firstName = prefs.getString("firstName");
+  String username = prefs.getString("username");
 
-  if(token != null && firstName != null ) {
+  if(token != null && username != null ) {
     // await fetchRandom(http.Client(), "For $firstName Today");
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
         builder: (BuildContext context) => FrameworkPage()), (
@@ -43,14 +43,14 @@ Future setLocals(response) async{
   print(userId);
   String authToken = jsonResponse["authentication_token"] as String;
   String userEmail = jsonResponse["email"] as String;
-  String firstName = jsonResponse["first_name"] as String;
+  String username = jsonResponse["username"] as String;
   String tagLine = jsonResponse["description"] as String;
   String avatarUrl = jsonResponse["avatar"] as String;
   final storage = FlutterSecureStorage();
   await storage.write(key:"token", value: authToken);
   await storage.write(key:"email", value: userEmail);
   prefs.setString("userId", userId);
-  prefs.setString("firstName", firstName);
+  prefs.setString("username", username);
   prefs.setString("email", userEmail);
   prefs.setString("tagLine", tagLine);
   prefs.setString("avatarUrl", avatarUrl);
@@ -59,7 +59,7 @@ Future setLocals(response) async{
 Future signIn(String email, String pass, context, prefs) async {
 
   String errorMessage;
-  String loginUrl = authUrl +"login";
+  String loginUrl = localUrl +"login";
 
   final response = await http.post(
     loginUrl,
@@ -79,14 +79,14 @@ Future signIn(String email, String pass, context, prefs) async {
 }
 
 
-Future signUp(String email, String pass, String firstName, context) async {
+Future signUp(String email, String pass, String username, context) async {
 
-  String signUpUrl = authUrl +'signup';
+  String signUpUrl = localUrl +'signup';
 
   final response = await http.post(
     signUpUrl,
     headers: {"Accept": "Application/json"},
-    body: {"email":email, "password":pass, "first_name":firstName},
+    body: {"email":email, "password":pass, "username":username},
   );
   if(response.statusCode == 200) {
     await setLocals(response);
@@ -94,11 +94,14 @@ Future signUp(String email, String pass, String firstName, context) async {
   }else{
     print("nope");
     print(response.body);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupPage()));
+    var jsonMessage = json.decode(response.body);
+    String error = jsonMessage["error"].toString();
+    print(error);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupPage(error)));
   }
 }
 Future signOut(context) async {
-  String signoutUrl = authUrl +'logout';
+  String signoutUrl = localUrl +'logout';
   final storage = FlutterSecureStorage();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userEmail = await storage.read(key: "email");
@@ -113,7 +116,7 @@ Future signOut(context) async {
 
 Future createVerificationCode(email)async{
   String params = "email="+email;
-  String url = authUrl + 'passwords/forgot?'+params;
+  String url = localUrl + 'passwords/forgot?'+params;
   var response = await http.get(
     url,
     headers: {"Accept": "Application/json"},
@@ -134,7 +137,7 @@ Future confirmReset(code)async{
 
   String params = "verify="+code;
 
-  String url = authUrl + 'passwords/confirm?'+params;
+  String url = localUrl + 'passwords/confirm?'+params;
   var response = await http.get(
     url,
     headers: {"Accept": "Application/json"},
@@ -152,8 +155,7 @@ Future confirmReset(code)async{
 Future setPasswordAndLogin(password, context) async{
   final storage = FlutterSecureStorage();
   String resetToken= await storage.read(key:"resetToken");
-
-String url = authUrl + 'passwords/reset';
+  String url = localUrl + 'passwords/reset';
 
   final response = await http.put(
     url,

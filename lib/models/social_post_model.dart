@@ -39,19 +39,6 @@ class SocialPost {
     );
   }
 
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['id'] = this.id;
-  //   data['time'] = this.time;
-  //   data['message'] = this.message;
-  //   data['image'] = this.image;
-  //   data['user_name'] = this.userName;
-  //   data['user_tagline'] = this.userTagline;
-  //   data['user_avatar'] = this.userAvatar;
-  //   data['bump_count'] = this.bumpCount;
-  //   data['my_bump'] = this.myBump;
-  //   return data;
-  // }
 }
 class SocialPostList {
 
@@ -101,16 +88,5 @@ class SocialPostList {
 
     });
   }
-
-
-  // factory SocialPostList.fromJson(List<dynamic> parsedJson) {
-  //
-  //   List<SocialPost> socialPosts = new List<SocialPost>();
-  //   socialPosts = parsedJson.map((i)=>SocialPost.fromJson(i)).toList();
-  //
-  //   return new SocialPostList(
-  //       socialPosts: socialPosts
-  //   );
-  // }
 }
 

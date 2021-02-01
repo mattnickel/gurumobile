@@ -35,6 +35,7 @@ class _SupportState extends State<Support> {
 				  		.of(context)
 				  		.size
 				  		.height,
+				  	padding: EdgeInsets.all(20.0),
 				  	decoration: BoxDecoration(
 				  			image: DecorationImage(
 				  				image: AssetImage("assets/images/menu_background.png"),
@@ -48,7 +49,7 @@ class _SupportState extends State<Support> {
 				        	Column(
 				        	  children: [
 				        	    Container(
-				  							margin: EdgeInsets.only(top:130),
+				  							margin: EdgeInsets.only(top:80),
 				  							width: MediaQuery
 				  						.of(context)
 				  						.size
@@ -60,7 +61,7 @@ class _SupportState extends State<Support> {
 				  				decoration: BoxDecoration(
 				  					color: Colors.white
 				  				),
-				  				height: 370,
+				  				height: 340,
 				  				width: MediaQuery.of(context)
 				  				.size
 				  				.width,
@@ -91,7 +92,7 @@ class _SupportState extends State<Support> {
 				  								// height: 150,
 				  								padding: EdgeInsets.all(20.0),
 				  								child:  SizedBox(
-				  									height:200,
+				  									height:180,
 				  								  // width:300,
 				  								  child: TextField(
 				  										// focusNode: _focusNode,

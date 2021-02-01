@@ -143,29 +143,30 @@ class _HabitTilesState extends State<HabitTiles> {
                                   })
                           ),
                           Positioned(
-                              left:40.0,
-                              bottom: 25.0,
-                              child: Text("DAILY",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.0,
-                                  color: Colors.white
+                            // left:40.0,
+                            bottom: 8.0,
+                            child: Column(
+                              children: [
+                                Text("DAILY",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.0,
+                                      color: Colors.white
                                   ),
                                   textAlign: TextAlign.center,
-                              )
-                          ),
-                          Align(
-                            alignment:Alignment.bottomCenter,
-                            child: Container(
-                              padding: EdgeInsets.all(10.0),
-                              width: 120,
-                              child: Text(widget.habits[widget.index].habit.toUpperCase(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.0,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(2.0),
+                                  width: 120,
+                                  child: Text(widget.habits[widget.index].habit.toUpperCase(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14.0,
+                                        color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
                             ),
                           ), Positioned(
                             right:5.0,

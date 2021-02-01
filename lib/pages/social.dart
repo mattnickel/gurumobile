@@ -17,15 +17,16 @@ class Social extends StatefulWidget{
 class _SocialState extends State<Social> {
   final scrollController = ScrollController();
   SocialPostList posts;
-  var mostRecent;
+  bool scrolling = false;
   int page = 0;
 
-  checkForNewPosts()async{
-    mostRecent = await mostRecentPostTime(http.Client());
-    print("Most Recent: $mostRecent");
-
-    setState(() {});
-  }
+  // checkForNewPosts()async{
+  //   mostRecent = await mostRecentPostTime(http.Client());
+  //   print("Most Recent: $mostRecent");
+  //   setState(() {
+  //
+  //   });
+  // }
 
   @override
 
@@ -38,8 +39,13 @@ class _SocialState extends State<Social> {
         }
         posts.loadMore(page+=1);
       }
+      if(scrollController.offset >= 500){
+        scrolling = true;
+      } else {
+        scrolling = false;
+      }
     });
-    checkForNewPosts();
+    // checkForNewPosts();
     // setState(() {});
     super.initState();
   }
@@ -102,7 +108,7 @@ class _SocialState extends State<Social> {
                     )
                 ),
                         Visibility(
-                          visible: mostRecent != _snapshot.data[0].time,
+                          visible: scrolling,
                           child: Align(
                             alignment: Alignment.topCenter,
                             child: Padding(
@@ -121,7 +127,7 @@ class _SocialState extends State<Social> {
                                         Icon(Icons.arrow_upward, color: Colors.white),
                                         Spacer(),
                                         Text(
-                                            ("New Posts"),
+                                            ("Back to top"),
                                             style: TextStyle(
                                                 color: Colors
                                                     .white,
@@ -133,12 +139,16 @@ class _SocialState extends State<Social> {
                                     onPressed: (AnimationController controller) async {
                                       controller.forward();
 
-                                      await Future
-                                          .delayed(
-                                          Duration(
-                                              seconds: 1), () {});
 
-                                     posts.refresh();
+                                      scrollController.animateTo(
+                                        0.0,
+                                        curve: Curves.easeOut,
+                                        duration: const Duration(milliseconds: 300),
+                                      );
+
+                                     setState(() {
+                                       scrolling = false;
+                                     });
                                       controller
                                           .reset();
 
@@ -159,7 +169,6 @@ class _SocialState extends State<Social> {
                                 onPressed: ()async{
                                   await Navigator.push(context,
                                       MaterialPageRoute(builder: (context) => SocialCreate())).then((value) {
-                                    var posts = checkForNewPosts();
                                   });
                                   // checkForNewPosts();
                                 }
