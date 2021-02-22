@@ -3,7 +3,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../popups/habit_popup.dart';
 import '../services/local_notifications_manager.dart';
-import '../helpers/database_helpers.dart';
+import '../helpers/habit_database_helpers.dart';
 import './habit_tiles.dart';
 
 
@@ -86,7 +86,7 @@ class _HabitsRowState extends State<HabitsRow> {
   @override
   Widget build(BuildContext context) {
     _read() async {
-      DatabaseHelper helper = DatabaseHelper.instance;
+      HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
       List<Habit> habitList = await helper.queryAll();
       return habitList;
     }

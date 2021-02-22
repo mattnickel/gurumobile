@@ -62,13 +62,18 @@ class VideoTiles extends StatelessWidget {
                   Positioned(
                     bottom: 50,
                     left:10,
-                    child: Text(
-                        videos[index].title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.white)
-                        ),
+                    child: Container(
+                      width:300,
+                      child: Text(
+                          videos[index].title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          ),
+                    ),
                   ),
                   Positioned(
                     bottom: 30,

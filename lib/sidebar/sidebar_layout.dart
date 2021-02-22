@@ -27,7 +27,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
   Future <List> setProfileInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     username = prefs.getString("username");
-    initial = username.substring(0,0);
+    initial = username.substring(0,1);
     tagLine = prefs.getString("tagLine") ??
         "Add a tagline...";
     avatarUrl = prefs.getString("avatarUrl") ?? "no";
@@ -84,57 +84,66 @@ class _SideBarMenuState extends State<SideBarMenu> {
                                 ),
                               ]
                           ),
-                          ListTile(
-                            title:
-                            snapshot.data[1] != null ?
-                            Text(
-                              snapshot.data[1],
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20, fontWeight:
-                              FontWeight.w800
-                              ),
-                            )
-                            :Text(
-                              "unknown",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20, fontWeight:
-                              FontWeight.w800
-                              ),
-                            ),
-                            subtitle: Text(
-                              snapshot.data[0],
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w200
-                              ),
-                            ),
-                            leading:
-                              snapshot.data[2].length > 3
-                              ? CircleAvatar(
-                                  backgroundImage: NetworkImage(snapshot.data[2]),
-                                  radius: 40,
-                                )
-
-                              : CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: Color(0xff00eebc),
-                                  child: Text(
-                                      initial,
-                                      style: GoogleFonts.roboto(
-                                        textStyle: TextStyle(
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.white,
-                                        )
-                                      ),
-                                  ),
+                          FlatButton(
+                            padding:EdgeInsets.zero,
+                            onPressed:(){
+                              Route route = MaterialPageRoute(
+                                builder: (context) => Profile(),
+                              );
+                              Navigator.push(context, route).then(onGoBack);
+                            },
+                            child: ListTile(
+                              title:
+                              snapshot.data[1] != null ?
+                              Text(
+                                snapshot.data[1],
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20, fontWeight:
+                                FontWeight.w800
                                 ),
+                              )
+                              :Text(
+                                "unknown",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20, fontWeight:
+                                FontWeight.w800
+                                ),
+                              ),
+                              subtitle: Text(
+                                snapshot.data[0],
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w200
+                                ),
+                              ),
+                              leading:
+                                snapshot.data[2].length > 3
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot.data[2]),
+                                    radius: 40,
+                                  )
+
+                                : CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: Colors.white,
+                                  child: CircleAvatar(
+                                    radius: 40,
+                                    backgroundColor: Color(0xff00eebc),
+                                    child: Text(
+                                        initial,
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.white,
+                                          )
+                                        ),
+                                    ),
+                                  ),
+                              ),
                             ),
                           ),
 

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:sidebar_animation/pages/home.dart';
-import 'package:sidebar_animation/pages/next_steps.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 import '../services/local_notifications_manager.dart';
-import '../helpers/database_helpers.dart';
+import '../helpers/habit_database_helpers.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -22,6 +22,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 	bool messagesCheck = true;
 	bool contentCheck = true;
 	final localNotifications = LocalNotificationsManager.init();
+	final _firebaseMessaging = FirebaseMessaging();
 
 
 	var permGranted = "granted";
@@ -195,14 +196,14 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		}
 
 	void _checkForActive() async {
-		DatabaseHelper helper = DatabaseHelper.instance;
+		HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
 		bool _check = await helper.anyActive();
 		setState(() {
 		    habitsCheck = _check;
 		});
 	}
 	setHabitsInactive(){
-		DatabaseHelper helper = DatabaseHelper.instance;
+		HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
 		helper.setAllInactive();
 		var inactive = localNotifications.cancelAllNotifications;
 	}
@@ -315,6 +316,53 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		],
 		),
 		),
+										Container(
+											margin:const EdgeInsets.only(top:0),
+											padding: const EdgeInsets.only(left:20),
+											height:60,
+											decoration: BoxDecoration(
+													color: Colors.white12,
+													border: Border(
+														bottom: BorderSide(
+															color: Colors.black38,
+														),
+													)
+
+											),
+											child: Row(
+												children: [
+													// SizedBox(
+													// 	width:100,
+													// 	height: 100,
+													// ),
+													Text(
+														"News Notifications",
+														style: TextStyle(fontSize: 18, color: Colors.white),
+													),
+													Spacer(),
+													Switch(
+														value: contentCheck,
+														onChanged: (value)async {
+															// updateIt(widget.habits[widget.index].id, value);
+															if (value == false) {
+																print('false');
+																contentCheck=false;
+																_firebaseMessaging.unsubscribeFromTopic("news");
+
+																// cancelIt(widget.habits[widget.index].id);
+															}else {
+																print('true');
+																contentCheck=true;
+																_firebaseMessaging.subscribeToTopic("news");
+															}
+															setState(() {});
+														},
+														activeTrackColor: Color(0xFF9fe7d7),
+														activeColor: Color(0xFF00ebcc),
+													),
+												],
+											),
+										),
 		Container(
 		margin:const EdgeInsets.only(top:0),
 		padding: const EdgeInsets.only(left:20),
@@ -335,7 +383,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		// 	height: 100,
 		// ),
 		Text(
-		"Content Notifications",
+		"New Content Notifications",
 		style: TextStyle(fontSize: 18, color: Colors.white),
 		),
 		Spacer(),
@@ -344,12 +392,15 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		onChanged: (value)async {
 		// updateIt(widget.habits[widget.index].id, value);
 		if (value == false) {
+
 		print('false');
 		contentCheck=false;
+		_firebaseMessaging.unsubscribeFromTopic("new content");
 		// cancelIt(widget.habits[widget.index].id);
 		}else {
 		print('true');
 		contentCheck=true;
+		_firebaseMessaging.subscribeToTopic("new content");
 		}
 		setState(() {
 

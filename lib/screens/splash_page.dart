@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +25,10 @@ class SplashPageState extends State<SplashPage> {
   Future<void> initState() {
     super.initState();
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
+    Firebase.initializeApp().whenComplete(() {
+      print("completed");
+      setState(() {});
+    });
     getCategories(http.Client());
     checkLoginStatus(context);
   }

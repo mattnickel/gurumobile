@@ -29,6 +29,7 @@ class LocalNotificationsManager{
     initializePlatform();
   }
   requestIOSPermission(){
+
     FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
       alert:true,
       badge: true,
@@ -37,8 +38,10 @@ class LocalNotificationsManager{
   }
   initializePlatform(){
     _configureLocalTimeZone();
+
     var initSettingAndroid = AndroidInitializationSettings('lm_app_icon');
     var initSettingIOS = IOSInitializationSettings(
+
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
@@ -53,6 +56,7 @@ class LocalNotificationsManager{
 
     );
     initSetting = InitializationSettings(android: initSettingAndroid, iOS: initSettingIOS);
+
   }
   setOnNotificationReceive(Function onNotificationReceive){
     didReceiveLocalNotificationSubject.listen((notification) {
@@ -64,12 +68,10 @@ class LocalNotificationsManager{
       onNotificationClick(payload);
     });
   }
-  Future<void> showDailyNotification(id, selectedDescription, selectedTime) async {
+  Future<void> showDailyNotification(id, selectedDescription, habitTitle, selectedTime) async {
     tz.initializeTimeZones();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     final location = await tz.getLocation(currentTimeZone);
-    print("so $selectedTime");
-    print("here $location");
     final scheduledDate = tz.TZDateTime.from(selectedTime, location);
     print("scheduled date $scheduledDate");
 
@@ -86,7 +88,7 @@ class LocalNotificationsManager{
     var platformChannel = NotificationDetails(android: androidChannel, iOS: iosChannel);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      "Daily Habit Reminder",
+      "Daily $habitTitle",
       selectedDescription,
       scheduledDate,
       const NotificationDetails(

@@ -20,14 +20,6 @@ class _SocialState extends State<Social> {
   bool scrolling = false;
   int page = 0;
 
-  // checkForNewPosts()async{
-  //   mostRecent = await mostRecentPostTime(http.Client());
-  //   print("Most Recent: $mostRecent");
-  //   setState(() {
-  //
-  //   });
-  // }
-
   @override
 
   initState(){
@@ -45,11 +37,8 @@ class _SocialState extends State<Social> {
         scrolling = false;
       }
     });
-    // checkForNewPosts();
-    // setState(() {});
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context){
@@ -163,13 +152,12 @@ class _SocialState extends State<Social> {
                             right: 45,
                             child: FloatingActionButton(
                                 child:
-                                Icon(Icons.add),
+                                Icon(Icons.add, color: Colors.white),
 
                                 backgroundColor: Color(0xFF09eebc),
                                 onPressed: ()async{
                                   await Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => SocialCreate())).then((value) {
-                                  });
+                                      MaterialPageRoute(builder: (context) => SocialCreate()));
                                   // checkForNewPosts();
                                 }
                             )

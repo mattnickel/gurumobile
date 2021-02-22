@@ -27,6 +27,15 @@ class BigTiles extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(18.0),
                     child:
+                    // Container(
+                    //     decoration: BoxDecoration(
+                    //       image: DecorationImage(
+                    //           image: NetworkImage(video.image),
+                    //           fit: BoxFit.cover,
+                    //           colorFilter:
+                    //           ColorFilter.mode(Colors.black38, BlendMode.darken)),
+                    //     ),
+                    //   ),
                     CachedNetworkImage(
                       imageUrl: '${video.image}',
                       imageBuilder: (context, imageProvider) => Container(
@@ -74,13 +83,18 @@ class BigTiles extends StatelessWidget {
                   Positioned(
                     bottom: 50,
                     left:10,
-                    child: Text(
-                        video.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            color: Colors.white)
-                        ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 40,
+                      child: Text(
+                          video.title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                          ),
+                    ),
                   ),
                   Positioned(
                     bottom: 30,

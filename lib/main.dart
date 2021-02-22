@@ -38,11 +38,27 @@ class MainApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
-            primaryColor: Colors.white,
-            splashColor: Color(0xFF00ebcc),
-          ),
+              // Define the default brightness and colors.
+
+              brightness: Brightness.light,
+              primaryColor: Colors.white,
+              accentColor: Color(0xFF09ebcc),
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF09ebcc),
+              onPrimary: Colors.white,
+                secondary: Colors.white,
+              // surface:Colors.black,
+              // onSurface:  Color(0xFF00ebcc),
+            ),
+
+
+
+            ),
+
+
+
           home: SplashPage(),
-          // home: SetGoals()
+          // home: SetGoals(),
           routes: <String, WidgetBuilder>{
             '/home': (BuildContext context) => new HomePage(),
             '/framework':(BuildContext context) => new FrameworkPage(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import '../helpers/database_helpers.dart';
+import '../helpers/habit_database_helpers.dart';
 import '../services/local_notifications_manager.dart';
 
 class HabitTiles extends StatefulWidget {
@@ -23,7 +23,7 @@ class _HabitTilesState extends State<HabitTiles> {
 
   updateIt(id, active){
       int activity;
-      DatabaseHelper helper = DatabaseHelper.instance;
+      HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
       if (active == true){
         activity = 1;
       } else{
@@ -32,7 +32,7 @@ class _HabitTilesState extends State<HabitTiles> {
       helper.updateHabitActivity(id, activity);
   }
   deleteIt(id){
-    DatabaseHelper helper = DatabaseHelper.instance;
+    HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
     helper.deleteHabit(id);
   }
   cancelIt(id){
@@ -41,7 +41,7 @@ class _HabitTilesState extends State<HabitTiles> {
   restoreIt()async{
     DateTime best = DateFormat.jm().parse(widget.habits[widget.index].time);
     DateTime bester = calcTime(best);
-    localNotifications.showDailyNotification(widget.habits[widget.index].id, widget.habits[widget.index].description, bester);
+    localNotifications.showDailyNotification(widget.habits[widget.index].id, widget.habits[widget.index].habit, widget.habits[widget.index].description, bester);
     return true;
   }
   DateTime calcTime(time){

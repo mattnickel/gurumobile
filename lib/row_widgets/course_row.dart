@@ -17,7 +17,7 @@ class CourseRow extends StatelessWidget {
 
     return
       FutureBuilder<List<TrainingModule>>(
-          future: fetchCourses(http.Client(),category),
+          future: fetchCourses(http.Client(),category, context),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done)  {

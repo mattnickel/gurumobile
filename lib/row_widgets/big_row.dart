@@ -21,7 +21,7 @@ class BigRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return
       FutureBuilder<Video>(
-          future: fetchRandom(http.Client(), category),
+          future: fetchRandom(http.Client(), category, context),
           builder: (context, snapshot) {
 
             if(snapshot.connectionState == ConnectionState.done) {

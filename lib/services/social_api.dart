@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -10,15 +10,16 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
+import 'api_login.dart';
+
 http.Client client;
-// String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
 String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
 // String localUrl = 'http://localhost:3000/api/v1';
 
 List<Map> parseSocial(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  // var parsedList = parsed.map<SocialPost>((json) => SocialPost.fromServerMap(json))
-  //         .toList();
+  final responseJson = utf8.decode(responseBody.runes.toList());
+  print (responseJson);
+  final parsed = json.decode(responseJson).cast<Map<String, dynamic>>();
   return parsed;
 }
 
@@ -29,13 +30,13 @@ Future<List<Map>> fetchSocial(client, page) async {
     print("file exists");
     DateTime update = await file.lastModified();
     var now = new DateTime.now();
-    if (page == 0){
+    if (page == 0) {
       if (update.day == now.day) {
         print("Fetching social from cache");
         var cachedSocial = file.readAsStringSync();
         return parseSocial(cachedSocial);
       }
-    } else{
+    } else {
       print("go for updates");
       return updateSocial(client, page);
     }
@@ -44,16 +45,13 @@ Future<List<Map>> fetchSocial(client, page) async {
     return updateSocial(client, page);
   }
 }
-savePost(message, image) async {
+savePost({message, image}) async {
   try {
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     final tokenHeaders = {'token': token};
     var postUri = Uri.parse("$baseUrl/social_posts");
     print(postUri);
-    if (image == null) {
-      final msg = [{"message": message}];
-    }
     String fileName = image.path
         .split('/')
         .last;
@@ -77,6 +75,7 @@ savePost(message, image) async {
     } else {
       return true;
     }
+
   }on TimeoutException catch (_) {
     // A timeout occurred.
   } on SocketException catch (_) {
@@ -86,11 +85,13 @@ savePost(message, image) async {
 }
 
 
+
 Future <List<Map>> updateSocial(http.Client client, page) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   var url = "$baseUrl/social_posts?page=$page";
+  print(token);
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -99,6 +100,7 @@ Future <List<Map>> updateSocial(http.Client client, page) async {
   if (response != null) {
     if (response.statusCode == 200) {
       print("updated social from api");
+
       if (page== 1) {
         print("update file");
         var dir = await getTemporaryDirectory();
@@ -109,6 +111,7 @@ Future <List<Map>> updateSocial(http.Client client, page) async {
       print(response.body);
       return parseSocial(response.body);
     } else {
+
       print("social not updated from api");
       print(response.body);
       return null;

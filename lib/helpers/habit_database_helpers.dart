@@ -54,7 +54,7 @@ class Habit {
 }
 
 // singleton class to manage the database
-class DatabaseHelper {
+class HabitDatabaseHelper {
 
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "MyDatabase.db";
@@ -63,9 +63,9 @@ class DatabaseHelper {
   static final _databaseVersion = 1;
 
   // Make this a singleton class.
-  DatabaseHelper._privateConstructor();
+  HabitDatabaseHelper._privateConstructor();
 
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  static final HabitDatabaseHelper instance = HabitDatabaseHelper._privateConstructor();
 
   // Only allow a single open connection to the database.
   static Database _database;
@@ -163,7 +163,7 @@ class DatabaseHelper {
   }
 
   Future<List<Habit>> queryAll() async {
-    Database db = await DatabaseHelper.instance.database;
+    Database db = await HabitDatabaseHelper.instance.database;
     // get all rows
     var allResults = await db.query(tableHabits);
     int count = allResults.length;
@@ -179,7 +179,7 @@ class DatabaseHelper {
   }
 
   Future<bool> anyActive() async {
-    Database db = await DatabaseHelper.instance.database;
+    Database db = await HabitDatabaseHelper.instance.database;
     // get all rows
     List<Map> actives = await db.query(tableHabits,
         columns: [

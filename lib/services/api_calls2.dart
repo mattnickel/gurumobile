@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
+import 'package:sidebar_animation/services/api_login.dart';
 import '../models/training_module_course_model.dart';
 import '../models/video_model.dart';
 import '../models/categories_model.dart';
@@ -41,7 +43,7 @@ Future<List<VideoCategory>>getCategories(client)async{
     print(parsedList);
     categories.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
     return parsedList;
-  }
+  }else return null;
 }
 getParsedCategories () async{
   var dir = await getTemporaryDirectory();
@@ -75,7 +77,7 @@ Future<List<Video>> cachedVideos (category)async {
   return parseVideos(cachedVideos);
 }
 
-Future<List<Video>> fetchVideos(client, category) async {
+Future<List<Video>> fetchVideos(client, category, context) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
   if (file.existsSync()) {
@@ -89,14 +91,14 @@ Future<List<Video>> fetchVideos(client, category) async {
       return parseVideos(cachedVideos);
     } else{
       print("go for updates");
-      return updateVideos(client, category);
+      return updateVideos(client, category, context);
     }
   } else {
     print("go for updates");
-    return updateVideos(client, category);
+    return updateVideos(client, category, context);
   }
 }
-Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
+Future <Video> updateOneVideo(http.Client client, category, customUrl, context) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
   final storage = FlutterSecureStorage();
@@ -108,13 +110,11 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
   );
   if (response != null) {
     if (response.statusCode == 200) {
-      print("updated $category from api");
       file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
-      print("so far so good");
       print(response.body);
       return parseOneVideo(response.body);
     } else {
-      print("$category not updated from api");
+      signOut(context);
       print(response.body);
       return null;
     }
@@ -122,29 +122,29 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl) async {
     return null;
   }
 }
-Future<Video> fetchRandom(client, category) async {
+Future<Video> fetchRandom(client, category, context) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
 
-  if (file.existsSync()) {
-    DateTime update = await file.lastModified();
-    if (update.day == DateTime.now().day) {
-      print("update random from cache");
-      var randomVideo = file.readAsStringSync();
-      print(randomVideo);
-      return parseOneVideo(randomVideo);
-    } else {
-      print("go get it");
-      return updateOneVideo(client, category, "random");
-    }
-  }else{
-    print("go get it");
-    return updateOneVideo(client, category, "random");
-  }
+  // if (file.existsSync()) {
+  //   DateTime update = await file.lastModified();
+  //   if (update.day == DateTime.now().day) {
+  //     print("update random from cache");
+  //     var randomVideo = file.readAsStringSync();
+  //     print(randomVideo);
+  //     return parseOneVideo(randomVideo);
+  //   } else {
+  //     print("go get it");
+  //     return updateOneVideo(client, category, "random", context);
+  //   }
+  // }else{
+  //   print("go get it");
+    return updateOneVideo(client, category, "random", context);
+  // }
 
 }
 
-Future<List<TrainingModule>> fetchCourses(client, category) async {
+Future<List<TrainingModule>> fetchCourses(client, category, context) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
 
@@ -155,7 +155,7 @@ Future<List<TrainingModule>> fetchCourses(client, category) async {
     return parseTrainingModules(cachedCourses);
   } else {
     print("update");
-    return updateCourses(client, category);
+    return updateCourses(client, category, context);
   }
 }
 
@@ -170,13 +170,11 @@ Future<String>getVideoFile(id, client)async{
   print(response.body);
   if (response.statusCode == 200){
     return "here";
-  };
-
+  } else return null;
 
 }
 
-
-Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) async {
+Future <List<Video>> updateVideos(http.Client client, category, context) async {
   var updateResponse;
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/$category.json");
@@ -185,11 +183,8 @@ Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) asy
   var url;
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  if (customUrl != null) {
-    url = "$baseUrl/videos/$customUrl";
-  } else {
-    url = "$baseUrl/videos/category?category=$category";
-  }
+  url = "$baseUrl/videos/category?category=$category";
+
   final response = await client.get(
     url, headers: tokenHeaders,
   );
@@ -202,13 +197,14 @@ Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) asy
       print(response.body);
       return parseVideos(response.body);
     } else {
-      print("$category not updated from api");
-      print(response.body);
+      signOut(context);
+      // print("$category not updated from api");
+      // print(response.body);
       return null;
     }
-  }
+  } else return null;
 }
-  Future<List<TrainingModule>>updateCourses(http.Client client, category) async {
+  Future<List<TrainingModule>>updateCourses(http.Client client, category, context) async {
     var dir = await getTemporaryDirectory();
     File file = File(dir.path + "/$category.json");
     print("update: $category");
@@ -224,14 +220,16 @@ Future <List<Video>> updateVideos(http.Client client, category, [customUrl]) asy
       file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
       return compute(parseTrainingModules, response.body);
     } else {
-      if (response.statusCode != null) {
-        print("media not updated from api");
-        print(response.statusCode);
-        return null;
-      } else {
-        print("no api response");
-        return null;
-      }
+      signOut(context);
+      return null;
+      // if (response.statusCode != null) {
+      //   print("media not updated from api");
+      //   print(response.statusCode);
+      //   return null;
+      // } else {
+      //   print("no api response");
+      //   return null;
+      // }
     }
   }
   Future<List<Video>> checkThenUpdateVideos(http.Client client,

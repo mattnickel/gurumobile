@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sidebar_animation/services/api_calls2.dart';
-import 'package:sidebar_animation/services/api_posts.dart';
+import 'package:image/image.dart' as img;
+import 'package:sidebar_animation/helpers/fix_rotation.dart';
+
+import '../services/api_posts.dart';
 import 'dart:io';
-import 'package:progress_indicator_button/button_stagger_animation.dart';
 import 'package:progress_indicator_button/progress_button.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,7 +19,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 	File _image;
 	final picker = ImagePicker();
-	String _pickedPath;
 	final _usernameController = TextEditingController();
 	final tagLineController = TextEditingController();
 	final emailController = TextEditingController();
@@ -38,15 +38,12 @@ class _ProfileState extends State<Profile> {
 	Future getImage() async {
 		final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200.0,
 			maxWidth: 200.0);
-
-		setState(() {
-			if (pickedFile != null) {
-				_pickedPath = pickedFile.path;
-				_image = File(pickedFile.path);
-			} else {
-				print('No image selected.');
-			}
-		});
+		if (pickedFile != null && pickedFile.path != null) {
+			File better = await fixImageRotation(pickedFile.path);
+			setState((){
+				_image = better;
+			});
+		}
 	}
 
 		Future <List> getUserInfo() async {
@@ -85,7 +82,6 @@ class _ProfileState extends State<Profile> {
 			tagLineController.text = tagLine;
 			emailController.text = email;
 			passwordController.text = password;
-			_pickedPath = null;
 		}
 
 		@override
@@ -218,7 +214,7 @@ class _ProfileState extends State<Profile> {
 																													initialValue: snapshot
 																															.data[1],
 																													decoration: const InputDecoration(
-																															labelText: "YOUR USERNAME",
+																															labelText: "USERNAME",
 																															hintText: "What do people call you?"),
 																													autocorrect: false,
 																													// controller: _firstNameController,
@@ -246,7 +242,7 @@ class _ProfileState extends State<Profile> {
 																													initialValue: snapshot
 																															.data[0],
 																													decoration: const InputDecoration(
-																															labelText: "YOUR TAG LINE",
+																															labelText: "TAGLINE",
 																															hintText: "What do you want people to know about you?"),
 																													autocorrect: false,
 																													// controller: tagLineController,
@@ -273,7 +269,7 @@ class _ProfileState extends State<Profile> {
 																															fontSize: 18),
 																													initialValue: email,
 																													decoration: const InputDecoration(
-																															labelText: "YOUR EMAIL ADDRESS",
+																															labelText: "EMAIL",
 																															hintText: "Email address"),
 																													autocorrect: false,
 																													// controller: emailController,

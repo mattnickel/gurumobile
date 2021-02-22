@@ -1,196 +1,176 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
+import 'package:sidebar_animation/row_widgets/image_row.dart';
+import 'package:provider/provider.dart';
 import 'package:sidebar_animation/services/social_api.dart';
+import '../models/social_index_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show get;
 
-class SocialCreate extends StatefulWidget {
-  @override
 
-  _SocialCreateState createState() => _SocialCreateState();
-}
-class _SocialCreateState extends State<SocialCreate> {
-  final ScrollController _scrollController = ScrollController();
-  // FocusNode _focusNode = new FocusNode();
-  final picker = ImagePicker();
-  String pickedPath;
-  var image;
-  var pickedFile;
-  bool isLoading = false;
+class SocialCreate extends StatelessWidget {
+  File betterImage;
+  // final ScrollController _scrollController = ScrollController();
   final messageController = TextEditingController();
 
-  getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
-    setState(() {
-      pickedPath = pickedFile.path;
-      image = pickedFile;
-    });
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+    return  Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 1,
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          title: Text("Create Social Post",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
         ),
-        title: Text("Create Social Post",
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.transparent,
-      ),
-      body:GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              children: [
+        body:
 
-                Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .width - 40,
-                    child:
+        ChangeNotifierProvider<SocialIndexModel>(
+          create: (context)=> SocialIndexModel(),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                reverse: true,
+                child: Column(
+                  children: [
                     Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(18.0),
-                          child:
-                          Container(
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width - 40,
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width - 40,
-                              child: DecoratedBox(
-                                decoration: image == null
-                                    ? BoxDecoration(
-                                  color: Colors.black12,
-                                ) : BoxDecoration(
-                                    image: DecorationImage(
-                                        image: FileImage(
-                                            File(pickedPath)),
-                                        fit:BoxFit.cover
-                                    )
-                                ),
-                              )
+                        Container(
+                          height: MediaQuery.of(context).size.width - 40,
+                          width: MediaQuery.of(context).size.width - 40,
+                        ),
+                        ImageRow(),
+                  ],
+                ),
+
+                Consumer<SocialIndexModel>(builder:(context, socialIndex, child) {
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 25.0),
+                    child: TextField(
+                      // focusNode: _focusNode,
+                      controller: messageController,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black26,
                           ),
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
-                        Center(
-                          child:
-                          image == null
-                              ? Icon(
-                            Icons.photo_size_select_actual_outlined,
-                            size: 100,
-                            color: Colors.white,)
-                              : Container(),
-                        ),
-
-                        Positioned(
-                          top: 30,
-                          right: 30,
-                          child: image == null
-                            ? FloatingActionButton(
-                              child:
-                              Icon(Icons.file_upload),
-                              backgroundColor: Color(0xFF09eebc),
-                              onPressed: () async{
-                                print("add photo");
-                                getImage();
-                                setState(() {});
-                              })
-                            : FloatingActionButton(
-                              child:
-                              Icon(Icons.cancel),
-                              backgroundColor: Colors.black45,
-                              onPressed: () async{
-                                setState(() {
-                                  pickedPath = null;
-                                  image = null;
-                                });
-                              }),
-                        ),
-                      ],
-                    )
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 25.0),
-                  child: TextField(
-                    // focusNode: _focusNode,
-                    controller: messageController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black26,
-                        ),
-                        borderRadius: BorderRadius.circular(18.0),
+                        hintText: 'Write a caption... ',
+                        fillColor: Colors.grey,
                       ),
-                      hintText: 'Write a caption... ',
-                      fillColor: Colors.grey,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      onChanged: (text) {
+                        socialIndex.setSocialCaption(text);
+                      },
                     ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 3,
-                    onChanged: (tex) {
-                      setState(() {
+                  );
+                }),
 
-                      });
-                    },
-                  ),
+                Consumer<SocialIndexModel>(builder:(context, socialIndex, child) {
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 50,
+                        child: RaisedButton(
+                          onPressed: !socialIndex.imageExists
+                              ? null
+                              : () async {
+                            socialIndex.imageUrl != null
+                            ? Share.shareFiles([socialIndex.convertedImageFile.path], text: socialIndex.caption)
+                            : Share.shareFiles([socialIndex.imageFile.path],
+                                text: socialIndex.caption);
+                          },
+                          elevation: 0.2,
+                          color: Color(0xff09eebc),
+                          disabledColor: Color.fromRGBO(0, 238, 188, 0.25),
+                          child: Text("Share to...", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0)),
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        width: 150,
+                        height: 50,
+                        child: Consumer<SocialIndexModel>(
+                            builder: (context, socialIndex, child) {
+                              return RaisedButton(
+                                onPressed: !socialIndex.imageExists || socialIndex.caption == null
+                                    ? null
+                                    : () async {
+                                  if(socialIndex.convertedImageFile != null) {
+                                    await savePost(
+                                        message: socialIndex.caption,
+                                        image: socialIndex.convertedImageFile,
+                                        );
+                                    Navigator.pop(context, 'yep');
+                                  }else if(socialIndex.imageFile != null) {
+                                    await savePost(
+                                        message: socialIndex.caption,
+                                        image: socialIndex.imageFile);
+                                    Navigator.pop(context, 'yep');
+                                  }else {
+                                    return null;
+                                  }
+                                },
+                                elevation: 0.2,
+                                color: Color(0xff09eebc),
+                                disabledColor: Color.fromRGBO(0, 238, 188, 0.25),
+                                child: socialIndex.isLoading
+                                    ? Center(child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white70)
+                                ))
+
+                                    : Text("Post", style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25.0)),
+                              );
+                            }
+                        ),
+                      )
+
+                    ],
+                  );
+                }),
+                    Container(
+                      height: MediaQuery.of(context).size.height/25
+                    )
+                  ],
                 ),
-                Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  height: 50.0,
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  margin: EdgeInsets.only(top: 5.0, bottom:MediaQuery
-                      .of(context)
-                      .size
-                      .width/3),
-                  child: RaisedButton(
-                    onPressed: messageController.text == '' || image == null ? null :
-                        ()async {
-                      setState((){isLoading = true;});
-                      await savePost(
-                          messageController.text, image);
-                      Navigator.pop(context, 'yep');
-                    },
-                    elevation: 0.2,
-                    color: Color(0xff09eebc),
-                    disabledColor: Color.fromRGBO(0, 238, 188, 0.25),
-                    child: isLoading
-                        ? Center(child:CircularProgressIndicator())
-
-                        :Text("Create Post", style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
-                  ),
-                ),
-
-              ],
+              ),
             ),
           ),
         ),
-      ),
     );
-}
+  }
 }

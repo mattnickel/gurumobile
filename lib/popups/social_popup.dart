@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:share/share.dart';
 
 import 'package:sidebar_animation/services/social_api.dart';
 
@@ -84,7 +85,7 @@ socialPopup(BuildContext context) {
                                       pickedFile = null;
                                       image = null;
                                     });
-                                    Navigator.pop(context, 'yep');
+                                    Navigator.pop(context, 'close');
                                   },
                                 ),
                               ),
@@ -184,7 +185,7 @@ socialPopup(BuildContext context) {
                       width: MediaQuery
                           .of(context)
                           .size
-                          .width,
+                          .width/2,
                       height: 50.0,
                       padding: EdgeInsets.symmetric(horizontal: 15.0),
                       margin: EdgeInsets.only(top: 5.0),
@@ -192,9 +193,10 @@ socialPopup(BuildContext context) {
                         onPressed: messageController.text == ''|| image == null ? null :
                             ()async {
                           setState((){isLoading = true;});
-                          await savePost(
-                              messageController.text, image);
-                          Navigator.pop(context, 'yep');
+                          Share.shareFiles([image], text: messageController.text, subject: messageController.text );
+                          // await savePost(
+                          //     messageController.text, image);
+                          // Navigator.pop(context, 'yep');
                         },
                         elevation: 0.2,
                         color: Color(0xff09eebc),
@@ -202,7 +204,38 @@ socialPopup(BuildContext context) {
                         child: isLoading
                             ? Center(child:CircularProgressIndicator())
 
-                            :Text("Create Post", style: TextStyle(
+                            :Text("Post to LM", style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0)),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width/2,
+                      height: 50.0,
+                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      margin: EdgeInsets.only(top: 5.0),
+                      child: RaisedButton(
+                        onPressed: messageController.text == ''|| image == null ? null :
+                            ()async {
+                          setState((){isLoading = true;});
+                          Share.shareFiles([image], text: messageController.text, subject: messageController.text );
+                          // await savePost(
+                          //     messageController.text, image);
+                          // Navigator.pop(context, 'yep');
+                        },
+                        elevation: 0.2,
+                        color: Color(0xff09eebc),
+                        disabledColor: Color.fromRGBO(0, 238, 188, 0.25),
+                        child: isLoading
+                            ? Center(child:CircularProgressIndicator())
+
+                            :Text("Share", style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
                             fontSize: 16)),

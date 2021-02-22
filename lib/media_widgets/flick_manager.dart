@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widgets/flutter_widgets.dart';
-import 'package:sidebar_animation/screens/social_post_screen.dart';
+import 'package:sidebar_animation/screens/social_create_screen.dart';
+// import 'package:sidebar_animation/screens/social_post_screen.dart';
 import 'package:sidebar_animation/services/api_posts.dart';
 import 'package:video_player/video_player.dart';
 
@@ -44,17 +47,40 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
     flickManager.dispose();
     super.dispose();
   }
-  void checkVideo(){
+  void checkVideo()async{
     if (widget.socialImage != null) {
       if (flickManager.flickVideoManager.videoPlayerController.value.position ==
           flickManager.flickVideoManager.videoPlayerController.value.duration) {
         print('video Ended');
+        saveSocialImage(widget.socialImage);
         Route route = MaterialPageRoute(
-            builder: (context) => SocialPostScreen(image: widget.socialImage));
+            builder: (context) => SocialCreate());
         Navigator.pushReplacement(context, route);
       }
     }
-
+  }
+  void saveSocialImage(socialImageUrl)async{
+    //save in prefs
+    String savedImages;
+    List savedImagesList;
+    List newImagesList;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    savedImages = prefs.getString("socialLibrary");
+    if(savedImages== null){
+      newImagesList=["$socialImageUrl"];
+    } else {
+      savedImagesList= json.decode(savedImages);
+      if(savedImagesList.contains("$socialImageUrl")){
+        print("duplicate");
+        newImagesList = savedImagesList;
+      }else{
+        newImagesList=["$socialImageUrl"];
+        newImagesList.addAll(savedImagesList);
+      }
+    }
+    String saveThis = json.encode(newImagesList);
+    // String saveThis = "";
+    prefs.setString("socialLibrary", saveThis);
   }
 
   @override
@@ -91,10 +117,13 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                   color: Colors.white,
                   onPressed: () {
                     setState(() {
-
                       widget.positionValue = flickManager.flickVideoManager.videoPlayerController.value.position.inSeconds;
                     });
                     markedViewed(widget.videoId, widget.positionValue);
+                    if (widget.socialImage != null){
+                      saveSocialImage(widget.socialImage);
+                    }
+
                     Navigator.of(context).pop();
                     print(widget.positionValue);
                   }
@@ -114,10 +143,11 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                     ),
                     onPressed: () {
                       flickManager.flickVideoManager.videoPlayerController.pause();
+                      saveSocialImage(widget.socialImage);
                       Navigator.of(context).push(PageRouteBuilder(
                           opaque: false,
                           pageBuilder: (BuildContext context, _, __) =>
-                              SocialPostScreen(image: widget.socialImage)));
+                              SocialCreate()));
                     }
 
               )

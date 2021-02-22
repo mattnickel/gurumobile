@@ -1,8 +1,13 @@
+import 'dart:io' show Platform;
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notification_permissions/notification_permissions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './services/local_notifications_manager.dart';
 import 'models/navbar_tab_selected_model.dart';
 
@@ -18,14 +23,44 @@ class FrameworkPage extends StatefulWidget{
 
 
 class _FrameworkPageState extends State<FrameworkPage> {
-
+	final localNotifications = LocalNotificationsManager.init();
+	final _firebaseMessaging = FirebaseMessaging();
+	final FirebaseFirestore _db = FirebaseFirestore.instance;
+	var iosSubscription;
 	@override
 	void initState(){
 		super.initState();
-		final _firebaseMessaging = FirebaseMessaging();
 		_firebaseMessaging.requestNotificationPermissions();
+		_firebaseMessaging.subscribeToTopic("news");
+		_firebaseMessaging.subscribeToTopic("content");
+		if (Platform.isIOS){
+			print("waiting to register");
+			iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
+				print("iosRegistered");
+				_saveDeviceToken();
+			});
+		}else{
+			_saveDeviceToken();
+		}
 	}
-	final localNotifications = LocalNotificationsManager.init();
+
+	_saveDeviceToken()async{
+		final SharedPreferences prefs = await SharedPreferences.getInstance();
+		print("saving device token??");
+		String username = prefs.getString("username");
+		String email = prefs.getString("email");
+		String firebaseToken = await _firebaseMessaging.getToken();
+		if(firebaseToken != null){
+			var tokenRef = _db
+					.collection('user')
+					.doc(username)
+					.collection('tokens')
+					.doc(firebaseToken);
+			await tokenRef.set({
+				'token':firebaseToken
+			});
+		}
+	}
 
 	@override
 	Widget build(BuildContext context) {

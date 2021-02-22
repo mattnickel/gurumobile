@@ -37,8 +37,6 @@ checkLoginStatus(context) async {
 Future setLocals(response) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var jsonResponse = json.decode(response.body);
-  print(jsonResponse);
-  // print("here");
   String userId = jsonResponse["id"].toString();
   print(userId);
   String authToken = jsonResponse["authentication_token"] as String;
@@ -60,6 +58,7 @@ Future signIn(String email, String pass, context, prefs) async {
 
   String errorMessage;
   String loginUrl = authUrl +"login";
+  // String loginUrl =  localUrl +"login";
 
   final response = await http.post(
     loginUrl,
@@ -82,15 +81,18 @@ Future signIn(String email, String pass, context, prefs) async {
 Future signUp(String email, String pass, String username, context) async {
 
   String signUpUrl = authUrl +'signup';
-
+  print("signup");
   final response = await http.post(
     signUpUrl,
     headers: {"Accept": "Application/json"},
     body: {"email":email, "password":pass, "username":username},
   );
+  print(response.body);
   if(response.statusCode == 200) {
     await setLocals(response);
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SetGoals()), (Route<dynamic> route) => false);
+    print(response.body);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
+    // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SetGoals()), (Route<dynamic> route) => false);
   }else{
     print("nope");
     print(response.body);

@@ -23,12 +23,13 @@ class _SignupPageState extends State<SignupPage> {
   Image backgroundImage;
   bool _isLoading = false;
   bool _isEnabled;
+  bool accepted= true;
   String privacyInfo;
   String termsInfo;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final userNameController = TextEditingController();
+  final usernameController = TextEditingController();
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
     // Start listening to changes.
     emailController.addListener(_enableSignin);
     passwordController.addListener( _enableSignin);
-    userNameController.addListener( _enableSignin);
+    usernameController.addListener( _enableSignin);
 
   }
   _enableSignin() {
@@ -85,15 +86,17 @@ class _SignupPageState extends State<SignupPage> {
                 )) : ListView(
               children: <Widget>[
                 headerSection(),
+                returningUserSection(),
                 formSection(),
                 errorSection(),
                 passwordInfoSection(),
                 buttonSection(),
 
+
               ],
             ),
           ),
-          termsSection(),
+          checkboxSection(),
         ],
       ),
     );
@@ -119,78 +122,157 @@ class _SignupPageState extends State<SignupPage> {
           : null,
     );
   }
-  Align termsSection(){
-    return Align(
-        alignment:Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
-          child: RichText(
-              textAlign: TextAlign.center,
-            text:TextSpan(
-              text: "By signing up, you're agreeing to our \n",
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 14,
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                  text: "Terms of Use",
-                    recognizer: new TapGestureRecognizer()
-                      ..onTap = () async {
-                        termsInfo = await rootBundle.loadString('assets/text/terms.txt');
-                        await showDialog(
-                          context:context,
-                          builder:(BuildContext context){
-                            return termsPopup("Terms of Use", termsInfo, context);
-                          }
-                        );
-                      },
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    )
-                  ),
-                TextSpan(
-                  text: " and ",
-                ),
-                TextSpan(
-                    text: "Privacy Policy",
-                    recognizer: new TapGestureRecognizer()
-                      ..onTap = () async{
-                        privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
-                          print("here");
-                        await showDialog(
-                            context:context,
-                            builder:(BuildContext context){
-                              return termsPopup("Privacy Policy", privacyInfo, context);
-                            }
-                        );
-
-                      },
+  Positioned checkboxSection(){
+    return Positioned(
+          bottom: 0,
+          right: 0,
+      child: Container(
+        padding: EdgeInsets.only(top:20),
+        width: MediaQuery.of(context).size.width,
+      child: Wrap(children: [
+        Checkbox(
+            value: accepted,
+            onChanged: (val){
+              setState(() {
+                accepted=val;
+              });
+        }),
+        Container(
+            width:MediaQuery.of(context).size.width -65,
+            // color: Colors.white70,
+            padding: EdgeInsets.only(top:5.0, bottom:15),
+            child: RichText(
+                // textAlign: TextAlign.center,
+                text:TextSpan(
+                    text: "I accept the ",
                     style: TextStyle(
-                      decoration: TextDecoration.underline,)
-                ),
-                TextSpan(
-                  text: ".",
-                ),
-              ]
+                      color: Colors.black54,
+                      fontSize: 14,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: "Terms of Use",
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () async {
+                              termsInfo = await rootBundle.loadString('assets/text/terms.txt');
+                              await showDialog(
+                                  context:context,
+                                  builder:(BuildContext context){
+                                    return termsPopup("Terms of Use", termsInfo, context);
+                                  }
+                              );
+                            },
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                          )
+                      ),
+                      TextSpan(
+                        text: " and ",
+                      ),
+                      TextSpan(
+                          text: "Privacy Policy,",
+                          recognizer: new TapGestureRecognizer()
+                            ..onTap = () async{
+                              privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
+                              await showDialog(
+                                  context:context,
+                                  builder:(BuildContext context){
+                                    return termsPopup("Privacy Policy", privacyInfo, context);
+                                  }
+                              );
+
+                            },
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,)
+                      ),
+                      TextSpan(
+                        text: " and I understand that there is no tolerance for objectionable content or abusive users.",
+                      ),
+                    ]
+                )
+            ),),
+      ],)
+      ),
+    );
+  }
+
+  Positioned termsSection(){
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        color:Colors.white70,
+        child: Align(
+            alignment:Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: RichText(
+                  textAlign: TextAlign.center,
+                text:TextSpan(
+                  text: "By signing up, you're agreeing to our \n",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Terms of Use",
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () async {
+                            termsInfo = await rootBundle.loadString('assets/text/terms.txt');
+                            await showDialog(
+                              context:context,
+                              builder:(BuildContext context){
+                                return termsPopup("Terms of Use", termsInfo, context);
+                              }
+                            );
+                          },
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        )
+                      ),
+                    TextSpan(
+                      text: " and ",
+                    ),
+                    TextSpan(
+                        text: "Privacy Policy",
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () async{
+                            privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
+                              print("here");
+                            await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return termsPopup("Privacy Policy", privacyInfo, context);
+                                }
+                            );
+
+                          },
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,)
+                    ),
+                    TextSpan(
+                      text: ".",
+                    ),
+                  ]
+                )
+              ),
             )
           ),
-        )
-      );
+      ),
+    );
   }
-  Container signUpInstead(){
-   return Container(
-     height:40,
-     padding: const EdgeInsets.only(left:23.0, top:15, bottom:5),
-     child: Row(
-          // mainAxisAlignment: MainAxisAlignment.left,
-          children:<Widget>[
+  Padding returningUserSection() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: Row(
+          children: <Widget>[
             Text('Already Signed Up?', style: TextStyle(
                 color: Colors.black54
             ),
             ),
             FlatButton(child:
-
             Text(
               'Log in',
               style: TextStyle(
@@ -198,12 +280,12 @@ class _SignupPageState extends State<SignupPage> {
                 decoration: TextDecoration.underline,
               ),
             ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage("")), (Route<dynamic> route) => false);
               },)
           ]
       ),
-   );
+    );
   }
   Container buttonSection() {
     return Container(
@@ -212,13 +294,17 @@ class _SignupPageState extends State<SignupPage> {
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 5.0),
       child: RaisedButton(
-        onPressed: emailController.text == "" || passwordController.text == "" || userNameController.text == "" ? null : () {
-          setState(() {
-            _isLoading = true;
-          });
+        onPressed: emailController.text == "" || passwordController.text == "" || usernameController.text == ""|| accepted== false ? null : () {
+
           if (_formBKey.currentState.validate()) {
-            signUp(emailController.text, passwordController.text, userNameController.text, context);
-          };
+            print("valid");
+            signUp(emailController.text, passwordController.text, usernameController.text, context);
+            setState(() {
+              _isLoading = true;
+            });
+          }
+          else print("not valid");
+
         },
         elevation: 0.2,
         color: Color(0xff00eebc),
@@ -250,11 +336,12 @@ Container passwordInfoSection(){
     // widget tree.
     emailController.dispose();
     passwordController.dispose();
-    userNameController.dispose();
+    usernameController.dispose();
     super.dispose();
   }
   Container formSection() {
     return Container(
+      constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
       padding: EdgeInsets.only(top: 5, bottom: 10, left:20, right:20),
       child: FormBuilder(
         key: _formBKey,
@@ -265,8 +352,8 @@ Container passwordInfoSection(){
                   child: FormBuilderTextField(
                     keyboardType: TextInputType.text,
                     maxLines:1,
-                    attribute:"userName",
-                    controller: userNameController,
+                    attribute:"username",
+                    controller: usernameController,
                     validators: [FormBuilderValidators.required(),FormBuilderValidators.maxLength(25) ],
                     cursorColor: Colors.black54,
                     style: TextStyle(color: Colors.black54),
@@ -373,10 +460,10 @@ Container passwordInfoSection(){
              )
          ),
         ),
-        Positioned(
-          top: 80,
-             child: signUpInstead(),
-        )
+        // Positioned(
+        //   top: 80,
+        //      child: signUpInstead(),
+        // )
       ],
     );
   }

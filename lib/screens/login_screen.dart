@@ -1,11 +1,13 @@
 
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/framework_page.dart';
+import 'package:sidebar_animation/popups/terms_popup.dart';
 import 'package:sidebar_animation/screens/reset_password.dart';
 import 'package:sidebar_animation/screens/signup_screen.dart';
 import 'package:sidebar_animation/services/api_login.dart';
@@ -26,7 +28,11 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isEnabled = false;
   String email;
-
+  String privacyInfo;
+  String termsInfo;
+  Future<String> loadAsset(String s) async {
+    return await rootBundle.loadString(s);
+  }
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -62,43 +68,51 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/adventure3.png'),
-                  fit:BoxFit.cover
-              )
-          ),
-        child: _isLoading ? Center (
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text("Logging In...",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500,
-                      )),
-                )
-              ],
-            )) : ListView(
-          children: <Widget>[
-            headerSection(),
-            newUserSection(),
-            formSection(),
-            errorSection(),
-            buttonSection(),
-            forgotPasswordSection(),
+      body: Stack(
+        children: [
+          Container(
 
-          ],
-        ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/adventure3.png'),
+                      fit:BoxFit.cover
+                  )
+              ),
+            child: _isLoading ? Center (
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("Logging In...",
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                          )),
+                    )
+                  ],
+                )) : ListView(
+              children: <Widget>[
+                headerSection(),
+                newUserSection(),
+                formSection(),
+                errorSection(),
+                buttonSection(),
+                forgotPasswordSection(),
+
+              ],
+            ),
+
+          ),
+          termsSection(),
+        ],
       ),
+
     );
   }
   Align forgotPasswordSection(){
@@ -139,6 +153,73 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupPage("")), (Route<dynamic> route) => false);
               },)
           ]
+      ),
+    );
+  }
+  Positioned termsSection(){
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        color:Colors.white70,
+        child: Align(
+            alignment:Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: RichText(
+                  textAlign: TextAlign.center,
+                  text:TextSpan(
+                      text: "By logging in, you're agreeing to our \n",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: "Terms of Use",
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () async {
+                                termsInfo = await rootBundle.loadString('assets/text/terms.txt');
+                                await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return termsPopup("Terms of Use", termsInfo, context);
+                                    }
+                                );
+                              },
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            )
+                        ),
+                        TextSpan(
+                          text: " and ",
+                        ),
+                        TextSpan(
+                            text: "Privacy Policy",
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () async{
+                                privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
+                                print("here");
+                                await showDialog(
+                                    context:context,
+                                    builder:(BuildContext context){
+                                      return termsPopup("Privacy Policy", privacyInfo, context);
+                                    }
+                                );
+
+                              },
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,)
+                        ),
+                        TextSpan(
+                          text: ".",
+                        ),
+                      ]
+                  )
+              ),
+            )
+        ),
       ),
     );
   }
@@ -283,6 +364,29 @@ class _LoginPageState extends State<LoginPage> {
          )
      ),
     );
+    // Stack headerSection() {
+    //   double topHeight =  MediaQuery.of(context).size.height/15;
+    //   return Stack(
+    //     children: [
+    //       Container(
+    //         // margin: EdgeInsets.only(top: 150.0),
+    //         padding: EdgeInsets.only(top:topHeight, left: 20.0),
+    //         height: 130,
+    //         width: double.infinity,
+    //         child: Text("Get Started!",
+    //             style: TextStyle(
+    //                 color: Color(0xff606060),
+    //                 fontSize: 30.0,
+    //                 fontWeight: FontWeight.bold
+    //             )
+    //         ),
+    //       ),
+    //       Positioned(
+    //         top: 80,
+    //         child: signUpInstead(),
+    //       )
+    //     ],
+    //   );
   }
 }
 

@@ -8,7 +8,8 @@ class SocialPost {
   String time;
   String message;
   String image;
-  String userName;
+  int postUserId;
+  String username;
   String userTagline;
   String userAvatar;
   int bumpCount;
@@ -19,7 +20,8 @@ class SocialPost {
         this.time,
         this.message,
         this.image,
-        this.userName,
+        this.postUserId,
+        this.username,
         this.userTagline,
         this.userAvatar,
         this.bumpCount,
@@ -31,7 +33,8 @@ class SocialPost {
       time: json['time'],
       message: json['message'],
       image: json['image'],
-      userName: json['user_name'],
+      postUserId: json['post_user_id'],
+      username: json['username'],
       userTagline: json['user_tagline'],
       userAvatar:json['user_avatar'],
       bumpCount: json['bump_count'],
