@@ -64,7 +64,7 @@ class SocialCreate extends StatelessWidget {
                 Consumer<SocialIndexModel>(builder:(context, socialIndex, child) {
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25.0),
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
                     child: TextField(
                       // focusNode: _focusNode,
                       controller: messageController,
@@ -163,7 +163,7 @@ class SocialCreate extends StatelessWidget {
                   );
                 }),
                     Container(
-                      height: MediaQuery.of(context).size.height/25
+                      height: 10,
                     )
                   ],
                 ),

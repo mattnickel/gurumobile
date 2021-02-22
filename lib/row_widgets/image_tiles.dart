@@ -15,7 +15,7 @@ Container ImageTiles(image, selected){
         height:100,
         width: 100,
         child: ClipRRect(
-          // borderRadius: BorderRadius.circular(17.0),
+          borderRadius: BorderRadius.circular(17.0),
           child:
           CachedNetworkImage(
             imageUrl: image,
