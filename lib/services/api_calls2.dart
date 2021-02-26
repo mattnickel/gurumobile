@@ -125,22 +125,21 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl, context) 
 Future<Video> fetchRandom(client, category, context) async {
   var dir = await getTemporaryDirectory();
   File file = File(dir.path + "/" + category + ".json");
-
-  // if (file.existsSync()) {
-  //   DateTime update = await file.lastModified();
-  //   if (update.day == DateTime.now().day) {
-  //     print("update random from cache");
-  //     var randomVideo = file.readAsStringSync();
-  //     print(randomVideo);
-  //     return parseOneVideo(randomVideo);
-  //   } else {
-  //     print("go get it");
-  //     return updateOneVideo(client, category, "random", context);
-  //   }
-  // }else{
-  //   print("go get it");
+  if (file.existsSync()) {
+    DateTime update = await file.lastModified();
+    if (update.day == DateTime.now().day) {
+      print("update random from cache");
+      var randomVideo = file.readAsStringSync();
+      print(randomVideo);
+      return parseOneVideo(randomVideo);
+    } else {
+      print("go get it");
+      return updateOneVideo(client, category, "random", context);
+    }
+  }else{
+    print("go get it");
     return updateOneVideo(client, category, "random", context);
-  // }
+  }
 
 }
 

@@ -81,13 +81,11 @@ Future signIn(String email, String pass, context, prefs) async {
 Future signUp(String email, String pass, String username, context) async {
 
   String signUpUrl = authUrl +'signup';
-  print("signup");
   final response = await http.post(
     signUpUrl,
     headers: {"Accept": "Application/json"},
     body: {"email":email, "password":pass, "username":username},
   );
-  print(response.body);
   if(response.statusCode == 200) {
     await setLocals(response);
     print(response.body);

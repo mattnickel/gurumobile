@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Align(
             alignment:Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 30.0),
+              padding: const EdgeInsets.only(bottom: 20.0, top:10.0),
               child: RichText(
                   textAlign: TextAlign.center,
                   text:TextSpan(
@@ -364,29 +364,7 @@ class _LoginPageState extends State<LoginPage> {
          )
      ),
     );
-    // Stack headerSection() {
-    //   double topHeight =  MediaQuery.of(context).size.height/15;
-    //   return Stack(
-    //     children: [
-    //       Container(
-    //         // margin: EdgeInsets.only(top: 150.0),
-    //         padding: EdgeInsets.only(top:topHeight, left: 20.0),
-    //         height: 130,
-    //         width: double.infinity,
-    //         child: Text("Get Started!",
-    //             style: TextStyle(
-    //                 color: Color(0xff606060),
-    //                 fontSize: 30.0,
-    //                 fontWeight: FontWeight.bold
-    //             )
-    //         ),
-    //       ),
-    //       Positioned(
-    //         top: 80,
-    //         child: signUpInstead(),
-    //       )
-    //     ],
-    //   );
+    //
   }
 }
 

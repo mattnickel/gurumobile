@@ -25,10 +25,10 @@ class SplashPageState extends State<SplashPage> {
   Future<void> initState() {
     super.initState();
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
-    Firebase.initializeApp().whenComplete(() {
-      print("completed");
-      setState(() {});
-    });
+    // Firebase.initializeApp().whenComplete(() {
+    //   print("completed");
+    //   setState(() {});
+    // });
     getCategories(http.Client());
     checkLoginStatus(context);
   }

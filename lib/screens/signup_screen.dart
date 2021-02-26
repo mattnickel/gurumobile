@@ -129,7 +129,63 @@ class _SignupPageState extends State<SignupPage> {
       child: Container(
         padding: EdgeInsets.only(top:20),
         width: MediaQuery.of(context).size.width,
-      child: Wrap(children: [
+      child: Stack(children: [
+        Container(
+          width:MediaQuery.of(context).size.width,
+          color: Colors.white70,
+          padding: EdgeInsets.only(top:5.0, bottom:15, left:50, right:10),
+          child: RichText(
+            // textAlign: TextAlign.center,
+              text:TextSpan(
+                  text: "I accept the ",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: "Terms of Use",
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () async {
+                            termsInfo = await rootBundle.loadString('assets/text/terms.txt');
+                            await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return termsPopup("Terms of Use", termsInfo, context);
+                                }
+                            );
+                          },
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                        )
+                    ),
+                    TextSpan(
+                      text: " and ",
+                    ),
+                    TextSpan(
+                        text: "Privacy Policy,",
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () async{
+                            privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
+                            await showDialog(
+                                context:context,
+                                builder:(BuildContext context){
+                                  return termsPopup("Privacy Policy", privacyInfo, context);
+                                }
+                            );
+
+                          },
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,)
+                    ),
+                    TextSpan(
+                      text: " and I understand that there is no tolerance for objectionable content or abusive users.",
+                    ),
+                  ]
+              )
+          ),
+        ),
+
         Checkbox(
             value: accepted,
             onChanged: (val){
@@ -137,62 +193,8 @@ class _SignupPageState extends State<SignupPage> {
                 accepted=val;
               });
         }),
-        Container(
-            width:MediaQuery.of(context).size.width -65,
-            // color: Colors.white70,
-            padding: EdgeInsets.only(top:5.0, bottom:15),
-            child: RichText(
-                // textAlign: TextAlign.center,
-                text:TextSpan(
-                    text: "I accept the ",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: "Terms of Use",
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () async {
-                              termsInfo = await rootBundle.loadString('assets/text/terms.txt');
-                              await showDialog(
-                                  context:context,
-                                  builder:(BuildContext context){
-                                    return termsPopup("Terms of Use", termsInfo, context);
-                                  }
-                              );
-                            },
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                          )
-                      ),
-                      TextSpan(
-                        text: " and ",
-                      ),
-                      TextSpan(
-                          text: "Privacy Policy,",
-                          recognizer: new TapGestureRecognizer()
-                            ..onTap = () async{
-                              privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
-                              await showDialog(
-                                  context:context,
-                                  builder:(BuildContext context){
-                                    return termsPopup("Privacy Policy", privacyInfo, context);
-                                  }
-                              );
-
-                            },
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,)
-                      ),
-                      TextSpan(
-                        text: " and I understand that there is no tolerance for objectionable content or abusive users.",
-                      ),
-                    ]
-                )
-            ),),
-      ],)
-      ),
+    ],)
+      )
     );
   }
 
