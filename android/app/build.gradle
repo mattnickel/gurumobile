@@ -14,18 +14,18 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '12'
+    flutterVersionCode = '17'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = 'Beta 1.12'
+    flutterVersionName = 'Beta 1.17'
 }
 
 apply plugin: 'com.android.application'
-apply plugin: "com.google.gms.google-services"
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: '$flutterRoot/packages/flutter_tools/gradle/flutter.gradle'
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -52,7 +52,7 @@ android {
         applicationId "com.limitless.minds"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 12
+        versionCode flutterVersionCode
         versionName flutterVersionName
     }
     signingConfigs {
@@ -76,10 +76,10 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:26.0.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-
+//    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+//    implementation 'com.google.firebase:firebase-analytics-ktx'
+//    implementation 'com.google.firebase:firebase-auth'
+//    implementation 'com.google.firebase:firebase-messaging'
 }
 
 

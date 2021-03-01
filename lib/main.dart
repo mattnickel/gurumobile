@@ -4,12 +4,10 @@ import './screens/splash_page.dart';
 import 'framework_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-// FlutterLocalNotificationsPlugin();
 
-Future<void> main() async {
+void main()async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  Firebase.initializeApp();
   runApp(MainApp());
 }
 

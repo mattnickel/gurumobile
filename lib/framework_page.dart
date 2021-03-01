@@ -24,24 +24,24 @@ class FrameworkPage extends StatefulWidget{
 
 class _FrameworkPageState extends State<FrameworkPage> {
 	final localNotifications = LocalNotificationsManager.init();
-	final _firebaseMessaging = FirebaseMessaging();
+	final _firebaseMessaging = FirebaseMessaging.instance;
 	final FirebaseFirestore _db = FirebaseFirestore.instance;
 	var iosSubscription;
 	@override
 	void initState(){
 		super.initState();
-		_firebaseMessaging.requestNotificationPermissions();
+		_firebaseMessaging.requestPermission();
 		_firebaseMessaging.subscribeToTopic("news");
 		_firebaseMessaging.subscribeToTopic("content");
-		if (Platform.isIOS){
-			print("waiting to register");
-			iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
-				print("iosRegistered");
-				_saveDeviceToken();
-			});
-		}else{
-			_saveDeviceToken();
-		}
+		// if (Platform.isIOS){
+		// 	print("waiting to register");
+		// 	iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
+		// 		print("iosRegistered");
+		// 		_saveDeviceToken();
+		// 	});
+		// }else{
+		// 	_saveDeviceToken();
+		// }
 	}
 
 	_saveDeviceToken()async{
@@ -70,7 +70,6 @@ class _FrameworkPageState extends State<FrameworkPage> {
 				builder: (context, model, child) =>
 					Scaffold(
 							resizeToAvoidBottomInset: false,
-						resizeToAvoidBottomPadding:false,
 							appBar: AppBar(
 								title: Image.asset("assets/images/lmlogo.png", fit: BoxFit.cover),
 								),

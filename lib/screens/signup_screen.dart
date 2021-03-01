@@ -446,15 +446,14 @@ Container passwordInfoSection(){
   }
 
   Stack headerSection() {
-    double topHeight =  MediaQuery.of(context).size.height/15;
+
     return Stack(
       children: [
         Container(
-          // margin: EdgeInsets.only(top: 150.0),
-          padding: EdgeInsets.only(top:topHeight, left: 20.0),
-         height: 130,
-         width: double.infinity,
-         child: Text("Get Started!",
+          padding: EdgeInsets.only(top:30.0, left: 20.0),
+          height: 130,
+          width: double.infinity,
+          child: Text("Get Started!",
              style: TextStyle(
                  color: Color(0xff606060),
                  fontSize: 30.0,
@@ -462,10 +461,6 @@ Container passwordInfoSection(){
              )
          ),
         ),
-        // Positioned(
-        //   top: 80,
-        //      child: signUpInstead(),
-        // )
       ],
     );
   }
