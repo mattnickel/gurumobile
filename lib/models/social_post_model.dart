@@ -14,6 +14,7 @@ class SocialPost {
   String userAvatar;
   int bumpCount;
   String myBump;
+  List<Comments> comments;
 
   SocialPost(
       {this.id,
@@ -25,9 +26,18 @@ class SocialPost {
         this.userTagline,
         this.userAvatar,
         this.bumpCount,
-        this.myBump});
+        this.myBump,
+        this.comments
+        });
 
   factory SocialPost.fromServerMap(Map json){
+    List commentsList = new List<Comments>();
+    if (json['comments'] != null) {
+      json['comments'].forEach((v) {
+        commentsList.add(new Comments.fromJson(v));
+      });
+    }
+
     return SocialPost(
       id: json['id'],
       time: json['time'],
@@ -39,9 +49,51 @@ class SocialPost {
       userAvatar:json['user_avatar'],
       bumpCount: json['bump_count'],
       myBump: json ['my_bump'],
+      comments: commentsList,
     );
+    }
+
   }
 
+class Comments {
+  int id;
+  String body;
+  String createdAt;
+  String updatedAt;
+  int userId;
+  String commentableType;
+  int commentableId;
+
+  Comments(
+      {this.id,
+        this.body,
+        this.createdAt,
+        this.updatedAt,
+        this.userId,
+        this.commentableType,
+        this.commentableId});
+
+  Comments.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    body = json['body'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    userId = json['user_id'];
+    commentableType = json['commentable_type'];
+    commentableId = json['commentable_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['body'] = this.body;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['user_id'] = this.userId;
+    data['commentable_type'] = this.commentableType;
+    data['commentable_id'] = this.commentableId;
+    return data;
+  }
 }
 class SocialPostList {
 

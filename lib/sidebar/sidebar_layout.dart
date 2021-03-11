@@ -27,7 +27,9 @@ class _SideBarMenuState extends State<SideBarMenu> {
   Future <List> setProfileInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     username = prefs.getString("username");
-    initial = username.substring(0,1);
+    username!= null
+     ? initial = username.substring(0,1)
+     : initial = "?";
     tagLine = prefs.getString("tagLine") ??
         "Add a tagline...";
     avatarUrl = prefs.getString("avatarUrl") ?? "no";
@@ -47,11 +49,6 @@ class _SideBarMenuState extends State<SideBarMenu> {
     setState(() {});
   }
 
-  @override
-  void initState() {
-    setProfileInfo();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

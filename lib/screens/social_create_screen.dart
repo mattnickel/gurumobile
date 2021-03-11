@@ -99,7 +99,7 @@ class SocialCreate extends StatelessWidget {
                           onPressed: !socialIndex.imageExists
                               ? null
                               : () async {
-                            socialIndex.imageUrl != null
+                            socialIndex.convertedImageFile != null
                             ? Share.shareFiles([socialIndex.convertedImageFile.path], text: socialIndex.caption)
                             : Share.shareFiles([socialIndex.imageFile.path],
                                 text: socialIndex.caption);
@@ -125,6 +125,7 @@ class SocialCreate extends StatelessWidget {
                                 onPressed: !socialIndex.imageExists || socialIndex.caption == null
                                     ? null
                                     : () async {
+                                  socialIndex.setLoading(true);
                                   if(socialIndex.convertedImageFile != null) {
                                     await savePost(
                                         message: socialIndex.caption,

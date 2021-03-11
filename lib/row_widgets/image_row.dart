@@ -73,8 +73,8 @@ class ImageRow extends StatelessWidget {
                                                     : false),
                                             onTap: () {
                                               socialIndex.value = 0;
-                                              socialIndex.setSocialImage(null);
-                                              socialIndex.setImageExists(false);
+                                              socialIndex.cancelImage();
+
                                             },
                                           );
                                         } else {

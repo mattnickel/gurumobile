@@ -33,6 +33,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 		_firebaseMessaging.requestPermission();
 		_firebaseMessaging.subscribeToTopic("news");
 		_firebaseMessaging.subscribeToTopic("content");
+		_saveDeviceToken();
 		// if (Platform.isIOS){
 		// 	print("waiting to register");
 		// 	iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
@@ -69,7 +70,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 		  child: Consumer<NavbarTabSelectedModel>(
 				builder: (context, model, child) =>
 					Scaffold(
-							resizeToAvoidBottomInset: false,
+							resizeToAvoidBottomPadding: false,
 							appBar: AppBar(
 								title: Image.asset("assets/images/lmlogo.png", fit: BoxFit.cover),
 								),
@@ -79,6 +80,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 							Container(
 								height: 70,
 								margin: EdgeInsets.only(bottom: 20, left: 20, right:20),
+								// padding: EdgeInsets.only(bottom:MediaQuery.of(context).viewInsets.bottom),
 								decoration: BoxDecoration(
 									color: Colors.white,
 									borderRadius: BorderRadius.only(

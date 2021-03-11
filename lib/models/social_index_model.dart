@@ -16,7 +16,7 @@ class SocialIndexModel with ChangeNotifier{
   List libraryList;
   String caption;
   bool isLoading = false;
-  bool imageExists = true;
+  bool imageExists = false;
   File convertedImageFile;
 
   convertImage(imageUrl) async{
@@ -73,6 +73,7 @@ class SocialIndexModel with ChangeNotifier{
     imageFile = null;
     imageUrl = null;
     imageExists = false;
+    convertedImageFile =null;
     notifyListeners();
     print("false");
   }

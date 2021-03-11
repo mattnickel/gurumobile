@@ -1,7 +1,12 @@
+import 'dart:core';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:sidebar_animation/framework_page.dart';
+import 'package:sidebar_animation/screens/start_screen.dart';
 import 'dart:async';
 import '../services/api_login.dart';
 import '../services/api_calls2.dart';
@@ -18,20 +23,33 @@ class SplashPage extends StatefulWidget {
 
 class SplashPageState extends State<SplashPage> {
   Image splashImage;
-  String firstName;
-  bool skipLogin;
-
   @override
   Future<void> initState() {
     super.initState();
     splashImage = Image.asset('assets/images/adventure3.png', width: 500, gaplessPlayback: true,);
-    // Firebase.initializeApp().whenComplete(() {
-    //   print("completed");
-    //   setState(() {});
-    // });
     getCategories(http.Client());
     checkLoginStatus(context);
   }
+
+  static Future checkLoginStatus(context)async {
+    final storage = FlutterSecureStorage();
+    String token;
+    try {
+      token = await storage.read(key: "token");
+    } catch (exception) {
+      storage.deleteAll();
+    }
+    if(token != null) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (BuildContext context) => FrameworkPage()), (
+          Route<dynamic> route) => false);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => StartScreen()), (
+          Route<dynamic> route) => false);
+    }
+  }
+
 
   @override
   void didChangeDependencies() {

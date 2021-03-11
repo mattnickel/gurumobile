@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:sidebar_animation/blocs/post_tiles_bloc.dart';
 import 'package:sidebar_animation/helpers/mark_block_hide.dart';
 import 'package:sidebar_animation/models/social_post_model.dart';
 import 'package:sidebar_animation/services/social_api.dart';
+import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 class PostTiles extends StatefulWidget {
 
@@ -21,6 +23,8 @@ class _PostTilesState extends State<PostTiles> {
   bool localBumped = false;
   bool localFalse =  true;
   bool _visibility = true;
+  bool _opened = false;
+  int number = 0;
 
   bool bumpCheck(val){
     if (localBumped == true){
@@ -34,38 +38,6 @@ class _PostTilesState extends State<PostTiles> {
   }
 
 
- int number = 0;
-
- String convertTime(apiTime){
-   print(apiTime);
-     String time;
-     DateTime now = new DateTime.now();
-     var then = DateTime.parse(apiTime);
-     var timeFormatter = new DateFormat('E h:mm a');
-     var timeSpan = now.difference(then);
-     var timeSpanFormat = new DateFormat('h:mm');
-      if (timeSpan.inMinutes <= 59 ){
-        if (timeSpan.inMinutes < 2){
-          time = "now";
-        }else {
-          time = timeSpan.inMinutes.toString() + " min ago";
-        }
-     } else if (timeSpan.inHours < 24){
-        if(timeSpan.inHours < 2){
-          time = timeSpan.inHours.toString() + " hr ago";
-        }else {
-          time = timeSpan.inHours.toString() + " hrs ago";
-        }
-     } else if (timeSpan.inHours < 48){
-        time = timeSpan.inDays.toString()  + " day ago";
-      }else{
-        time = timeSpan.inDays.toString()  + " days ago";
-      }
-     print(time);
-     // time = timeFormatter.format(DateTime.parse(apiTime)).toString();
-
-   return time;
- }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +57,6 @@ class _PostTilesState extends State<PostTiles> {
                     Column(
                       children: <Widget>[
                             Container(
-                              margin: EdgeInsets.only(top: 25),
-
                               child:
                               widget.post.userAvatar != null
                                   ? Center(child:
@@ -168,7 +138,7 @@ class _PostTilesState extends State<PostTiles> {
                 ),
                 Positioned(
                   right: 10,
-                  top:40,
+                  top:25,
                   child: DropdownButton<String>(
                   underline: Container(),
                   icon: Icon(Icons.more_horiz),
@@ -232,93 +202,190 @@ class _PostTilesState extends State<PostTiles> {
                     ],
                   ),
                 ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal:10),
-              padding: EdgeInsets.only(top:20.0),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width - 115,
-                    child: RichText(
-                        textAlign: TextAlign.left,
-                        text:TextSpan(
-                            text: widget.post.username != null ? widget.post.username+": " : "Unknown: ",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 14,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: widget.post.message,
+            Stack(
+              children: [
+                Container(
+                  // margin: EdgeInsets.symmetric(horizontal:10),
+                  padding: EdgeInsets.only(top:40.0, bottom:10),
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width - 130,
+                        child: RichText(
+                            textAlign: TextAlign.left,
+                            text:TextSpan(
+                                text: widget.post.username != null ? widget.post.username+": " : "Unknown: ",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w800,
                                   fontSize: 14,
                                 ),
-                              )
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: widget.post.message,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                    ),
+                                  )
 
-                            ]
-                        )
-                    ),
+                                ]
+                            )
+                        ),
+                      ),
+
+                      // Icon(Icons.thumb_up_outlined),
+
+                    ],
                   ),
-                 Container(
-                   width:40,
-                   child: Padding(
-                     padding: const EdgeInsets.only(top:5.0),
-                     child: Text((widget.post.bumpCount + number).toString() , textAlign: TextAlign.right,),
-                   ),
-                 ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      if (bumped== false) {
-                        bumpThisPost(widget.post.id);
-                        setState(() {
-                          localBumped = true;
-                          localFalse = true;
-                          number += 1;
-                        });
-                      }else{
-                        unbumpThisPost(widget.post.id);
-                        setState(() {
-                          localBumped = false;
-                          localFalse = false;
-                          number -= 1;
-                        });
-                      }
-
-                    },
-
-                    child:  bumpCheck(widget.post.myBump)
-                        ? Image.asset('assets/images/fist2.png', height: 20, width:20 )
-                        : Image.asset('assets/images/fist.png', height: 20, width:20 )
-
-                  ),
-                  // Icon(Icons.thumb_up_outlined),
-
-                ],
-              ),
-            ),
-            // Container(
-            //     width: MediaQuery.of(context).size.width,
-            //     margin: EdgeInsets.symmetric(horizontal:20),
-            //     padding: EdgeInsets.only(top:20),
-            //     child: Row(
-            //       children: [
-            //         Text("$number Bumps"),
-            //         Spacer(),
-            //         Icon(Icons.thumb_up_outlined),
-            //
-            //       ],
-            //     )
-            // ),
-            Divider(),
-
-          ],
                 ),
-      ),
+                // Positioned(
+                //   top:15,
+                //   right:20,
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       if (_opened == false) {
+                //         setState(() {
+                //           _opened = true;
+                //         });
+                //       }else{
+                //         setState(() {
+                //           _opened = false;
+                //         });
+                //       }
+                //
+                //     },
+                //     child: Container(
+                //       width:80,
+                //       child: Row(
+                //         children: [
+                //           Padding(
+                //             padding: const EdgeInsets.only(top:5.0),
+                //             child: widget.post.comments != null
+                //                 ? Text((widget.post.comments.length).toString() , textAlign: TextAlign.right,)
+                //                 : Text('0', textAlign: TextAlign.right,)
+                //           ),
+                //           Spacer(),
+                //           Image.asset('assets/icons/comment_icon.png', height: 23, width:23 ),
+                //           Spacer(),
+                //           Padding(
+                //             padding: const EdgeInsets.only(top:5.0),
+                //             child: Text((widget.post.bumpCount + number).toString() , textAlign: TextAlign.right,),
+                //           ),
+                //           Spacer(),
+                //           GestureDetector(
+                //               onTap: () {
+                //                 if (bumped== false) {
+                //                   bumpThisPost(widget.post.id);
+                //                   setState(() {
+                //                     localBumped = true;
+                //                     localFalse = true;
+                //                     number += 1;
+                //                   });
+                //                 }else{
+                //                   unbumpThisPost(widget.post.id);
+                //                   setState(() {
+                //                     localBumped = false;
+                //                     localFalse = false;
+                //                     number -= 1;
+                //                   });
+                //                 }
+                //
+                //               },
+                //               child:  bumpCheck(widget.post.myBump)
+                //                   ? Image.asset('assets/images/fist2.png', height: 20, width:20 )
+                //                   : Image.asset('assets/images/fist.png', height: 20, width:20 )
+                //
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
+              ],
+            ),
+
+    //           Visibility(
+    //             visible: _opened,
+    //             child: Container(
+    //               // margin: EdgeInsets.symmetric(horizontal:10),
+    //               padding: EdgeInsets.only(bottom: 20),
+    //               width: MediaQuery
+    //                   .of(context)
+    //                   .size
+    //                   .width,
+    //               child: ListView.builder(
+    //                   scrollDirection: Axis.vertical,
+    //                   shrinkWrap: true,
+    //                   itemCount: widget.post.comments != null
+    //                       ? widget.post.comments.length +1
+    //                       : 1,
+    //                   itemBuilder: (BuildContext context,int index) {
+    // if (index < widget.post.comments.length){
+    // return Column(
+    //   children: [
+    //     Container(
+    //       width: MediaQuery.of(context).size.width,
+    //       padding: EdgeInsets.only(bottom: 20),
+    //       child: RichText(
+    //         textAlign: TextAlign.left,
+    //         text: TextSpan(
+    //           text: (widget.post.comments[index].userId).toString()+ ": ",
+    //           style: TextStyle(
+    //             color: Colors.black,
+    //             fontWeight: FontWeight.w800,
+    //             fontSize: 14,
+    //           ),
+    //           children: <TextSpan>[
+    //             TextSpan(
+    //               text: widget.post.comments[index].body,
+    //               style: TextStyle(
+    //                 color: Colors.black,
+    //                 fontWeight: FontWeight.w400,
+    //                 fontSize: 14,
+    //               ),
+    //             )
+    //
+    //           ]
+    //         )
+    //       ),
+    //     ),
+    //   ]
+    // );
+    // } else{
+    //     return OutlineButton(
+    //       padding: EdgeInsets.all(15),
+    //       shape: new RoundedRectangleBorder(
+    //           borderRadius: new BorderRadius.circular(25.0)),
+    //       onPressed: () async {
+    //         await showDialog(
+    //           context: context,
+    //           builder: (BuildContext context) {
+    //             return triggerKeyboardComment(context, widget.post.id);
+    //           },
+    //         );
+    //         //add comment to UI (if comment made)
+    //       },
+    //       child: Row(
+    //         children: [
+    //           Image.asset('assets/icons/comment_icon.png', height: 23, width:23 ),
+    //           Text("  Add a comment..."),
+    //         ],
+    //       )
+    //     );
+    //   }
+    // }
+    //                 ),
+    //
+    //           )
+    //           ),
+            Divider(),
+          ]
+      )
+    )
     );
   }
 }

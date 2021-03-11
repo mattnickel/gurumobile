@@ -17,33 +17,17 @@ import '../main.dart';
   String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
   // String localUrl = "http://localhost:3000/api/v1/";
 
-checkLoginStatus(context) async {
-  final storage = FlutterSecureStorage();
-  String token = await storage.read(key: "token");
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String username = prefs.getString("username");
-
-  if(token != null && username != null ) {
-    // await fetchRandom(http.Client(), "For $firstName Today");
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (BuildContext context) => FrameworkPage()), (
-        Route<dynamic> route) => false);
-  }else {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => StartScreen()), (
-        Route<dynamic> route) => false);
-  }
-}
 Future setLocals(response) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var jsonResponse = json.decode(response.body);
   String userId = jsonResponse["id"].toString();
-  print(userId);
+  print("setting locals");
   String authToken = jsonResponse["authentication_token"] as String;
   String userEmail = jsonResponse["email"] as String;
   String username = jsonResponse["username"] as String;
   String tagLine = jsonResponse["description"] as String;
   String avatarUrl = jsonResponse["avatar"] as String;
+  print (username);
   final storage = FlutterSecureStorage();
   await storage.write(key:"token", value: authToken);
   await storage.write(key:"email", value: userEmail);
@@ -52,7 +36,7 @@ Future setLocals(response) async{
   prefs.setString("email", userEmail);
   prefs.setString("tagLine", tagLine);
   prefs.setString("avatarUrl", avatarUrl);
-  return true;
+  return null;
 }
 Future signIn(String email, String pass, context, prefs) async {
 

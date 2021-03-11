@@ -14,7 +14,7 @@ import 'api_login.dart';
 
 http.Client client;
 String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-// String localUrl = 'http://localhost:3000/api/v1';
+String localUrl = 'http://localhost:3000/api/v1';
 
 List<Map> parseSocial(String responseBody) {
   final responseJson = utf8.decode(responseBody.runes.toList());
@@ -45,6 +45,7 @@ Future<List<Map>> fetchSocial(client, page) async {
     return updateSocial(client, page);
   }
 }
+
 savePost({message, image}) async {
   try {
     final storage = FlutterSecureStorage();
@@ -84,13 +85,39 @@ savePost({message, image}) async {
 
 }
 
+Future submitSupportTicket(message)async {
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final msg = jsonEncode({"message": message});
+  final response = await http.post(
+    "$baseUrl/support_messages",
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print(response.body);
+}
+newPostComment(postId, comment)async{
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  var url = "$localUrl/comments/new";
+  final msg = jsonEncode({"comment": "$comment", "post_id":"$postId"});
+  final response = await http.post(
+    url,
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print(response.body);
+  return response.body;
+}
 
 
 Future <List<Map>> updateSocial(http.Client client, page) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/social_posts?page=$page";
+  final tokenHeaders = {'token': 'aKNQHPrPLh2uLVoC97sg', 'content-type': 'application/json'};
+  var url = "$localUrl/social_posts?page=$page";
   print(token);
 
   final response = await client.get(
@@ -125,7 +152,7 @@ Future mostRecentPostTime(http.Client client) async {
   String token = await storage.read(key: "token");
   print(token);
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$baseUrl/social_posts/recent";
+  var url = "$localUrl/social_posts/recent";
 
   final response = await client.get(
     url, headers: tokenHeaders,
