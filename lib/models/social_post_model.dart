@@ -59,28 +59,19 @@ class Comments {
   int id;
   String body;
   String createdAt;
-  String updatedAt;
-  int userId;
-  String commentableType;
-  int commentableId;
+  String username;
 
   Comments(
       {this.id,
         this.body,
         this.createdAt,
-        this.updatedAt,
-        this.userId,
-        this.commentableType,
-        this.commentableId});
+        this.username});
 
   Comments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     body = json['body'];
     createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    userId = json['user_id'];
-    commentableType = json['commentable_type'];
-    commentableId = json['commentable_id'];
+    username = json['username'];
   }
 
   Map<String, dynamic> toJson() {
@@ -88,10 +79,7 @@ class Comments {
     data['id'] = this.id;
     data['body'] = this.body;
     data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['user_id'] = this.userId;
-    data['commentable_type'] = this.commentableType;
-    data['commentable_id'] = this.commentableId;
+    data['username'] = this.username;
     return data;
   }
 }

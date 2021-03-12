@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/blocs/post_tiles_bloc.dart';
 import 'package:sidebar_animation/helpers/mark_block_hide.dart';
 import 'package:sidebar_animation/models/social_post_model.dart';
@@ -18,6 +19,9 @@ class PostTiles extends StatefulWidget {
   _PostTilesState createState() => _PostTilesState();
 }
 
+
+
+
 class _PostTilesState extends State<PostTiles> {
   bool bumped = false;
   bool localBumped = false;
@@ -25,6 +29,20 @@ class _PostTilesState extends State<PostTiles> {
   bool _visibility = true;
   bool _opened = false;
   int number = 0;
+  String username= "test";
+  String newComment;
+  int newCommentInt =0;
+
+  getUsername()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    username = prefs.getString("username");
+  }
+
+  @override
+  Future<void> initState() {
+    super.initState();
+    getUsername();
+  }
 
   bool bumpCheck(val){
     if (localBumped == true){
@@ -206,187 +224,241 @@ class _PostTilesState extends State<PostTiles> {
               children: [
                 Container(
                   // margin: EdgeInsets.symmetric(horizontal:10),
-                  padding: EdgeInsets.only(top:40.0, bottom:10),
+                  padding: EdgeInsets.only(top:50.0, bottom:20),
                   width: MediaQuery.of(context).size.width,
-                  child: Row(
+                  child: Column(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - 130,
-                        child: RichText(
-                            textAlign: TextAlign.left,
-                            text:TextSpan(
-                                text: widget.post.username != null ? widget.post.username+": " : "Unknown: ",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: widget.post.message,
+                      Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            child: RichText(
+                                textAlign: TextAlign.left,
+                                text:TextSpan(
+                                    text: widget.post.username != null ? widget.post.username+": " : "Unknown: ",
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w800,
                                       fontSize: 14,
                                     ),
-                                  )
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: widget.post.message,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                        ),
+                                      )
 
-                                ]
-                            )
-                        ),
+                                    ]
+                                )
+                            ),
+                          ),
+                        ],
                       ),
 
-                      // Icon(Icons.thumb_up_outlined),
 
                     ],
                   ),
                 ),
-                // Positioned(
-                //   top:15,
-                //   right:20,
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       if (_opened == false) {
-                //         setState(() {
-                //           _opened = true;
-                //         });
-                //       }else{
-                //         setState(() {
-                //           _opened = false;
-                //         });
-                //       }
-                //
-                //     },
-                //     child: Container(
-                //       width:80,
-                //       child: Row(
-                //         children: [
-                //           Padding(
-                //             padding: const EdgeInsets.only(top:5.0),
-                //             child: widget.post.comments != null
-                //                 ? Text((widget.post.comments.length).toString() , textAlign: TextAlign.right,)
-                //                 : Text('0', textAlign: TextAlign.right,)
-                //           ),
-                //           Spacer(),
-                //           Image.asset('assets/icons/comment_icon.png', height: 23, width:23 ),
-                //           Spacer(),
-                //           Padding(
-                //             padding: const EdgeInsets.only(top:5.0),
-                //             child: Text((widget.post.bumpCount + number).toString() , textAlign: TextAlign.right,),
-                //           ),
-                //           Spacer(),
-                //           GestureDetector(
-                //               onTap: () {
-                //                 if (bumped== false) {
-                //                   bumpThisPost(widget.post.id);
-                //                   setState(() {
-                //                     localBumped = true;
-                //                     localFalse = true;
-                //                     number += 1;
-                //                   });
-                //                 }else{
-                //                   unbumpThisPost(widget.post.id);
-                //                   setState(() {
-                //                     localBumped = false;
-                //                     localFalse = false;
-                //                     number -= 1;
-                //                   });
-                //                 }
-                //
-                //               },
-                //               child:  bumpCheck(widget.post.myBump)
-                //                   ? Image.asset('assets/images/fist2.png', height: 20, width:20 )
-                //                   : Image.asset('assets/images/fist.png', height: 20, width:20 )
-                //
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                Positioned(
+                  top:15,
+                  right:20,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (_opened == false) {
+                        setState(() {
+                          _opened = true;
+                        });
+                      }else{
+                        setState(() {
+                          _opened = false;
+                        });
+                      }
+
+                    },
+                    child: Container(
+                      width:80,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top:5.0),
+                            child: widget.post.comments != null
+                                ? Text((widget.post.comments.length + newCommentInt).toString() , textAlign: TextAlign.right,)
+                                : Text('0', textAlign: TextAlign.right,)
+                          ),
+                          Spacer(),
+                          Image.asset('assets/icons/comment_icon.png', height: 23, width:23 ),
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(top:5.0),
+                            child: Text((widget.post.bumpCount + number).toString() , textAlign: TextAlign.right,),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                              onTap: () {
+                                if (bumped== false) {
+                                  bumpThisPost(widget.post.id);
+                                  setState(() {
+                                    localBumped = true;
+                                    localFalse = true;
+                                    number += 1;
+                                  });
+                                }else{
+                                  unbumpThisPost(widget.post.id);
+                                  setState(() {
+                                    localBumped = false;
+                                    localFalse = false;
+                                    number -= 1;
+                                  });
+                                }
+
+                              },
+                              child:  bumpCheck(widget.post.myBump)
+                                  ? Image.asset('assets/images/fist2.png', height: 20, width:20 )
+                                  : Image.asset('assets/images/fist.png', height: 20, width:20 )
+
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
               ],
             ),
 
-    //           Visibility(
-    //             visible: _opened,
-    //             child: Container(
-    //               // margin: EdgeInsets.symmetric(horizontal:10),
-    //               padding: EdgeInsets.only(bottom: 20),
-    //               width: MediaQuery
-    //                   .of(context)
-    //                   .size
-    //                   .width,
-    //               child: ListView.builder(
-    //                   scrollDirection: Axis.vertical,
-    //                   shrinkWrap: true,
-    //                   itemCount: widget.post.comments != null
-    //                       ? widget.post.comments.length +1
-    //                       : 1,
-    //                   itemBuilder: (BuildContext context,int index) {
-    // if (index < widget.post.comments.length){
-    // return Column(
-    //   children: [
-    //     Container(
-    //       width: MediaQuery.of(context).size.width,
-    //       padding: EdgeInsets.only(bottom: 20),
-    //       child: RichText(
-    //         textAlign: TextAlign.left,
-    //         text: TextSpan(
-    //           text: (widget.post.comments[index].userId).toString()+ ": ",
-    //           style: TextStyle(
-    //             color: Colors.black,
-    //             fontWeight: FontWeight.w800,
-    //             fontSize: 14,
-    //           ),
-    //           children: <TextSpan>[
-    //             TextSpan(
-    //               text: widget.post.comments[index].body,
-    //               style: TextStyle(
-    //                 color: Colors.black,
-    //                 fontWeight: FontWeight.w400,
-    //                 fontSize: 14,
-    //               ),
-    //             )
-    //
-    //           ]
-    //         )
-    //       ),
-    //     ),
-    //   ]
-    // );
-    // } else{
-    //     return OutlineButton(
-    //       padding: EdgeInsets.all(15),
-    //       shape: new RoundedRectangleBorder(
-    //           borderRadius: new BorderRadius.circular(25.0)),
-    //       onPressed: () async {
-    //         await showDialog(
-    //           context: context,
-    //           builder: (BuildContext context) {
-    //             return triggerKeyboardComment(context, widget.post.id);
-    //           },
-    //         );
-    //         //add comment to UI (if comment made)
-    //       },
-    //       child: Row(
-    //         children: [
-    //           Image.asset('assets/icons/comment_icon.png', height: 23, width:23 ),
-    //           Text("  Add a comment..."),
-    //         ],
-    //       )
-    //     );
-    //   }
-    // }
-    //                 ),
-    //
-    //           )
-    //           ),
-            Divider(),
-          ]
-      )
-    )
+              Visibility(
+                visible: _opened,
+                child: Column(
+                  children: [
+                    Divider(
+                      endIndent: 250,
+                      thickness: 1,
+                    ),
+                    Container(
+                      // margin: EdgeInsets.symmetric(horizontal:10),
+                      padding: EdgeInsets.only(bottom: 20, top:10),
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: widget.post.comments != null
+                              ? widget.post.comments.length +1
+                              : 1,
+                          itemBuilder: (BuildContext context,int index) {
+    if (index < widget.post.comments.length){
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(bottom: 10),
+          child: RichText(
+            textAlign: TextAlign.left,
+            text: TextSpan(
+              text: (widget.post.comments[index].username).toString()+ ": ",
+              style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+              ),
+              children: <TextSpan>[
+                    TextSpan(
+                      text: widget.post.comments[index].body,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    )
+
+              ]
+            )
+          ),
+        ),
+      ]
     );
-  }
+    } else{
+      return
+      newComment!=null
+        ? Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(bottom: 5),
+          child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                      text: username+ ": ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: newComment,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        )
+
+                      ]
+              )
+          ),
+        )
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              height: 15,
+              child: Row(
+                      children: <Widget>[
+                          Text(
+                             username+ ": ",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14,
+                            ),
+                          ),
+                          FlatButton(
+                            padding: EdgeInsets.only(top:1, left:1),
+                            onPressed: () async {
+                              newComment = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return triggerKeyboardComment(context, widget.post.id);
+                                },
+                              );
+                              setState(() {
+                                newComment != null
+                                    ? newCommentInt=1
+                                    : newCommentInt =0;
+                              });
+                            },
+                            child:Text("Add a comment...", style:TextStyle(color: Colors.black26), textAlign: TextAlign.left,  ),
+                          )
+                      ]
+            ),
+          );
+    }
+     }
+     ),
+                      ),
+                  ],
+                )
+                  ),
+            Divider(),
+              ]
+          )
+      ),
+
+    );
+    }
+
 }
+
 

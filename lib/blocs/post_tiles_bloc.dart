@@ -47,7 +47,7 @@ GestureDetector triggerKeyboardComment(context, postId){
                    if (value != null) {
                      newPostComment(postId, value);
                    }
-                   Navigator.pop(context, 'close');
+                   Navigator.pop(context, value);
                  },
                 autofocus: true,
                 decoration: InputDecoration(

@@ -4,8 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
-import 'package:sidebar_animation/models/social_post_model.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -14,7 +12,7 @@ import 'api_login.dart';
 
 http.Client client;
 String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-String localUrl = 'http://localhost:3000/api/v1';
+// String localUrl = 'http://localhost:3000/api/v1';
 
 List<Map> parseSocial(String responseBody) {
   final responseJson = utf8.decode(responseBody.runes.toList());
@@ -101,8 +99,8 @@ newPostComment(postId, comment)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/comments/new";
-  final msg = jsonEncode({"comment": "$comment", "post_id":"$postId"});
+  var url = "$baseUrl/comments";
+  final msg = jsonEncode({"comment": "$comment", "post_id":postId});
   final response = await http.post(
     url,
     headers: tokenHeaders,
@@ -116,8 +114,8 @@ newPostComment(postId, comment)async{
 Future <List<Map>> updateSocial(http.Client client, page) async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
-  final tokenHeaders = {'token': 'aKNQHPrPLh2uLVoC97sg', 'content-type': 'application/json'};
-  var url = "$localUrl/social_posts?page=$page";
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  var url = "$baseUrl/social_posts?page=$page";
   print(token);
 
   final response = await client.get(
@@ -152,7 +150,7 @@ Future mostRecentPostTime(http.Client client) async {
   String token = await storage.read(key: "token");
   print(token);
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  var url = "$localUrl/social_posts/recent";
+  var url = "$baseUrl/social_posts/recent";
 
   final response = await client.get(
     url, headers: tokenHeaders,
