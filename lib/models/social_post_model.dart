@@ -15,6 +15,7 @@ class SocialPost {
   int bumpCount;
   String myBump;
   List<Comments> comments;
+  String group;
 
   SocialPost(
       {this.id,
@@ -27,7 +28,8 @@ class SocialPost {
         this.userAvatar,
         this.bumpCount,
         this.myBump,
-        this.comments
+        this.comments,
+        this.group
         });
 
   factory SocialPost.fromServerMap(Map json){
@@ -50,6 +52,7 @@ class SocialPost {
       bumpCount: json['bump_count'],
       myBump: json ['my_bump'],
       comments: commentsList,
+      group: json['group']
     );
     }
 
@@ -90,13 +93,16 @@ class SocialPostList {
   bool _isLoading;
   List<Map> _data;
   StreamController<List<Map>> _controller;
-  // int page;
+  String _group;
 
-  SocialPostList(){
+  SocialPostList({group}){
+    _group = group;
     _data = List<Map>();
     _controller = StreamController<List<Map>>.broadcast();
     _isLoading = false;
     stream = _controller.stream.map((List<Map> postsData){
+      print("tasks");
+      print(postsData);
       return postsData.map((Map postData){
         return SocialPost.fromServerMap(postData);
       }).toList();
@@ -121,10 +127,10 @@ class SocialPostList {
       return Future.value();
     }
     _isLoading = true;
-    print(page);
-    return fetchSocial(http.Client(), page).then((postsData){
+    return fetchSocial(http.Client(), page, _group) .then((postsData){
       _isLoading = false;
       print("we are here");
+      print(_group);
       _data.addAll(postsData);
       hasMore = (postsData.length == 8);
       _controller.add(_data);
@@ -132,4 +138,3 @@ class SocialPostList {
     });
   }
 }
-

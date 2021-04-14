@@ -62,6 +62,9 @@ dependencies:
   flutter_image_compress: ^0.7.0
   share: ^0.6.5+4
   keyboard_attachable: 1.0.3
+  auto_size_text: ^2.1.0
+  circular_check_box: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:

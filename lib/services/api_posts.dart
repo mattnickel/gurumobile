@@ -5,19 +5,16 @@ import 'dart:async';
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-// String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-// String localUrl = 'http://localhost:3000/api/v1';
+import 'api_url.dart';
 
 
 Future<String> postImage(_image, id) async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token':token};
-  var postUri = Uri.parse("$baseUrl/users/$id");
+  var postUri = Uri.parse("$apiUrl/api/v1/users/$id");
   String fileName = _image.path.split('/').last;
     FormData data = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(
@@ -43,7 +40,7 @@ Future<String>markedViewed(videoId, seconds) async {
   print(now);
   final msg = jsonEncode({"video_id": videoId, "last_second_viewed":seconds, "date":"$now"});
   final response = await http.post(
-      "$baseUrl/viewings",
+      "$apiUrl/api/v1/viewings",
       headers: tokenHeaders,
       body: msg,
     );
@@ -61,7 +58,7 @@ Future<String>saveGoals(goals) async {
   final msg = [{"goals": message}];
   print(msg);
   final response = await http.post(
-    "$baseUrl/users",
+    "$apiUrl/api/v1/users",
     headers: tokenHeaders,
     body: msg,
   );
@@ -76,12 +73,11 @@ Future<String>updateUser(update) async {
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   print(update);
-  final msg = jsonEncode({"username": update[1], "description":update[2], "email":update[3]});
+  final msg = jsonEncode({"username": update[1], "description":update[2], "email":update[3], "joincode":update[4]});
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);
-  String thisUrl = "$baseUrl/users/$userId";
-  print(thisUrl);
+  String thisUrl = "$apiUrl/api/v1/users/$userId";
 
   final response = await http.put(
     "$thisUrl",
@@ -92,13 +88,79 @@ Future<String>updateUser(update) async {
   return "success";
 }
 
+Future<String>addUserToGroup(joinCode) async {
+
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final msg = jsonEncode({"joincode": joinCode});
+  String thisUrl = "$apiUrl/api/v1/groups";
+  final response = await http.post(
+    "$thisUrl",
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print(response.statusCode);
+  if (response.statusCode == 201){
+    print("we good");
+    var parsedJson = json.decode(response.body);
+    var res = parsedJson['json'];
+    var group = res['group'];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("group", group);
+    print ("success");
+    return "success";
+  }
+  else {
+    var parsedJson = json.decode(response.body);
+    try {
+      var res = parsedJson['json'];
+      var message = res['messages'];
+      return message;
+    } catch (e) {
+      return "user already joined";
+    }
+  }
+
+}
+
+Future<String>removeUserGroup(group) async {
+  print('here');
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final msg = jsonEncode({"group": group});
+
+  String thisUrl = "$apiUrl/api/v1/groups";
+  final response = await http.put(
+    thisUrl,
+    headers: tokenHeaders,
+    body: msg,
+  );
+  if (response.statusCode == 200){
+    print(response.body);
+    print("success");
+    return "success";
+  }else
+    print("try");
+  print(response.body);
+    var parsedJson = json.decode(response.body);
+    try {
+      var res = parsedJson['json'];
+      var message = res['messages'];
+      return message;
+    } catch(e){
+      return "other issue";
+    }
+}
+
 Future submitSupportTicket(message)async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   final msg = jsonEncode({"message": message});
   final response = await http.post(
-    "$baseUrl/support_messages",
+    "$apiUrl/api/v1/support_messages",
     headers: tokenHeaders,
     body: msg,
   );

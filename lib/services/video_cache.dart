@@ -27,7 +27,7 @@ class MyCacheManager extends BaseCacheManager {
       : super(key,
       maxAgeCacheObject: Duration(hours: 12),
       maxNrOfCacheObjects: 200,
-      fileFetcher: _myHttpGetter);
+      fileService: HttpFileService());
 
   @override
   Future<String> getFilePath() async {

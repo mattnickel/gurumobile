@@ -8,17 +8,24 @@ import 'package:sidebar_animation/row_widgets/image_row.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebar_animation/services/social_api.dart';
 import '../models/social_index_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart' show get;
+import 'package:circular_check_box/circular_check_box.dart';
 
 
-class SocialCreate extends StatelessWidget {
+
+class SocialCreate extends StatefulWidget {
+  String group;
+  SocialCreate({this.group});
+
+  @override
+  _SocialCreateState createState() => _SocialCreateState();
+}
+
+class _SocialCreateState extends State<SocialCreate> {
   File betterImage;
-  // final ScrollController _scrollController = ScrollController();
+  String setGroup;
+  bool _isChecked = false;
+
   final messageController = TextEditingController();
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,39 +58,79 @@ class SocialCreate extends StatelessWidget {
                 reverse: true,
                 child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.width - 40,
-                          width: MediaQuery.of(context).size.width - 40,
-                        ),
-                        ImageRow(),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:15.0),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.width - 40,
+                            width: MediaQuery.of(context).size.width - 40,
+                          ),
+                          ImageRow(),
                   ],
                 ),
+                    ),
+                    Visibility(
+                        visible: true,
+                            child: Row(
 
+                              children: [
+                                Text("Post to:", style: TextStyle(fontSize:16),),
+                                CircularCheckBox(
+                                    value: !_isChecked,
+                                    checkColor: Colors.white,
+                                    activeColor: Color(0xFF09ebcc),
+                                    inactiveColor: Colors.black54,
+                                    disabledColor: Colors.grey ,
+                                    onChanged: (val) => this.setState(() {
+                                      _isChecked= !_isChecked;
+                                    }) ),
+                                Text("Everyone", style: TextStyle(fontSize:16),),
+                                CircularCheckBox(
+                                    value: _isChecked,
+                                    checkColor: Colors.white,
+                                    activeColor: Color(0xFF09ebcc),
+                                    inactiveColor: Colors.black54,
+                                    disabledColor: Colors.grey ,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _isChecked = !_isChecked;
+                                      });
+                                      _isChecked
+                                          ? setGroup = widget.group
+                                          : setGroup = null;
+                                      }),
+                                Text("${widget.group}", style: TextStyle(fontSize:16),),
+                              ],
+                            )),
                 Consumer<SocialIndexModel>(builder:(context, socialIndex, child) {
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: TextField(
-                      // focusNode: _focusNode,
-                      controller: messageController,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black26,
+                  return Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: TextField(
+                          // focusNode: _focusNode,
+                          controller: messageController,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black26,
+                              ),
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            hintText: 'Write a caption... ',
+                            fillColor: Colors.grey,
                           ),
-                          borderRadius: BorderRadius.circular(18.0),
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 3,
+                          onChanged: (text) {
+                            socialIndex.setSocialCaption(text);
+                          },
                         ),
-                        hintText: 'Write a caption... ',
-                        fillColor: Colors.grey,
                       ),
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 3,
-                      onChanged: (text) {
-                        socialIndex.setSocialCaption(text);
-                      },
-                    ),
+
+                    ],
                   );
                 }),
 
@@ -130,12 +177,14 @@ class SocialCreate extends StatelessWidget {
                                     await savePost(
                                         message: socialIndex.caption,
                                         image: socialIndex.convertedImageFile,
+                                        group: setGroup
                                         );
                                     Navigator.pop(context, 'yep');
                                   }else if(socialIndex.imageFile != null) {
                                     await savePost(
                                         message: socialIndex.caption,
-                                        image: socialIndex.imageFile);
+                                        image: socialIndex.imageFile,
+                                        group: setGroup);
                                     Navigator.pop(context, 'yep');
                                   }else {
                                     return null;

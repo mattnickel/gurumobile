@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:async' show Future;
@@ -13,9 +17,8 @@ import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 
 import '../main.dart';
+import 'api_url.dart';
 
-  String authUrl = "https://limitlessguru.herokuapp.com/api/v1/";
-  // String localUrl = "http://localhost:3000/api/v1/";
 
 Future setLocals(response) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -27,6 +30,7 @@ Future setLocals(response) async{
   String username = jsonResponse["username"] as String;
   String tagLine = jsonResponse["description"] as String;
   String avatarUrl = jsonResponse["avatar"] as String;
+  String group = jsonResponse["group"] as String;
   print (username);
   final storage = FlutterSecureStorage();
   await storage.write(key:"token", value: authToken);
@@ -36,22 +40,32 @@ Future setLocals(response) async{
   prefs.setString("email", userEmail);
   prefs.setString("tagLine", tagLine);
   prefs.setString("avatarUrl", avatarUrl);
+  prefs.setString("group", group);
   return null;
 }
 Future signIn(String email, String pass, context, prefs) async {
 
   String errorMessage;
-  String loginUrl = authUrl +"login";
-  // String loginUrl =  localUrl +"login";
-
+  String loginUrl =  "$apiUrl/api/v1/login";
+  print(loginUrl);
   final response = await http.post(
+
     loginUrl,
     headers: {"Accept": "Application/json"},
     body: {"email": email, "password": pass},
 
   );
   if(response.statusCode == 200){
+    print(response.body);
     await setLocals(response);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email, password: pass);
+    }on FirebaseAuthException catch  (e) {
+      print('Failed with error code: ${e.code}');
+      print(e.message);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: pass);
+    }
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
   }else{
     print("nope");
@@ -64,7 +78,7 @@ Future signIn(String email, String pass, context, prefs) async {
 
 Future signUp(String email, String pass, String username, context) async {
 
-  String signUpUrl = authUrl +'signup';
+  String signUpUrl = '$apiUrl/signup';
   final response = await http.post(
     signUpUrl,
     headers: {"Accept": "Application/json"},
@@ -72,6 +86,7 @@ Future signUp(String email, String pass, String username, context) async {
   );
   if(response.statusCode == 200) {
     await setLocals(response);
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: pass);
     print(response.body);
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => FrameworkPage()), (Route<dynamic> route) => false);
     // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SetGoals()), (Route<dynamic> route) => false);
@@ -85,7 +100,7 @@ Future signUp(String email, String pass, String username, context) async {
   }
 }
 Future signOut(context) async {
-  String signoutUrl = authUrl +'logout';
+  String signoutUrl = '$apiUrl/logout';
   final storage = FlutterSecureStorage();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userEmail = await storage.read(key: "email");
@@ -100,7 +115,7 @@ Future signOut(context) async {
 
 Future createVerificationCode(email)async{
   String params = "email="+email;
-  String url = authUrl + 'passwords/forgot?'+params;
+  String url = apiUrl + 'passwords/forgot?'+params;
   var response = await http.get(
     url,
     headers: {"Accept": "Application/json"},
@@ -121,7 +136,7 @@ Future confirmReset(code)async{
 
   String params = "verify="+code;
 
-  String url = authUrl + 'passwords/confirm?'+params;
+  String url = apiUrl + 'passwords/confirm?'+params;
   var response = await http.get(
     url,
     headers: {"Accept": "Application/json"},
@@ -139,7 +154,7 @@ Future confirmReset(code)async{
 Future setPasswordAndLogin(password, context) async{
   final storage = FlutterSecureStorage();
   String resetToken= await storage.read(key:"resetToken");
-  String url = authUrl + 'passwords/reset';
+  String url = apiUrl + 'passwords/reset';
 
   final response = await http.put(
     url,

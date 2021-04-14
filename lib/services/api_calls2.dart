@@ -11,16 +11,16 @@ import '../models/video_model.dart';
 import '../models/categories_model.dart';
 import 'dart:io';
 
+import 'api_url.dart';
+
 // http.Client client;
-// String url = 'https://limitlessguru.herokuapp.com/api/v1/videos';
-String baseUrl = 'https://limitlessguru.herokuapp.com/api/v1';
-// String localUrl = 'http://localhost:3000/api/v1';
+
 
 Future getUpdatedUser(id,client)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  final url = "$baseUrl/users/$id";
+  final url = "$apiUrl/api/v1/users/$id";
   final response = await client.get(
     url, headers: tokenHeaders,
   );
@@ -32,7 +32,8 @@ Future getUpdatedUser(id,client)async{
 Future<List<VideoCategory>>getCategories(client)async{
   var dir = await getTemporaryDirectory();
   File categories = File(dir.path + "/categories.json");
-  String url = "$baseUrl/categories";
+  String url = "$apiUrl/api/v1/categories";
+  print(url);
   final response = await client.get(
     url, headers: {'content-type': 'application/json'}
   );
@@ -104,14 +105,14 @@ Future <Video> updateOneVideo(http.Client client, category, customUrl, context) 
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  final url = "$baseUrl/videos/$customUrl";
+  final url = "$apiUrl/api/v1/videos/$customUrl";
+  print(url);
   final response = await client.get(
     url, headers: tokenHeaders,
   );
   if (response != null) {
     if (response.statusCode == 200) {
       file.writeAsStringSync(response.body, flush: true, mode: FileMode.write);
-      print(response.body);
       return parseOneVideo(response.body);
     } else {
       signOut(context);
@@ -162,7 +163,7 @@ Future<String>getVideoFile(id, client)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  final url = "$baseUrl/videos/$id";
+  final url = "$apiUrl/api/v1/videos/$id";
   final response = await client.get(
     url, headers: tokenHeaders
   );
@@ -179,10 +180,9 @@ Future <List<Video>> updateVideos(http.Client client, category, context) async {
   File file = File(dir.path + "/$category.json");
   print("update: $category");
   final storage = FlutterSecureStorage();
-  var url;
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
-  url = "$baseUrl/videos/category?category=$category";
+  var url = "$apiUrl/api/v1/videos/category?category=$category";
 
   final response = await client.get(
     url, headers: tokenHeaders,
@@ -197,8 +197,6 @@ Future <List<Video>> updateVideos(http.Client client, category, context) async {
       return parseVideos(response.body);
     } else {
       signOut(context);
-      // print("$category not updated from api");
-      // print(response.body);
       return null;
     }
   } else return null;
@@ -211,7 +209,7 @@ Future <List<Video>> updateVideos(http.Client client, category, context) async {
     String token = await storage.read(key: "token");
     final tokenHeaders = {'token': token, 'content-type': 'application/json'};
     final response = await client.get(
-      "$baseUrl/training_modules", headers: tokenHeaders,
+      "$apiUrl/api/v1/training_modules", headers: tokenHeaders,
     );
     print(response.body);
     if (response.statusCode == 200) {
@@ -236,16 +234,14 @@ Future <List<Video>> updateVideos(http.Client client, category, context) async {
     String media_type = "videos";
     var dir = await getTemporaryDirectory();
     File file = File(dir.path + "/" + category + ".json");
-    print("here");
     var _cachedVideos = file.readAsStringSync();
-    print("also here");
     final storage = FlutterSecureStorage();
     String token = await storage.read(key: "token");
     final tokenHeaders = {'token': token, 'content-type': 'application/json'};
 
     if (file.existsSync()) {
       final response = await client.get(
-        "$baseUrl/$media_type", headers: tokenHeaders,
+        "$apiUrl/api/v1/$media_type", headers: tokenHeaders,
       );
       if (response.statusCode == 200) {
         var _apiVideos = response.body;

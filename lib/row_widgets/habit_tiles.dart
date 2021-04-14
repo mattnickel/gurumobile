@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import '../helpers/habit_database_helpers.dart';
 import '../services/local_notifications_manager.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HabitTiles extends StatefulWidget {
 
@@ -158,7 +159,7 @@ class _HabitTilesState extends State<HabitTiles> {
                                 Container(
                                   padding: EdgeInsets.all(2.0),
                                   width: 120,
-                                  child: Text(widget.habits[widget.index].habit.toUpperCase(),
+                                  child: AutoSizeText(widget.habits[widget.index].habit.toUpperCase(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14.0,

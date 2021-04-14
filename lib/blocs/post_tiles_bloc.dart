@@ -33,7 +33,7 @@ String convertTime(apiTime){
 GestureDetector triggerKeyboardComment(context, postId){
   return  GestureDetector(
     onTap:(){
-      Navigator.pop(context, 'close');
+      Navigator.pop(context);
       },
     child: Scaffold(
       backgroundColor: Colors.transparent,

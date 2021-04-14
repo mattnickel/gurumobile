@@ -28,10 +28,20 @@ class FlickVideoScreen extends StatefulWidget {
 
 class _FlickVideoScreenState extends State<FlickVideoScreen> {
   FlickManager flickManager;
+  String group;
+
+  Future <String> _getGroup()async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      group = prefs.getString("group") ?? '';
+      print(group);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _getGroup;
 
     flickManager = FlickManager(
       videoPlayerController:
@@ -147,7 +157,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                       Navigator.of(context).push(PageRouteBuilder(
                           opaque: false,
                           pageBuilder: (BuildContext context, _, __) =>
-                              SocialCreate()));
+                              SocialCreate(group: group)));
                     }
 
               )

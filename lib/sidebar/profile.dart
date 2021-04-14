@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
+import 'package:sidebar_animation/blocs/join.dart';
 import 'package:sidebar_animation/helpers/fix_rotation.dart';
 
 import '../services/api_posts.dart';
@@ -23,6 +24,7 @@ class _ProfileState extends State<Profile> {
 	final tagLineController = TextEditingController();
 	final emailController = TextEditingController();
 	final passwordController = TextEditingController();
+
 	bool textChanged = false;
 	http.Client client;
 
@@ -34,6 +36,17 @@ class _ProfileState extends State<Profile> {
 	String email;
 	String password;
 	String avatarUrl;
+	String group;
+
+
+	@override
+	void dispose() {
+		_usernameController.dispose();
+		tagLineController.dispose();
+		emailController.dispose();
+		passwordController.dispose();
+		super.dispose();
+	}
 
 	Future getImage() async {
 		final pickedFile = await picker.getImage(source: ImageSource.gallery, maxHeight: 200.0,
@@ -56,6 +69,7 @@ class _ProfileState extends State<Profile> {
 			password = prefs.getString("password");
 			avatarUrl = prefs.getString("avatarUrl") ?? "no";
 			userId = prefs.getString("userId");
+			group = prefs.getString("group") ?? "";
 			List userInfo = [tagLine, username, email, avatarUrl, password];
 			return userInfo;
 		}
@@ -75,6 +89,7 @@ class _ProfileState extends State<Profile> {
 			prefs.setString("email", email);
 			prefs.setString("tagLine", tagLine);
 		}
+
 		@override
 		void initState() {
 			super.initState();
@@ -214,8 +229,14 @@ class _ProfileState extends State<Profile> {
 																													initialValue: snapshot
 																															.data[1],
 																													decoration: const InputDecoration(
-																															labelText: "USERNAME",
-																															hintText: "What do people call you?"),
+																															focusedBorder: UnderlineInputBorder(
+																																borderSide: BorderSide(color: Color(0xFF09EECA)),
+																															),
+																															helperText: "USERNAME",
+																															hintText: "What do people call you?",
+																															hintStyle: TextStyle(
+																																fontSize: 14),
+																													),
 																													autocorrect: false,
 																													// controller: _firstNameController,
 																													onChanged: (
@@ -242,8 +263,14 @@ class _ProfileState extends State<Profile> {
 																													initialValue: snapshot
 																															.data[0],
 																													decoration: const InputDecoration(
-																															labelText: "TAGLINE",
-																															hintText: "What do you want people to know about you?"),
+																															focusedBorder: UnderlineInputBorder(
+																																borderSide: BorderSide(color: Color(0xFF09EECA)),
+																															),
+																															helperText: "TAGLINE",
+																															hintText: "What do you want people to know about you?",
+																															hintStyle: TextStyle(
+																																fontSize: 14),
+																													),
 																													autocorrect: false,
 																													// controller: tagLineController,
 																													onChanged: (
@@ -269,8 +296,14 @@ class _ProfileState extends State<Profile> {
 																															fontSize: 18),
 																													initialValue: email,
 																													decoration: const InputDecoration(
-																															labelText: "EMAIL",
-																															hintText: "Email address"),
+																															focusedBorder: UnderlineInputBorder(
+																																borderSide: BorderSide(color: Color(0xFF09EECA)),
+																															),
+																															helperText: "EMAIL",
+																															hintText: "Email address",
+																															hintStyle: TextStyle(
+																																fontSize: 14),
+																													),
 																													autocorrect: false,
 																													// controller: emailController,
 																													onChanged: (
@@ -283,6 +316,8 @@ class _ProfileState extends State<Profile> {
 																													},
 																												),
 																											),
+																										Join(group: group)
+
 																										],
 																									),
 																								),

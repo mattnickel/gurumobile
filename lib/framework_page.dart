@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,15 +26,28 @@ class FrameworkPage extends StatefulWidget{
 class _FrameworkPageState extends State<FrameworkPage> {
 	final localNotifications = LocalNotificationsManager.init();
 	final _firebaseMessaging = FirebaseMessaging.instance;
+	FirebaseAuth auth = FirebaseAuth.instance;
 	final FirebaseFirestore _db = FirebaseFirestore.instance;
 	var iosSubscription;
+
+
+
 	@override
 	void initState(){
 		super.initState();
 		_firebaseMessaging.requestPermission();
 		_firebaseMessaging.subscribeToTopic("news");
 		_firebaseMessaging.subscribeToTopic("content");
-		_saveDeviceToken();
+		// _saveDeviceToken();
+		FirebaseAuth.instance
+				.authStateChanges()
+				.listen((User user) {
+			if (user == null) {
+				print('User is currently signed out!');
+			} else {
+				print('User is signed in!');
+			}
+		});
 		// if (Platform.isIOS){
 		// 	print("waiting to register");
 		// 	iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
@@ -45,23 +59,24 @@ class _FrameworkPageState extends State<FrameworkPage> {
 		// }
 	}
 
-	_saveDeviceToken()async{
-		final SharedPreferences prefs = await SharedPreferences.getInstance();
-		print("saving device token??");
-		String username = prefs.getString("username");
-		String email = prefs.getString("email");
-		String firebaseToken = await _firebaseMessaging.getToken();
-		if(firebaseToken != null){
-			var tokenRef = _db
-					.collection('user')
-					.doc(username)
-					.collection('tokens')
-					.doc(firebaseToken);
-			await tokenRef.set({
-				'token':firebaseToken
-			});
-		}
-	}
+	// _saveDeviceToken()async{
+	// 	UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+	// 	// final SharedPreferences prefs = await SharedPreferences.getInstance();
+	// 	// print("saving device token??");
+	// 	// String username = prefs.getString("username");
+	// 	// String email = prefs.getString("email");
+	// 	// String firebaseToken = await _firebaseMessaging.getToken();
+	// 	// if(firebaseToken != null){
+	// 	// 	var tokenRef = _db
+	// 	// 			.collection('user')
+	// 	// 			.doc(username)
+	// 	// 			.collection('tokens')
+	// 	// 			.doc(firebaseToken);
+	// 	// 	await tokenRef.set({
+	// 	// 		'token':firebaseToken
+	// 	// 	});
+	// 	print(userCredential);
+	// }
 
 	@override
 	Widget build(BuildContext context) {
