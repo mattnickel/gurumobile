@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image/image.dart' as img;
-import 'package:sidebar_animation/blocs/join.dart';
-import 'package:sidebar_animation/helpers/fix_rotation.dart';
-
-import '../services/api_posts.dart';
 import 'dart:io';
 import 'package:progress_indicator_button/progress_button.dart';
 import 'package:http/http.dart' as http;
 
+import '../blocs/join.dart';
+import '../helpers/fix_rotation.dart';
+import '../services/api_posts.dart';
 
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
-
 }
 
 class _ProfileState extends State<Profile> {
@@ -37,7 +34,6 @@ class _ProfileState extends State<Profile> {
 	String password;
 	String avatarUrl;
 	String group;
-
 
 	@override
 	void dispose() {
@@ -81,7 +77,6 @@ class _ProfileState extends State<Profile> {
 			setState((){
 				_image = null;
 			});
-
 		}
 		Future saveUserInfo() async {
 			final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -383,11 +378,8 @@ class _ProfileState extends State<Profile> {
 																),
 															],
 														),
-
 													],
 												),
-
-
 											]
 									),
 								);

@@ -3,14 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:sidebar_animation/models/social_index_model.dart';
-import 'dart:io';
+import 'package:sidebar_animation/bottom_drawers/post_drawer.dart';
 
-import 'guru_tiles.dart';
+import '../models/social_index_model.dart';
 import 'image_tile_blank.dart';
-import 'image_tile_blank2.dart';
 import 'image_tiles.dart';
 
 class ImageRow extends StatelessWidget {
@@ -120,16 +116,16 @@ class ImageRow extends StatelessWidget {
                                                         ? Stack( children: [
                                                           Container(
                                                             decoration:
-                                                              socialIndex.imageFile == null
+                                                              socialIndex.mediaFile == null
                                                               ? BoxDecoration(color: Colors.black12,)
                                                               : BoxDecoration(image:
                                                                   DecorationImage(
-                                                                    image: FileImage(socialIndex.imageFile),
+                                                                    image: socialIndex.thumbnail != null ? MemoryImage(socialIndex.thumbnail) : FileImage(socialIndex.mediaFile),
                                                                     fit: BoxFit.cover,
                                                                     ),
                                                               ),
                                                             child: Center(
-                                                              child: socialIndex.imageFile == null
+                                                              child: socialIndex.mediaFile == null
                                                                 ? Icon(
                                                                     Icons.photo_size_select_actual_outlined,
                                                                     size: 100,
@@ -141,7 +137,7 @@ class ImageRow extends StatelessWidget {
                                                         Positioned(
                                                           top: 30,
                                                           right: 30,
-                                                          child: socialIndex.imageFile == null
+                                                          child: socialIndex.mediaFile == null
                                                               ? FloatingActionButton(
                                                               child: Icon(
                                                                   Icons.add,
@@ -150,7 +146,8 @@ class ImageRow extends StatelessWidget {
                                                               backgroundColor: Color(0xFF09eebc),
                                                               onPressed: () async{
                                                                 print("add photo");
-                                                                socialIndex.getImage();
+                                                                openDrawerBelow(context, socialIndex);
+
                                                               }
                                                           )
                                                               : FloatingActionButton(
@@ -159,8 +156,11 @@ class ImageRow extends StatelessWidget {
                                                                   color: Colors.white),
                                                               backgroundColor: Colors.black12,
                                                               elevation:0,
-                                                              onPressed: () async{
-                                                                socialIndex.imageFile = null;
+                                                              onPressed: (){
+                                                                setState(){
+                                                                  socialIndex.mediaFile = null;
+                                                                  socialIndex.thumbnail =null;
+                                                                };
                                                               }
                                                           ),
                                                         )

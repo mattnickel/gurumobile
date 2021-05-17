@@ -281,6 +281,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  export_video_frame:
+    dependency: "direct main"
+    description:
+      name: export_video_frame
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5+4"
   fake_async:
     dependency: transitive
     description:
@@ -1078,6 +1085,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
+  thumbnails:
+    dependency: "direct main"
+    description:
+      name: thumbnails
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   timezone:
     dependency: transitive
     description:
@@ -1141,6 +1155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4+1"
+  video_thumbnail:
+    dependency: "direct main"
+    description:
+      name: video_thumbnail
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5+1"
   vin_decoder:
     dependency: transitive
     description:
