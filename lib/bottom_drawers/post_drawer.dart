@@ -45,24 +45,24 @@ openDrawerBelow(context, socialIndex) {
                                   ),
                                 ),
                                 Divider(color: Colors.white30, height: 3),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: ListTile(
-                                    title: Text(
-                                      "Take a Photo",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () async{
-                                      await socialIndex.createImage();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ),
-                                Divider(color: Colors.white30, height: 3),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(10.0),
+                                //   child: ListTile(
+                                //     title: Text(
+                                //       "Take a Photo",
+                                //       style: TextStyle(color: Colors.white),
+                                //     ),
+                                //     leading: Icon(
+                                //       Icons.camera_alt,
+                                //       color: Colors.white,
+                                //     ),
+                                //     onTap: () async{
+                                //       await socialIndex.createImage();
+                                //       Navigator.of(context).pop();
+                                //     },
+                                //   ),
+                                // ),
+                                // Divider(color: Colors.white30, height: 3),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: ListTile(
@@ -80,24 +80,24 @@ openDrawerBelow(context, socialIndex) {
                                       },
                                   ),
                                 ),
-                                Divider(color: Colors.white30, height: 3),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: ListTile(
-                                    title: Text(
-                                      "Create a video (max: 1 min)",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.video_call_sharp,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () async{
-                                      await socialIndex.createVideo();
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ),
+                                // Divider(color: Colors.white30, height: 3),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(10.0),
+                                //   child: ListTile(
+                                //     title: Text(
+                                //       "Create a video (max: 1 min)",
+                                //       style: TextStyle(color: Colors.white),
+                                //     ),
+                                //     leading: Icon(
+                                //       Icons.video_call_sharp,
+                                //       color: Colors.white,
+                                //     ),
+                                //     onTap: () async{
+                                //       await socialIndex.createVideo();
+                                //       Navigator.of(context).pop();
+                                //     },
+                                //   ),
+                                // ),
 
                               ],
                             ),
