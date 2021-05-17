@@ -3,14 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_widgets/flutter_widgets.dart';
-import 'package:sidebar_animation/screens/social_create_screen.dart';
-// import 'package:sidebar_animation/screens/social_post_screen.dart';
-import 'package:sidebar_animation/services/api_posts.dart';
 import 'package:video_player/video_player.dart';
 
-
-import 'landscape_player_controls.dart';
+import '../screens/social_create_screen.dart';
+import '../services/api_posts.dart';
 
 class FlickVideoScreen extends StatefulWidget {
   int positionValue;
@@ -30,18 +26,9 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
   FlickManager flickManager;
   String group;
 
-  Future <String> _getGroup()async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      group = prefs.getString("group") ?? '';
-      print(group);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _getGroup;
 
     flickManager = FlickManager(
       videoPlayerController:
@@ -76,6 +63,7 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
     List newImagesList;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     savedImages = prefs.getString("socialLibrary");
+    group = prefs.getString("group") ?? "";
     if(savedImages== null){
       newImagesList=["$socialImageUrl"];
     } else {
@@ -89,13 +77,11 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
       }
     }
     String saveThis = json.encode(newImagesList);
-    // String saveThis = "";
     prefs.setString("socialLibrary", saveThis);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -104,21 +90,18 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
               child: AspectRatio(
                 aspectRatio:16/9,
                 child: FlickVideoPlayer(
-
-                      flickManager: flickManager,
-
-                        preferredDeviceOrientationFullscreen: [
-                        DeviceOrientation.landscapeLeft,
-                        DeviceOrientation.landscapeRight,
-                      ],
-                      systemUIOverlay: [],
-                      flickVideoWithControls: FlickVideoWithControls(
-                        controls:FlickLandscapeControls(),
-                      ),
+                  flickManager: flickManager,
+                  preferredDeviceOrientationFullscreen: [
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
+                  ],
+                  systemUIOverlay: [],
+                  flickVideoWithControls: FlickVideoWithControls(
+                    controls:FlickLandscapeControls(),
+                  ),
                 ),
               ),
             ),
-
             Positioned(
               top:40,
               right:10,
@@ -133,7 +116,6 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                     if (widget.socialImage != null){
                       saveSocialImage(widget.socialImage);
                     }
-
                     Navigator.of(context).pop();
                     print(widget.positionValue);
                   }
@@ -149,7 +131,6 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                       padding: const EdgeInsets.all(4.0),
                       child:
                       Image.asset('assets/images/share.png', height: 25, width:25 ),
-
                     ),
                     onPressed: () {
                       flickManager.flickVideoManager.videoPlayerController.pause();
@@ -159,7 +140,6 @@ class _FlickVideoScreenState extends State<FlickVideoScreen> {
                           pageBuilder: (BuildContext context, _, __) =>
                               SocialCreate(group: group)));
                     }
-
               )
                   :Container()
             ),

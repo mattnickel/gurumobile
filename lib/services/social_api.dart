@@ -81,7 +81,50 @@ savePost({message, image, group}) async {
     // Other exception
   }
 }
+saveVideoPost({message, image, video, group}) async {
+  try {
+    final storage = FlutterSecureStorage();
+    String token = await storage.read(key: "token");
+    final tokenHeaders = {'token': token};
+    var postUri = Uri.parse("$apiUrl/api/v1/social_posts");
+    print("group: $group");
+    print(postUri);
+    String fileName = image.path
+        .split('/')
+        .last;
+    String videoName = image.path
+        .split('/')
+        .last;
+    FormData data = FormData.fromMap({
+      "video": await MultipartFile.fromFile(
+        video.path,
+        filename: videoName,
+      ),
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+      ),
+      "message": message,
+      "group":group
 
+    });
+
+    Dio dio = new Dio();
+    dio.options.headers = tokenHeaders;
+    Response response = await dio.post("$postUri", data: data);
+
+    if (response != null) {
+      print(response);
+      return false;
+    } else {
+      return true;
+    }
+  }on TimeoutException catch (_) {
+    // A timeout occurred.
+  } on SocketException catch (_) {
+    // Other exception
+  }
+}
 Future submitSupportTicket(message)async {
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");
@@ -94,6 +137,7 @@ Future submitSupportTicket(message)async {
   );
   print(response.body);
 }
+
 newPostComment(postId, comment)async{
   final storage = FlutterSecureStorage();
   String token = await storage.read(key: "token");

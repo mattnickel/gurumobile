@@ -1,16 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
-import 'package:sidebar_animation/row_widgets/image_row.dart';
 import 'package:provider/provider.dart';
-import 'package:sidebar_animation/services/social_api.dart';
-import '../models/social_index_model.dart';
 import 'package:circular_check_box/circular_check_box.dart';
 
-
+import '../row_widgets/image_row.dart';
+import '../services/social_api.dart';
+import '../models/social_index_model.dart';
 
 class SocialCreate extends StatefulWidget {
   String group;
@@ -29,7 +26,6 @@ class _SocialCreateState extends State<SocialCreate> {
 
   @override
   Widget build(BuildContext context) {
-
     return  Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -43,7 +39,6 @@ class _SocialCreateState extends State<SocialCreate> {
           backgroundColor: Colors.white,
         ),
         body:
-
         ChangeNotifierProvider<SocialIndexModel>(
           create: (context)=> SocialIndexModel(),
           child: GestureDetector(
@@ -60,51 +55,42 @@ class _SocialCreateState extends State<SocialCreate> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom:15.0),
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.width - 40,
-                            width: MediaQuery.of(context).size.width - 40,
-                          ),
-                          ImageRow(),
-                  ],
-                ),
+                      child: ImageRow(),
                     ),
                     Visibility(
-                        visible: true,
-                            child: Row(
-
-                              children: [
-                                Text("Post to:", style: TextStyle(fontSize:16),),
-                                CircularCheckBox(
-                                    value: !_isChecked,
-                                    checkColor: Colors.white,
-                                    activeColor: Color(0xFF09ebcc),
-                                    inactiveColor: Colors.black54,
-                                    disabledColor: Colors.grey ,
-                                    onChanged: (val) => this.setState(() {
-                                      _isChecked= !_isChecked;
-                                    }) ),
-                                Text("Everyone", style: TextStyle(fontSize:16),),
-                                CircularCheckBox(
-                                    value: _isChecked,
-                                    checkColor: Colors.white,
-                                    activeColor: Color(0xFF09ebcc),
-                                    inactiveColor: Colors.black54,
-                                    disabledColor: Colors.grey ,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        _isChecked = !_isChecked;
-                                      });
-                                      _isChecked
-                                          ? setGroup = widget.group
-                                          : setGroup = null;
-                                      }),
-                                Text("${widget.group}", style: TextStyle(fontSize:16),),
-                              ],
-                            )),
+                      visible: widget.group != null,
+                      child: Row(
+                        children: [
+                          Text("Post to:", style: TextStyle(fontSize:16),),
+                          CircularCheckBox(
+                              value: !_isChecked,
+                              checkColor: Colors.white,
+                              activeColor: Color(0xFF09ebcc),
+                              inactiveColor: Colors.black54,
+                              disabledColor: Colors.grey ,
+                              onChanged: (val) => this.setState(() {
+                                _isChecked= !_isChecked;
+                              }) ),
+                          Text("Social Feed", style: TextStyle(fontSize:16),),
+                          CircularCheckBox(
+                              value: _isChecked,
+                              checkColor: Colors.white,
+                              activeColor: Color(0xFF09ebcc),
+                              inactiveColor: Colors.black54,
+                              disabledColor: Colors.grey ,
+                              onChanged: (val) {
+                                setState(() {
+                                  _isChecked = !_isChecked;
+                                });
+                                _isChecked
+                                    ? setGroup = widget.group
+                                    : setGroup = null;
+                              }),
+                          Text("${widget.group}", style: TextStyle(fontSize:16),),
+                        ],
+                      )
+                    ),
                 Consumer<SocialIndexModel>(builder:(context, socialIndex, child) {
-
                   return Stack(
                     children: [
                       Padding(
@@ -129,7 +115,6 @@ class _SocialCreateState extends State<SocialCreate> {
                           },
                         ),
                       ),
-
                     ],
                   );
                 }),
@@ -143,12 +128,12 @@ class _SocialCreateState extends State<SocialCreate> {
                         width: 150,
                         height: 50,
                         child: RaisedButton(
-                          onPressed: !socialIndex.imageExists
+                          onPressed: !socialIndex.mediaExists
                               ? null
                               : () async {
                             socialIndex.convertedImageFile != null
                             ? Share.shareFiles([socialIndex.convertedImageFile.path], text: socialIndex.caption)
-                            : Share.shareFiles([socialIndex.imageFile.path],
+                            : Share.shareFiles([socialIndex.mediaFile.path],
                                 text: socialIndex.caption);
                           },
                           elevation: 0.2,
@@ -169,7 +154,7 @@ class _SocialCreateState extends State<SocialCreate> {
                         child: Consumer<SocialIndexModel>(
                             builder: (context, socialIndex, child) {
                               return RaisedButton(
-                                onPressed: !socialIndex.imageExists || socialIndex.caption == null
+                                onPressed: !socialIndex.mediaExists || socialIndex.caption == null
                                     ? null
                                     : () async {
                                   socialIndex.setLoading(true);
@@ -180,12 +165,21 @@ class _SocialCreateState extends State<SocialCreate> {
                                         group: setGroup
                                         );
                                     Navigator.pop(context, 'yep');
-                                  }else if(socialIndex.imageFile != null) {
-                                    await savePost(
-                                        message: socialIndex.caption,
-                                        image: socialIndex.imageFile,
-                                        group: setGroup);
-                                    Navigator.pop(context, 'yep');
+                                  }else if(socialIndex.mediaFile != null) {
+                                    if(socialIndex.isVideo){
+                                      await saveVideoPost(
+                                          message: socialIndex.caption,
+                                          image: socialIndex.videoImage,
+                                          video: socialIndex.mediaFile,
+                                          group: setGroup);
+                                      Navigator.pop(context, 'yep');
+                                    }else {
+                                      await savePost(
+                                          message: socialIndex.caption,
+                                          image: socialIndex.mediaFile,
+                                          group: setGroup);
+                                      Navigator.pop(context, 'yep');
+                                    }
                                   }else {
                                     return null;
                                   }
@@ -208,7 +202,6 @@ class _SocialCreateState extends State<SocialCreate> {
                             }
                         ),
                       )
-
                     ],
                   );
                 }),

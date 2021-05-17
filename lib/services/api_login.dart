@@ -78,7 +78,7 @@ Future signIn(String email, String pass, context, prefs) async {
 
 Future signUp(String email, String pass, String username, context) async {
 
-  String signUpUrl = '$apiUrl/signup';
+  String signUpUrl = '$apiUrl/api/v1/signup';
   final response = await http.post(
     signUpUrl,
     headers: {"Accept": "Application/json"},

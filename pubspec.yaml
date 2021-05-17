@@ -64,6 +64,9 @@ dependencies:
   keyboard_attachable: 1.0.3
   auto_size_text: ^2.1.0
   circular_check_box: ^1.0.4
+  video_thumbnail: ^0.2.5+1
+  export_video_frame: ^0.0.5+4
+  thumbnails: ^1.0.1
 
 
 dev_dependencies:
