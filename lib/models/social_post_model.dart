@@ -8,6 +8,7 @@ class SocialPost {
   String time;
   String message;
   String image;
+  String video;
   int postUserId;
   String username;
   String userTagline;
@@ -22,6 +23,7 @@ class SocialPost {
         this.time,
         this.message,
         this.image,
+        this.video,
         this.postUserId,
         this.username,
         this.userTagline,
@@ -45,6 +47,7 @@ class SocialPost {
       time: json['time'],
       message: json['message'],
       image: json['image'],
+      video:json['video'],
       postUserId: json['post_user_id'],
       username: json['username'],
       userTagline: json['user_tagline'],

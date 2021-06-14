@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sidebar_animation/pages/games.dart';
 import '../pages/social.dart';
 import '../pages/gurus.dart';
 import '../pages/home.dart';
@@ -15,6 +16,7 @@ class NavbarTabSelectedModel extends ChangeNotifier {
     Library(),
     // Gurus(),
     Social(),
+    Games()
   ];
 
 

@@ -36,20 +36,20 @@ class _JoinState extends State<Join> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       FocusScope.of(context).requestFocus(new FocusNode());
       if (_apiMessage == "success"){
-        setState(() {
           _processing = false;
-          joinCodeController.text = prefs.getString("group");
-          widget.group = prefs.getString("group");
-        });
+          setState(() {
+            joinCodeController.text = prefs.getString("group");
+            widget.group = prefs.getString("group");
+          });
       } else{
         setState(() {
           _isInvalidJoinCode = true;
           _error = _apiMessage;
           _processing = false;
         });
-        this._secondFormKey.currentState.validate();
-      }
 
+      }
+      this._secondFormKey.currentState.validate();
   }
 
   leaveGroup()async{
@@ -62,6 +62,7 @@ class _JoinState extends State<Join> {
         widget.group = null;
         _processing = false;
       });
+
     } else{
       setState(() {
         _isInvalidJoinCode = true;

@@ -100,28 +100,24 @@ Future<String>addUserToGroup(joinCode) async {
     headers: tokenHeaders,
     body: msg,
   );
-  print(response.statusCode);
+  print(response.body);
   if (response.statusCode == 201){
-    print("we good");
     var parsedJson = json.decode(response.body);
     var res = parsedJson['json'];
     var group = res['group'];
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("group", group);
-    print ("success");
-    return "success";
-  }
-  else {
-    var parsedJson = json.decode(response.body);
-    try {
+    bool success = res['is_success']== true;
+    if (success == true) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("group", group);
+      print("success");
+      return "success";
+    } else{
       var res = parsedJson['json'];
       var message = res['messages'];
       return message;
-    } catch (e) {
-      return "user already joined";
     }
-  }
 
+  }
 }
 
 Future<String>removeUserGroup(group) async {

@@ -1,3 +1,4 @@
-bool prod = true;
-String apiUrl = prod ? 'https://limitlessguru.herokuapp.com'
-    : 'http://localhost:3000';
+String apiUrl =
+// "https://limitlessguru.herokuapp.com";
+//  "http://localhost:3000";
+"https://limitlessguru-staging.herokuapp.com";

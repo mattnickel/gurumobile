@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/blocs/post_tiles_bloc.dart';
 import 'package:sidebar_animation/helpers/mark_block_hide.dart';
 import 'package:sidebar_animation/models/social_post_model.dart';
+import 'package:sidebar_animation/row_widgets/social_media_tiles.dart';
 import 'package:sidebar_animation/services/social_api.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
@@ -203,19 +204,10 @@ class _PostTilesState extends State<PostTiles> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(18.0),
                         child:
-                        CachedNetworkImage(
-                          imageUrl: widget.post.image,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                  ),
-                            ),
-                          ),
-                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        ),
+                            widget.post.video != null
+                                ? SocialVideoTile(widget.post.video)
+                                : SocialImageTile(widget.post.image)
+
                       ),
                     ],
                   ),

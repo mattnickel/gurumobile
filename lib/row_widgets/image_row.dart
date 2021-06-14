@@ -157,10 +157,7 @@ class ImageRow extends StatelessWidget {
                                                               backgroundColor: Colors.black12,
                                                               elevation:0,
                                                               onPressed: (){
-                                                                setState(){
-                                                                  socialIndex.mediaFile = null;
-                                                                  socialIndex.thumbnail =null;
-                                                                };
+                                                                socialIndex.cancelImage();
                                                               }
                                                           ),
                                                         )

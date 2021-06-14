@@ -37,20 +37,19 @@ class SocialIndexModel with ChangeNotifier{
     thumbnail = await VideoThumbnail.thumbnailData(
       video: videoPath,
       imageFormat: ImageFormat.JPEG,
-      maxWidth: 400, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 225,
+      maxWidth: 800, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      quality: 800,
     );
     isVideo = true;
     videoImage = File.fromRawPath(thumbnail);
-    mediaFile = File(videoPath);
-    print("thumbnail ready");
+
   }
 
-
   void getImage() async {
-    final image = await picker.getImage(source: ImageSource.gallery, maxHeight: 700, maxWidth: 700);
+    final image = await picker.getImage(source: ImageSource.gallery, maxHeight: 800, maxWidth: 800);
     if (image != null) {
-      mediaFile = await fixImageRotation(image.path);
+       // mediaFile = await fixImageRotation(image.path);
+      mediaFile = File(image.path);
       mediaExists = true;
       notifyListeners();
     }
@@ -67,12 +66,10 @@ class SocialIndexModel with ChangeNotifier{
     PickedFile video = await picker.getVideo(source: ImageSource.gallery, maxDuration: const Duration(seconds: 60));
 
     if (video != null) {
-      print("getting thumbnail");
       await makeThumbnail(video.path);
-      print("got it");
       mediaExists = true;
       isVideo = true;
-      print("true");
+      mediaFile = File(video.path);
       notifyListeners();
     }
   }
@@ -80,9 +77,10 @@ class SocialIndexModel with ChangeNotifier{
     PickedFile video = await picker.getVideo(source: ImageSource.camera, maxDuration: const Duration(seconds: 60));
 
     if (video != null) {
-      mediaFile = await fixImageRotation(video.path);
+      await makeThumbnail(video.path);
       mediaExists = true;
-      print("true");
+      isVideo = true;
+      mediaFile = File(video.path);
       notifyListeners();
     }
   }

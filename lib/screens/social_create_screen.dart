@@ -58,7 +58,7 @@ class _SocialCreateState extends State<SocialCreate> {
                       child: ImageRow(),
                     ),
                     Visibility(
-                      visible: widget.group != null,
+                      visible: widget.group.length > 2,
                       child: Row(
                         children: [
                           Text("Post to:", style: TextStyle(fontSize:16),),
@@ -161,22 +161,23 @@ class _SocialCreateState extends State<SocialCreate> {
                                   if(socialIndex.convertedImageFile != null) {
                                     await savePost(
                                         message: socialIndex.caption,
-                                        image: socialIndex.convertedImageFile,
+                                        isVideo: false,
+                                        media: socialIndex.convertedImageFile,
                                         group: setGroup
                                         );
                                     Navigator.pop(context, 'yep');
                                   }else if(socialIndex.mediaFile != null) {
                                     if(socialIndex.isVideo){
-                                      await saveVideoPost(
+                                      await savePost(
                                           message: socialIndex.caption,
-                                          image: socialIndex.videoImage,
-                                          video: socialIndex.mediaFile,
+                                          isVideo: true,
+                                          media: socialIndex.mediaFile,
                                           group: setGroup);
                                       Navigator.pop(context, 'yep');
                                     }else {
                                       await savePost(
                                           message: socialIndex.caption,
-                                          image: socialIndex.mediaFile,
+                                          media: socialIndex.mediaFile,
                                           group: setGroup);
                                       Navigator.pop(context, 'yep');
                                     }
