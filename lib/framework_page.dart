@@ -129,7 +129,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 							      		FloatingNavbarItem(icon: Icons.home, title: 'Home', ),
 							      		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
 							      		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
-												FloatingNavbarItem(icon: Icons.psychology, title: 'Games')
+												// FloatingNavbarItem(icon: Icons.psychology, title: 'Games')
 							      	],
 							      ),
 							  ),

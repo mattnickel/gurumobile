@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:share/share.dart';
 import 'package:provider/provider.dart';
 import 'package:circular_check_box/circular_check_box.dart';
+import 'package:sidebar_animation/services/api_posts.dart';
 
 import '../row_widgets/image_row.dart';
 import '../services/social_api.dart';
@@ -131,10 +132,12 @@ class _SocialCreateState extends State<SocialCreate> {
                           onPressed: !socialIndex.mediaExists
                               ? null
                               : () async {
+
                             socialIndex.convertedImageFile != null
                             ? Share.shareFiles([socialIndex.convertedImageFile.path], text: socialIndex.caption)
                             : Share.shareFiles([socialIndex.mediaFile.path],
                                 text: socialIndex.caption);
+                            socialAttempt();
                           },
                           elevation: 0.2,
                           color: Color(0xff09eebc),

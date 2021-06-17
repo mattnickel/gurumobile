@@ -48,6 +48,22 @@ Future<String>markedViewed(videoId, seconds) async {
   return null;
 
 }
+
+Future<String>socialAttempt() async {
+  print("attempt");
+  final storage = FlutterSecureStorage();
+  String token = await storage.read(key: "token");
+  final tokenHeaders = {'token': token, 'content-type': 'application/json'};
+  final msg = jsonEncode({"attempt": true });
+  final response = await http.post(
+    "$apiUrl/api/v1/social_attempt",
+    headers: tokenHeaders,
+    body: msg,
+  );
+  print(response.body);
+  return null;
+
+}
 Future<String>saveGoals(goals) async {
 
   final storage = FlutterSecureStorage();
@@ -73,7 +89,7 @@ Future<String>updateUser(update) async {
   String token = await storage.read(key: "token");
   final tokenHeaders = {'token': token, 'content-type': 'application/json'};
   print(update);
-  final msg = jsonEncode({"username": update[1], "description":update[2], "email":update[3], "joincode":update[4]});
+  final msg = jsonEncode({"username": update[1], "description":update[2], "email":update[3]});
   print(msg);
   int userId = int.parse(update[0]);
   print (userId);
