@@ -29,6 +29,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 	FirebaseAuth auth = FirebaseAuth.instance;
 	final FirebaseFirestore _db = FirebaseFirestore.instance;
 	var iosSubscription;
+	bool _gameCheck= false;
 
 
 
@@ -48,6 +49,7 @@ class _FrameworkPageState extends State<FrameworkPage> {
 				print('User is signed in!');
 			}
 		});
+		_getGamePrefs();
 		// if (Platform.isIOS){
 		// 	print("waiting to register");
 		// 	iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
@@ -58,7 +60,20 @@ class _FrameworkPageState extends State<FrameworkPage> {
 		// 	_saveDeviceToken();
 		// }
 	}
+	void _getGamePrefs()async{
+		SharedPreferences prefs = await SharedPreferences.getInstance();
+		String check= prefs.getString("games");
+		if (check == "true") {
+			print("yes to games");
+			_gameCheck = true;
+		}else{
+			_gameCheck = false;
+			print("no to games");
+		}
+		setState(() {
 
+		});
+	}
 	// _saveDeviceToken()async{
 	// 	UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
 	// 	// final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -129,7 +144,11 @@ class _FrameworkPageState extends State<FrameworkPage> {
 							      		FloatingNavbarItem(icon: Icons.home, title: 'Home', ),
 							      		FloatingNavbarItem(icon: Icons.video_library, title: 'Library'),
 							      		FloatingNavbarItem(icon: Icons.insert_photo, title: 'Social'),
-												// FloatingNavbarItem(icon: Icons.psychology, title: 'Games')
+												if (_gameCheck)
+													FloatingNavbarItem(
+															icon: Icons.psychology, title: 'Games')
+												,
+
 							      	],
 							      ),
 							  ),

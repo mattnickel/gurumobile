@@ -1,23 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebar_animation/models/concentration_model.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class GridSquare extends StatefulWidget {
-  int value;
-  int globalNext;
-  GridSquare(this.value);
+  int _index;
+  ConcentrationModel conMod;
+  bool selected;
+  GridSquare(this._index, this.conMod, this.selected);
   @override
   _GridSquareState createState() => _GridSquareState();
 }
 class _GridSquareState extends State<GridSquare>{
+  bool _canVibrate = true;
   bool selected = false;
+  int numberInt;
+  String number;
+  String start;
+
+  @override
+  initState() {
+    super.initState();
+    selected = widget.selected;
+    number = widget._index.toString();
+    numberInt = widget._index;
+    init();
+  }
+
+  init() async {
+    bool canVibrate = await Vibrate.canVibrate;
+    setState(() {
+      _canVibrate = canVibrate;
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return
     selected ?
       Container(
         child: Text(
-          widget.value.toString(),
+          number,
           style: TextStyle(fontSize: 18, color: Colors.white),
           textAlign: TextAlign.center,
 
@@ -40,13 +63,21 @@ class _GridSquareState extends State<GridSquare>{
         :
     GestureDetector(
       onTap: () {
-        // if (widget.value == 0){
-        selected = true;
-        setState(() {});
-        // },
+        print(widget.conMod.next);
+        if (numberInt == widget.conMod.next){
+          widget.conMod.updateNext();
+          setState(() {
+            selected = true;
+          });
+        } else{
+          print("fail");
+          // !_canVibrate
+          //     ? null
+          //     : Vibrate.vibrate();
+        }
       },
       child: Container(
-        child: Text(widget.value.toString(), style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
+        child: Text(number, style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
         decoration: BoxDecoration(
         border: Border.all(
         width: 1.0,

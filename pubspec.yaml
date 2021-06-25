@@ -67,6 +67,7 @@ dependencies:
   video_thumbnail: ^0.2.5+1
   export_video_frame: ^0.0.5+4
   thumbnails: ^1.0.1
+  flutter_vibrate: ^1.0.0
 
 
 dev_dependencies:

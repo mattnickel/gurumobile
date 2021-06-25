@@ -7,10 +7,7 @@ import 'package:sidebar_animation/screens/new_game_screen.dart';
 
 
 class BigGameTiles extends StatelessWidget {
-
-
   bool hasViewed = false;
-
   @override
   Widget build(BuildContext context) {
     return Wrap(

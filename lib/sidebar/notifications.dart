@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../services/local_notifications_manager.dart';
@@ -21,6 +22,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 	bool habitsCheck;
 	bool messagesCheck = true;
 	bool contentCheck = true;
+	bool gameCheck = false;
 	final localNotifications = LocalNotificationsManager.init();
 	final _firebaseMessaging = FirebaseMessaging();
 
@@ -37,6 +39,7 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		permissionStatusFuture = getCheckNotificationPermStatus();
 		WidgetsBinding.instance.addObserver(this);
 		_checkForActive();
+		_getGamePrefs();
 	}
 	Future<void> initPlatformState() async {
 		// If the widget was removed from the tree while the asynchronous platform
@@ -201,6 +204,25 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		setState(() {
 		    habitsCheck = _check;
 		});
+	}
+	void _setGamePrefs(statusBool) async{
+		String status;
+		if (statusBool == true) {
+			status= "true";
+		}else{
+			status= "false";
+		}
+		SharedPreferences prefs = await SharedPreferences.getInstance();
+		prefs.setString("games", status);
+	}
+	void _getGamePrefs()async{
+		SharedPreferences prefs = await SharedPreferences.getInstance();
+		String check= prefs.getString("games");
+		if (check == "true") {
+			gameCheck = true;
+		}else{
+			gameCheck = false;
+		}
 	}
 	setHabitsInactive(){
 		HabitDatabaseHelper helper = HabitDatabaseHelper.instance;
@@ -500,14 +522,63 @@ class _NotificationsState extends State<Notifications> with WidgetsBindingObserv
 		),
 		],
 		),
-		)
+		),
+										Container(
+											margin:const EdgeInsets.only(top:0),
+											padding: const EdgeInsets.only(left: 20),
+											height:60,
+											decoration: BoxDecoration(
+													color: Colors.white12,
+													border: Border(
+														bottom: BorderSide(
+															color: Colors.black38,
+														),
+													)
+											),
+											child: Row(
+												children: [
+													// SizedBox(
+													// 	width:100,
+													// 	height: 100,
+													// ),
+													Text(
+														"Game Notifications",
+														style: TextStyle(fontSize: 18, color: Colors.white),
+													),
+													Spacer(),
+													Switch(
+														value: gameCheck,
+														onChanged: (value)async {
+															// updateIt(widget.habits[widget.index].id, value);
+															if (value == false) {
+																print('false');
+																gameCheck = false;
+																// cancelIt(widget.habits[widget.index].id);
+															}else {
+																print('true');
+																gameCheck= true;
+
+															}
+															_setGamePrefs(gameCheck);
+															setState(() {});
+														},
+														activeTrackColor: Color(0xFF9fe7d7),
+														activeColor: Color(0xFF00ebcc),
+													),
+												],
+											),
+
+										),
 		],
 		);
 		}
 		return Text("No permission status yet");
 		}
+
 				    ),
 		),
+
+
 						// Positioned(
 						// 		top:55,
 						// 		right:0,
