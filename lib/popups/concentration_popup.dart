@@ -102,18 +102,7 @@ concentrationPopup(BuildContext context, title, message, action) {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           onPressed: (){
-                            if(action =="Play Game") {
-                              Navigator.pop(context, 'restart');
-                            }else{
-                              print("here");
-                              Navigator.of(context).pushReplacement(
-                                  new MaterialPageRoute(
-                                      builder: (BuildContext context){
-                                        return new NewGameScreen(game:"Concentration Grid");
-                                      }
-                                  )
-                              );
-                            }
+                            Navigator.pop(context, false);
                           },
                         ),
                       ],

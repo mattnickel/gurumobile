@@ -192,6 +192,7 @@ Future bumpThisPost(postId)async{
   var url = "$apiUrl/api/v1/post_bumps";
 
   final msg = jsonEncode({"bump": "true", "postId":"$postId"});
+  print(msg);
   final response = await http.post(
     url,
     headers: tokenHeaders,

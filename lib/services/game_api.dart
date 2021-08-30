@@ -52,23 +52,25 @@ Future createGame(game)async{
 saveHighScores(res, prefs){
   var today= res['today'];
   var high = res['high'];
-  String highToday = today['score'].toString();
-  String allTimeHigh = high['score'].toString();
+  String highToday;
+  String allTimeHigh;
+  if (today['score']== null){
+    highToday =  0.toString();
+  } else {
+    highToday = today['score'].toString();
+  }
+  if (high['score'] == null){
+    allTimeHigh = 0.toString();
+  }else{
+    allTimeHigh = high['score'].toString();
+  }
+
   print(allTimeHigh);
   print(highToday);
   prefs.setString("allTimeHigh", allTimeHigh);
   prefs.setString("highToday", highToday);
   print("high scores saved");
-  // if (high['score'] == null){
-  //   prefs.setString("allTimeHigh", "0");
-  // }else{
-  //   prefs.setString("allTimeHigh", allTimeHigh);
-  // }
-  // if (today['score']==null){
-  //   prefs.setString("highToday", "0");
-  // }else{
-  //   prefs.setString("highToday", highToday);
-  // }
+
 }
 // Update Game Score
 

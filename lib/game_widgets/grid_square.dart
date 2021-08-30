@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebar_animation/models/concentration_model.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:sidebar_animation/services/game_api.dart';
 
 class GridSquare extends StatefulWidget {
   int _index;
@@ -66,14 +67,15 @@ class _GridSquareState extends State<GridSquare>{
         print(widget.conMod.next);
         if (numberInt == widget.conMod.next){
           widget.conMod.updateNext();
+          updateScore("conGrid", widget.conMod.score);
           setState(() {
             selected = true;
           });
         } else{
           print("fail");
-          // !_canVibrate
-          //     ? null
-          //     : Vibrate.vibrate();
+          !_canVibrate
+              ? null
+              : Vibrate.vibrate();
         }
       },
       child: Container(

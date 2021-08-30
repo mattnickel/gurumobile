@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:share/share.dart';
 import 'package:provider/provider.dart';
-import 'package:circular_check_box/circular_check_box.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebar_animation/game_widgets/grid_square.dart';
 import 'package:sidebar_animation/models/concentration_model.dart';
 import 'package:sidebar_animation/popups/concentration_popup.dart';
 
+import 'game_over.dart';
+
 
 class NewGameScreen extends StatefulWidget {
   String game;
-  NewGameScreen({this.game});
-  String score;
+  String allTimeHigh;
+  String todaysHigh;
+  NewGameScreen({this.game, this.allTimeHigh, this.todaysHigh});
 
   @override
   _NewGameScreenState createState() => _NewGameScreenState();
@@ -25,63 +28,54 @@ class _NewGameScreenState extends State<NewGameScreen> {
   int timesLoaded = 0;
   String message;
   Timer _timer;
- int _start = 60;
-   void startTimer(concentration) {
-     if (_timer != null) {
-        _timer.cancel();
-       _timer = null;
-        _start = 60;
-     }
-       _timer = new Timer.periodic(
+  int _start = 60;
 
-         const Duration(seconds: 1),
-             (Timer timer) =>
-             setState(
-                   () {
-                 if (_start < 1) {
-                   timer.cancel();
-                   showConcentrationPopup(context, concentration, "Game Over", "Wow, that was terribly unimpressive.", "Play Again");
-                 } else {
-                   _start = _start - 1;
-                 }
-               },
-             ),
-       );
+  void startTimer(concentration) {
+   if (_timer != null) {
+      _timer.cancel();
+     _timer = null;
+      _start = 60;
    }
-showConcentrationPopup(context, concentration, title, message, action)async{
-     if (concentration.score > 200 && concentration.score<1){
-       message = "Wow, you scored " + concentration.score.toString() +". You are a top performer!";
-     } else if (concentration.score >150){
-       message = concentration.score + "! That was impressive!";
-     }else if (concentration.score >100){
-       message = "You scored " + concentration.score.toString() +". That's pretty good.";
-     }else if (concentration.score >50){
-       message = "You scored " + concentration.score.toString() +". That's a good start, but you can do better.";
-     }else if (concentration.score < 50 && concentration.score > 1){
-       message = "You scored " + concentration.score.toString()+ ". Looks like you are having trouble concentrating. Try again?";
-     }
-  await showDialog(
+     _timer = new Timer.periodic(
+
+       const Duration(seconds: 1),
+           (Timer timer) =>
+           setState(
+                 () {
+               if (_start < 1) {
+                 timer.cancel();
+                 Navigator.pushReplacement(context,
+                 MaterialPageRoute(
+                 builder: (context) => GameOver(score: concentration.score)));
+               } else {
+                 _start = _start - 1;
+               }
+             },
+           ),
+     );
+  }
+  showConcentrationPopup(context, concentration, title, message, action)async{
+    await showDialog(
        context: context,
        builder: (_) =>
          concentrationPopup(context, title, message, action)
    ).then(
-          (val){
-            buildNewGame(concentration);
-
+      (val){
+        startGame(concentration);
       }
   );
  }
 
- buildNewGame(concentration)async{
+ startGame(concentration)async{
+    setState(() {
+      startTimer(concentration);
+    });
+  }
 
-   setState(() {
-     startTimer(concentration);
-   });
- }
+
  @override
  initState() {
    super.initState();
-
  }
    @override
    void dispose() {
@@ -153,7 +147,7 @@ showConcentrationPopup(context, concentration, title, message, action)async{
                               Row(
                                 children: [
                                   Text(
-                                    "High Score: 220",
+                                    "All Time High: "+ widget.allTimeHigh,
 
                                     style: TextStyle(
                                       color: Colors.black,
@@ -167,7 +161,7 @@ showConcentrationPopup(context, concentration, title, message, action)async{
                               Row(
                                 children: [
                                   Text(
-                                    "Today's best: 180",
+                                    "Today's High: " +widget.todaysHigh,
 
                                     style: TextStyle(
                                       color: Colors.black,

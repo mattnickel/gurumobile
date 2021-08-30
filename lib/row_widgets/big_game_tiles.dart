@@ -1,13 +1,37 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sidebar_animation/screens/new_game_screen.dart';
+import 'package:sidebar_animation/services/game_api.dart';
 
 
 
-class BigGameTiles extends StatelessWidget {
+class BigGameTiles extends StatefulWidget {
+  @override
+  _BigGameTilesState createState() => _BigGameTilesState();
+}
+
+class _BigGameTilesState extends State<BigGameTiles> {
+  String highToday;
+
+  String allTimeHigh;
+
+  getScores()async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      highToday = prefs.getString("highToday");
+      allTimeHigh = prefs.getString("allTimeHigh");
+
+    }
+  @override
+  initState() {
+    super.initState();
+    getScores();
+  }
+
   bool hasViewed = false;
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -57,9 +81,11 @@ class BigGameTiles extends StatelessWidget {
 
                           backgroundColor: Color(0xFF09eebc),
                           onPressed:(){
+                            createGame("conGrid");
+                            // getTopScores("conGrid");
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => NewGameScreen(game:"Concentration Grid")));
+                                    builder: (context) => NewGameScreen(game:"Concentration Grid", todaysHigh: highToday, allTimeHigh: allTimeHigh,)));
                           },
                         ),
                       ),

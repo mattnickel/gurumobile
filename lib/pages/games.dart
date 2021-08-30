@@ -10,7 +10,7 @@ class Games extends StatelessWidget {
 			ListView(
 				padding: const EdgeInsets.only(top:40),
 				children:<Widget>[
-					BigGameRow(category:"Games"),
+					BigGameRow(category:"Brain Games"),
 
 
 				],

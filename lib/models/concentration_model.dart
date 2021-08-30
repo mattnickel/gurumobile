@@ -19,10 +19,13 @@ class ConcentrationModel with ChangeNotifier{
       Random random = new Random();
       int startingValue = random.nextInt(100);
       print("shuffle");
-      if (startingValue == 0){
-        startingValue +=1;
+      if (startingValue < 10){
+        print("less than 10");
+        startingValue =11;
       }
       next = startingValue;
+      print(next);
+      print("no problems here");
     }
   }
   void setStartingValue() async{
@@ -50,7 +53,6 @@ class ConcentrationModel with ChangeNotifier{
     notifyListeners();
   }
   void shuffleList(){
-    List shuffled;
      numbersList.shuffle();
 
   }
